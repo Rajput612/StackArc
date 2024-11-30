@@ -1,98 +1,121 @@
 ---
 import CourseLayout from '../../../layouts/CourseLayout.astro';
-import { pythonBasicsTopics } from './topics';
+import CodeSnippet from '../../../components/CodeSnippet.astro';
+import MarkdownIt from 'markdown-it';
+import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 
-export function getStaticPaths() {
-  const paths = [];
-  pythonBasicsTopics.forEach(section => {
-    section.topics.forEach(topic => {
-      paths.push({
-        params: { topicId: topic.id },
-        props: { topic, section }
-      });
-    });
-  });
-  return paths;
+export async function getStaticPaths() {
+  const topics = [
+    'installation',
+    'ide-setup',
+    'input-output',
+    'variables',
+    'control-flow',
+    'functions',
+    'classes',
+    'interactive-shell'
+  ];
+
+  return topics.map(topic => ({
+    params: { topicId: topic }
+  }));
 }
 
-const { topic, section } = Astro.props;
 const { topicId } = Astro.params;
+
+// Read and process markdown content
+const contentDir = path.join(
+  path.dirname(fileURLToPath(import.meta.url)),
+  '../../../content/courses/python-basics'
+);
+
+let content = '';
+try {
+  const filePath = path.join(contentDir, `${topicId}.md`);
+  content = await readFile(filePath, 'utf-8');
+} catch (error) {
+  content = '# Content Not Found\n\nThis topic is currently under development.';
+}
+
+// Initialize markdown-it with options
+const md = new MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true
+});
+
+// Custom renderer for code blocks
+md.renderer.rules.fence = (tokens, idx) => {
+  const token = tokens[idx];
+  const code = token.content.trim();
+  const lang = token.info || 'python';
+  
+  return `<CodeSnippet code="${code.replace(/"/g, '&quot;')}" language="${lang}" />`;
+};
+
+// Add classes to elements
+md.renderer.rules.heading_open = (tokens, idx) => {
+  const token = tokens[idx];
+  const level = token.tag.slice(1);
+  return `<${token.tag} class="heading-${level}">`;
+};
+
+md.renderer.rules.paragraph_open = () => '<p class="mb-4 leading-7">';
+
+md.renderer.rules.bullet_list_open = () => '<ul class="list-disc ml-6 space-y-2">';
+md.renderer.rules.ordered_list_open = () => '<ol class="list-decimal ml-6 space-y-2">';
+
+md.renderer.rules.list_item_open = () => '<li class="mb-2">';
+
+md.renderer.rules.link_open = (tokens, idx) => {
+  const token = tokens[idx];
+  const href = token.attrGet('href');
+  const title = token.attrGet('title');
+  
+  return `<a href="${href}" ${title ? `title="${title}"` : ''} class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200">`;
+};
+
+md.renderer.rules.code_inline = (tokens, idx) => {
+  const code = tokens[idx].content;
+  return `<code class="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-sm font-mono">${code}</code>`;
+};
+
+// Parse the markdown content
+const htmlContent = md.render(content);
+
+// Get topic title from first h1 in content
+const titleMatch = content.match(/^#\s+(.+)$/m);
+const title = titleMatch ? titleMatch[1] : 'Python Basics';
 ---
 
-<CourseLayout title={topic.title} currentTopicId={topicId} courseType="python-basics">
-  <div class="max-w-4xl mx-auto px-4 py-8">
-    <nav class="text-sm breadcrumbs mb-6">
-      <ol class="list-none p-0 inline-flex">
-        <li class="flex items-center">
-          <a href="/courses" class="text-blue-600 dark:text-blue-400">Courses</a>
-          <span class="mx-2 text-gray-500 dark:text-gray-400">/</span>
-        </li>
-        <li class="flex items-center">
-          <a href="/courses/python-basics" class="text-blue-600 dark:text-blue-400">Python Basics</a>
-          <span class="mx-2 text-gray-500 dark:text-gray-400">/</span>
-        </li>
-        <li class="flex items-center">
-          <span class="text-gray-500 dark:text-gray-400">{section.title}</span>
-          <span class="mx-2 text-gray-500 dark:text-gray-400">/</span>
-        </li>
-        <li class="text-gray-800 dark:text-gray-200">{topic.title}</li>
-      </ol>
-    </nav>
-
-    <article class="prose dark:prose-invert max-w-none">
-      <h1>{topic.title}</h1>
-      <div set:html={topic.content} />
-    </article>
+<CourseLayout
+  title={title}
+  currentTopicId={topicId}
+  courseType="python-basics"
+>
+  <div class="prose dark:prose-invert max-w-none">
+    <div class="content-wrapper">
+      <Fragment set:html={htmlContent} />
+    </div>
   </div>
 </CourseLayout>
 
-<style is:global>
-  /* Syntax highlighting styles */
-  .prose pre {
-    background-color: #1a1a1a;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    margin: 1.5rem 0;
+<style>
+  .content-wrapper :global(.heading-1) {
+    @apply text-4xl font-bold mb-6 mt-8;
   }
 
-  .prose code {
-    color: #e6e6e6;
+  .content-wrapper :global(.heading-2) {
+    @apply text-3xl font-semibold mb-4 mt-8;
   }
 
-  /* Specific language tokens */
-  .token.comment { color: #6a9955; }
-  .token.string { color: #ce9178; }
-  .token.number { color: #b5cea8; }
-  .token.keyword { color: #569cd6; }
-  .token.function { color: #dcdcaa; }
-  .token.operator { color: #d4d4d4; }
-
-  /* Additional prose styles */
-  .prose h1 {
-    @apply text-3xl font-bold text-gray-900 dark:text-white mb-8;
+  .content-wrapper :global(.heading-3) {
+    @apply text-2xl font-medium mb-3 mt-6;
   }
 
-  .prose h2 {
-    @apply text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4;
-  }
-
-  .prose h3 {
-    @apply text-xl font-semibold text-gray-900 dark:text-white mt-6 mb-3;
-  }
-
-  .prose p {
-    @apply text-gray-700 dark:text-gray-300 mb-4;
-  }
-
-  .prose ul {
-    @apply list-disc list-inside text-gray-700 dark:text-gray-300 mb-4 ml-4;
-  }
-
-  .prose li {
-    @apply mb-2;
-  }
-
-  .prose strong {
-    @apply text-gray-900 dark:text-white font-semibold;
+  .content-wrapper :global(blockquote) {
+    @apply pl-4 border-l-4 border-gray-300 dark:border-gray-700 italic my-4;
   }
 </style>

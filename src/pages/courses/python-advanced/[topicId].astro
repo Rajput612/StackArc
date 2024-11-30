@@ -1,6 +1,7 @@
 ---
 import CourseLayout from '../../../layouts/CourseLayout.astro';
 import { pythonAdvancedTopics } from './topics';
+import { loadMarkdownContent } from '../../../utils/markdown';
 
 export function getStaticPaths() {
   const paths = [];
@@ -17,6 +18,7 @@ export function getStaticPaths() {
 
 const { topic, section } = Astro.props;
 const { topicId } = Astro.params;
+const content = await loadMarkdownContent(topicId, 'python-advanced');
 ---
 
 <CourseLayout title={topic.title} currentTopicId={topicId} courseType="python-advanced">
@@ -40,23 +42,59 @@ const { topicId } = Astro.params;
     </nav>
 
     <article class="prose dark:prose-invert max-w-none">
-      <h1>{topic.title}</h1>
-      <div set:html={topic.content} />
+      <Fragment set:html={content} />
     </article>
   </div>
 </CourseLayout>
 
-<style>
-  /* Syntax highlighting */
-  .token.comment { color: #6a9955; }
-  .token.keyword { color: #569cd6; }
-  .token.string { color: #ce9178; }
-  .token.number { color: #b5cea8; }
-  .token.function { color: #dcdcaa; }
-  .token.operator { color: #d4d4d4; }
+<style is:global>
+  /* Syntax highlighting styles */
+  .hljs {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 1em;
+    border-radius: 0.5em;
+  }
 
-  /* Additional prose styles */
-  .prose h1 {
-    @apply text-3xl font-bold text-gray-900 dark:text-white mb-8;
+  .prose pre {
+    background: none;
+    padding: 0;
+  }
+
+  .prose pre code {
+    background: none;
+    padding: 0;
+    border: none;
+  }
+
+  /* Dark mode adjustments */
+  .dark .prose {
+    color: #d4d4d4;
+  }
+
+  .dark .prose h1,
+  .dark .prose h2,
+  .dark .prose h3,
+  .dark .prose h4,
+  .dark .prose h5,
+  .dark .prose h6 {
+    color: #ffffff;
+  }
+
+  .dark .prose a {
+    color: #60a5fa;
+  }
+
+  .dark .prose strong {
+    color: #ffffff;
+  }
+
+  .dark .prose code {
+    color: #60a5fa;
+  }
+
+  .dark .prose blockquote {
+    color: #9ca3af;
+    border-left-color: #374151;
   }
 </style>

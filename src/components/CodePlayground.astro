@@ -39,7 +39,7 @@ const {
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-4" style={`height: ${height}`}>
     <!-- Code Editor -->
     <div class="relative h-full">
-      <div id="editor" class="absolute inset-0 font-mono">{initialCode}</div>
+      <div id="editor" class="absolute inset-0 font-mono"></div>
     </div>
     
     <!-- Output -->
@@ -53,24 +53,28 @@ const {
 </div>
 
 <script>
-  // Import Monaco Editor
-  import * as monaco from 'monaco-editor';
+  import Editor from "@monaco-editor/react";
+
+  // Initialize editor with React component
+  const editorContainer = document.getElementById('editor');
   
-  // Initialize editor
-  let editor = monaco.editor.create(document.getElementById('editor'), {
+  const editor = await Editor.render({
+    container: editorContainer,
     value: initialCode,
     language: 'python',
     theme: 'vs',
-    minimap: { enabled: false },
-    fontSize: 14,
-    automaticLayout: true
+    options: {
+      minimap: { enabled: false },
+      fontSize: 14,
+      automaticLayout: true
+    }
   });
   
   // Theme switching
   const themeSelect = document.getElementById('theme-select');
   themeSelect.addEventListener('change', (e) => {
     const theme = e.target.value === 'dark' ? 'vs-dark' : 'vs';
-    monaco.editor.setTheme(theme);
+    editor.setTheme(theme);
   });
   
   // Font size

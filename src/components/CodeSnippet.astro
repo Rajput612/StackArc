@@ -1,0 +1,166 @@
+---
+interface Props {
+  code: string;
+  language?: string;
+  title?: string;
+  showLineNumbers?: boolean;
+}
+
+const {
+  code,
+  language = "python",
+  title,
+  showLineNumbers = true
+} = Astro.props;
+---
+
+<div class="code-block my-6">
+  {title && (
+    <div class="code-title">
+      <span>{title}</span>
+      <button class="copy-button" data-code={code}>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+          <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+        </svg>
+      </button>
+    </div>
+  )}
+  <div class="code-content">
+    <pre class:list={[
+      "code-pre",
+      showLineNumbers && "line-numbers"
+    ]}><code class={`language-${language}`}>{code.trim()}</code></pre>
+  </div>
+</div>
+
+<style>
+  .code-block {
+    @apply rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700;
+  }
+
+  .code-title {
+    @apply flex justify-between items-center px-4 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700;
+  }
+
+  .code-title span {
+    @apply text-sm font-mono text-gray-600 dark:text-gray-300;
+  }
+
+  .copy-button {
+    @apply text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors;
+  }
+
+  .code-content {
+    @apply p-4 overflow-x-auto;
+  }
+
+  .code-pre {
+    @apply text-sm font-mono m-0 p-0;
+    tab-size: 4;
+  }
+
+  .line-numbers {
+    counter-reset: line;
+  }
+
+  .line-numbers > code {
+    @apply block;
+  }
+
+  .line-numbers > code > span {
+    @apply block pl-12 relative;
+    counter-increment: line;
+  }
+
+  .line-numbers > code > span::before {
+    @apply absolute left-0 text-gray-400 dark:text-gray-600 text-right w-8;
+    content: counter(line);
+    padding-right: 1.5rem;
+  }
+
+  /* Syntax highlighting */
+  :global(.token.comment),
+  :global(.token.prolog),
+  :global(.token.doctype),
+  :global(.token.cdata) {
+    @apply text-gray-500 dark:text-gray-400;
+  }
+
+  :global(.token.punctuation) {
+    @apply text-gray-700 dark:text-gray-300;
+  }
+
+  :global(.token.property),
+  :global(.token.tag),
+  :global(.token.boolean),
+  :global(.token.number),
+  :global(.token.constant),
+  :global(.token.symbol) {
+    @apply text-purple-600 dark:text-purple-400;
+  }
+
+  :global(.token.selector),
+  :global(.token.attr-name),
+  :global(.token.string),
+  :global(.token.char),
+  :global(.token.builtin) {
+    @apply text-green-600 dark:text-green-400;
+  }
+
+  :global(.token.operator),
+  :global(.token.entity),
+  :global(.token.url),
+  :global(.language-css .token.string),
+  :global(.style .token.string) {
+    @apply text-yellow-600 dark:text-yellow-400;
+  }
+
+  :global(.token.atrule),
+  :global(.token.attr-value),
+  :global(.token.keyword) {
+    @apply text-blue-600 dark:text-blue-400;
+  }
+
+  :global(.token.function),
+  :global(.token.class-name) {
+    @apply text-pink-600 dark:text-pink-400;
+  }
+
+  :global(.token.regex),
+  :global(.token.important) {
+    @apply text-red-600 dark:text-red-400;
+  }
+</style>
+
+<script>
+  // Initialize Prism.js
+  import Prism from 'prismjs';
+  Prism.highlightAll();
+
+  // Handle copy buttons
+  document.querySelectorAll('.copy-button').forEach(button => {
+    button.addEventListener('click', async () => {
+      const code = button.getAttribute('data-code');
+      if (code) {
+        try {
+          await navigator.clipboard.writeText(code);
+          const svg = button.querySelector('svg');
+          const originalHTML = svg.innerHTML;
+          
+          // Change to checkmark
+          svg.innerHTML = `
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+          `;
+          
+          // Revert after 2 seconds
+          setTimeout(() => {
+            svg.innerHTML = originalHTML;
+          }, 2000);
+        } catch (err) {
+          console.error('Failed to copy:', err);
+        }
+      }
+    });
+  });
+</script>
