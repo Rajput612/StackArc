@@ -112,7 +112,7 @@ const itemsPerPage = 8;
           <div class="relative">
             <input
               type="text"
-              id="search"
+              id="search-input"
               class="w-full px-4 py-2 pl-10 pr-4 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent dark:bg-gray-700 dark:text-white"
               placeholder="Search courses..."
             />
@@ -152,9 +152,13 @@ const itemsPerPage = 8;
       <!-- Available Courses -->
       <section class="mb-12">
         <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Available Courses</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div id="available-courses" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {courses.filter(course => course.status === 'Available').map(course => (
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 h-full">
+            <div class="course-card bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 h-full" 
+              data-title={course.title.toLowerCase()}
+              data-level={course.level.toLowerCase()}
+              data-rating={course.rating}
+              data-enrolled={course.enrolled}>
               <div class="p-6 flex flex-col h-full">
                 <div class="flex items-center mb-4">
                   <span class="text-4xl mr-3 filter drop-shadow-sm" role="img" aria-label={course.title}>
@@ -238,6 +242,77 @@ const itemsPerPage = 8;
   </div>
 </MainLayout>
 
+<script>
+  // Get DOM elements
+  const searchInput = document.getElementById('search-input');
+  const levelFilter = document.getElementById('level-filter');
+  const sortFilter = document.getElementById('sort-filter');
+  const availableCoursesContainer = document.getElementById('available-courses');
+
+  // Function to filter and sort courses
+  function filterAndSortCourses() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const selectedLevel = levelFilter.value.toLowerCase();
+    const sortBy = sortFilter.value;
+
+    // Get all course cards
+    const courseCards = document.querySelectorAll('.course-card');
+
+    courseCards.forEach(card => {
+      const title = card.dataset.title;
+      const level = card.dataset.level;
+      const rating = parseFloat(card.dataset.rating);
+      const enrolled = parseInt(card.dataset.enrolled);
+
+      // Check if card matches search and filter criteria
+      const matchesSearch = title.includes(searchTerm);
+      const matchesLevel = selectedLevel === '' || level === selectedLevel;
+
+      // Show/hide based on filters
+      if (matchesSearch && matchesLevel) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // Sort visible cards
+    const visibleCards = Array.from(courseCards).filter(card => card.style.display !== 'none');
+    
+    visibleCards.sort((a, b) => {
+      const aRating = parseFloat(a.dataset.rating);
+      const bRating = parseFloat(b.dataset.rating);
+      const aEnrolled = parseInt(a.dataset.enrolled);
+      const bEnrolled = parseInt(b.dataset.enrolled);
+
+      switch (sortBy) {
+        case 'rating':
+          return bRating - aRating;
+        case 'popular':
+          return bEnrolled - aEnrolled;
+        case 'newest':
+          // For demo, we'll just reverse the current order
+          return -1;
+        default:
+          return 0;
+      }
+    });
+
+    // Reorder cards in the DOM
+    visibleCards.forEach(card => {
+      availableCoursesContainer.appendChild(card);
+    });
+  }
+
+  // Add event listeners
+  searchInput.addEventListener('input', filterAndSortCourses);
+  levelFilter.addEventListener('change', filterAndSortCourses);
+  sortFilter.addEventListener('change', filterAndSortCourses);
+
+  // Initial filter and sort
+  filterAndSortCourses();
+</script>
+
 <style>
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-cyan-500;
@@ -276,9 +351,6 @@ const itemsPerPage = 8;
   document.getElementById('theme-toggle')?.addEventListener('click', handleToggleClick);
 
   const coursesGrid = document.getElementById('courses-grid');
-  const searchInput = document.getElementById('search');
-  const levelFilter = document.getElementById('level-filter');
-  const sortFilter = document.getElementById('sort-filter');
   const token = localStorage.getItem('token');
 
   // Handle course enrollment
