@@ -4,17 +4,109 @@ import { Editor } from '@monaco-editor/react';
 const CodePlayground = ({ initialCode = '# Write your Python code here\n' }) => {
   const editorRef = useRef(null);
   const containerRef = useRef(null);
+  const decorationsRef = useRef([]);
   const [code, setCode] = useState(initialCode);
   const [breakpoints, setBreakpoints] = useState(new Set());
   const [currentLine, setCurrentLine] = useState(null);
   const [isDebugging, setIsDebugging] = useState(false);
   const [executionQueue, setExecutionQueue] = useState([]);
+  const [output, setOutput] = useState([]);
 
   // Custom event emitter
   const emitEvent = (name, detail) => {
-    if (!containerRef.current) return;
-    const event = new CustomEvent(name, { detail, bubbles: true });
-    containerRef.current.dispatchEvent(event);
+    console.log('Emitting event:', name, detail); // Debug log
+    const event = new CustomEvent(name, { 
+      detail,
+      bubbles: true,
+      composed: true 
+    });
+    window.dispatchEvent(event); // Use window instead of containerRef
+  };
+
+  // Process Python line
+  const processLine = (line) => {
+    const trimmedLine = line.trim();
+    
+    // Skip empty lines and comments
+    if (!trimmedLine || trimmedLine.startsWith('#')) {
+      return null;
+    }
+
+    // Handle variable assignment
+    if (trimmedLine.includes('=')) {
+      const parts = trimmedLine.split('=');
+      const varName = parts[0].trim();
+      const varValue = parts.slice(1).join('=').trim();
+      return {
+        type: 'assignment',
+        name: varName,
+        value: varValue
+      };
+    }
+
+    // Handle del statement
+    if (trimmedLine.startsWith('del ')) {
+      return {
+        type: 'deletion',
+        name: trimmedLine.slice(4).trim()
+      };
+    }
+
+    // Handle print statement
+    if (trimmedLine.startsWith('print(')) {
+      return {
+        type: 'print',
+        value: trimmedLine.slice(6, -1).trim()
+      };
+    }
+
+    return null;
+  };
+
+  // Execute a single line of code
+  const executeLine = (line, lineNumber) => {
+    try {
+      const processed = processLine(line);
+      if (!processed) return;
+
+      console.log('Executing line:', processed); // Debug log
+
+      switch (processed.type) {
+        case 'assignment':
+          emitEvent('debuggerUpdate', {
+            currentLine: lineNumber,
+            code: line,
+            variables: {
+              name: processed.name,
+              value: processed.value,
+              operation: 'assign'
+            }
+          });
+          break;
+
+        case 'deletion':
+          emitEvent('debuggerUpdate', {
+            currentLine: lineNumber,
+            code: line,
+            variables: {
+              name: processed.name,
+              operation: 'delete'
+            }
+          });
+          break;
+
+        case 'print':
+          setOutput(prev => [...prev, processed.value]);
+          emitEvent('debuggerUpdate', {
+            currentLine: lineNumber,
+            code: line
+          });
+          break;
+      }
+    } catch (error) {
+      console.error('Error executing line:', error); // Debug log
+      setOutput(prev => [...prev, `Error: ${error.message}`]);
+    }
   };
 
   function handleEditorDidMount(editor, monaco) {
@@ -39,10 +131,46 @@ const CodePlayground = ({ initialCode = '# Write your Python code here\n' }) => 
 
   function handleEditorChange(value) {
     setCode(value);
-    emitEvent('codeChange', value);
   }
 
+  // Update editor decorations when currentLine changes
+  useEffect(() => {
+    if (!editorRef.current || currentLine === null) {
+      if (decorationsRef.current.length > 0) {
+        editorRef.current?.deltaDecorations(decorationsRef.current, []);
+        decorationsRef.current = [];
+      }
+      return;
+    }
+
+    const editor = editorRef.current;
+    const model = editor.getModel();
+    
+    if (!model) return;
+
+    // Create decoration for the current line
+    const newDecorations = [{
+      range: {
+        startLineNumber: currentLine,
+        startColumn: 1,
+        endLineNumber: currentLine,
+        endColumn: model.getLineMaxColumn(currentLine)
+      },
+      options: {
+        inlineClassName: 'currentLineText',
+        className: 'currentLine'
+      }
+    }];
+
+    // Update decorations
+    decorationsRef.current = editor.deltaDecorations(
+      decorationsRef.current,
+      newDecorations
+    );
+  }, [currentLine]);
+
   const executeCode = () => {
+    setOutput([]);
     const lines = code.split('\n');
     const executionLines = lines
       .map((line, index) => ({
@@ -54,13 +182,15 @@ const CodePlayground = ({ initialCode = '# Write your Python code here\n' }) => 
 
     setExecutionQueue(executionLines);
     setIsDebugging(true);
-    setCurrentLine(executionLines[0]?.lineNumber);
+    
+    console.log('Starting debug session'); // Debug log
+    emitEvent('debuggerUpdate', { isStarting: true });
 
-    emitEvent('debuggerUpdate', {
-      isStarting: true,
-      currentLine: executionLines[0]?.lineNumber,
-      code: executionLines[0]?.line
-    });
+    // Execute first line
+    if (executionLines[0]) {
+      setCurrentLine(executionLines[0].lineNumber);
+      executeLine(executionLines[0].line, executionLines[0].lineNumber);
+    }
   };
 
   const stepForward = () => {
@@ -72,12 +202,7 @@ const CodePlayground = ({ initialCode = '# Write your Python code here\n' }) => 
     if (nextIndex < executionQueue.length) {
       const nextLine = executionQueue[nextIndex];
       setCurrentLine(nextLine.lineNumber);
-      
-      emitEvent('debuggerUpdate', {
-        currentLine: nextLine.lineNumber,
-        code: nextLine.line,
-        isBreakpoint: nextLine.isBreakpoint
-      });
+      executeLine(nextLine.line, nextLine.lineNumber);
     } else {
       // Execution finished
       setIsDebugging(false);
@@ -90,11 +215,20 @@ const CodePlayground = ({ initialCode = '# Write your Python code here\n' }) => 
     setIsDebugging(false);
     setCurrentLine(null);
     setExecutionQueue([]);
+    setOutput([]);
     emitEvent('debuggerUpdate', { isStopped: true });
   };
 
   return (
     <div ref={containerRef} data-component="code-playground" className="space-y-4">
+      <style>{`
+        .currentLine {
+          background-color: rgba(239, 68, 68, 0.1);
+        }
+        .currentLineText {
+          color: rgb(239, 68, 68) !important;
+        }
+      `}</style>
       <div className="relative">
         <Editor
           height="300px"
@@ -109,17 +243,11 @@ const CodePlayground = ({ initialCode = '# Write your Python code here\n' }) => 
             lineNumbers: 'on',
             glyphMargin: true,
             folding: false,
+            lineDecorationsWidth: 0,
+            lineNumbersMinChars: 3,
+            renderLineHighlight: 'none'
           }}
         />
-        {currentLine && (
-          <div
-            className="absolute left-0 right-0 bg-blue-500/20 pointer-events-none"
-            style={{
-              top: `${(currentLine - 1) * 19}px`,
-              height: '19px'
-            }}
-          />
-        )}
       </div>
       <div className="flex space-x-4">
         {!isDebugging ? (
@@ -146,6 +274,18 @@ const CodePlayground = ({ initialCode = '# Write your Python code here\n' }) => 
           </>
         )}
       </div>
+      {output.length > 0 && (
+        <div className="bg-gray-900 rounded-lg p-4 font-mono text-sm">
+          <h3 className="text-white font-semibold mb-2">Output:</h3>
+          <div className="text-gray-300">
+            {output.map((line, i) => (
+              <div key={i} className="text-white">
+                {line}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
