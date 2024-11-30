@@ -1,0 +1,78 @@
+---
+import CourseLayout from '../../../layouts/CourseLayout.astro';
+
+const concepts = [
+  {
+    id: 'advanced-functions',
+    title: 'Advanced Functions',
+    sections: [
+      { id: 'decorators', title: 'Decorators' },
+      { id: 'generators', title: 'Generators and Iterators' },
+      { id: 'lambda', title: 'Lambda Functions' }
+    ]
+  },
+  {
+    id: 'oop',
+    title: 'Object-Oriented Programming',
+    sections: [
+      { id: 'classes', title: 'Classes and Objects' },
+      { id: 'inheritance', title: 'Inheritance and Polymorphism' },
+      { id: 'magic-methods', title: 'Magic Methods' }
+    ]
+  },
+  {
+    id: 'advanced-concepts',
+    title: 'Advanced Python Concepts',
+    sections: [
+      { id: 'context-managers', title: 'Context Managers' },
+      { id: 'metaclasses', title: 'Metaclasses' },
+      { id: 'descriptors', title: 'Descriptors' }
+    ]
+  }
+];
+
+const courseId = 'python-advanced';
+const currentConceptId = 'advanced-functions';
+---
+
+<CourseLayout
+  courseId={courseId}
+  concepts={concepts}
+  currentConceptId={currentConceptId}
+  title="Python Advanced - StackArc"
+  courseType="python-advanced"
+>
+  <div class="p-8">
+    <h1 class="text-3xl font-bold mb-6">Welcome to Advanced Python</h1>
+    
+    <div class="prose dark:prose-invert max-w-none">
+      <p class="text-lg mb-4">
+        Welcome to the Advanced Python course! This course will take your Python skills to the next level with advanced programming concepts and techniques.
+      </p>
+
+      <h2 class="text-2xl font-semibold mt-8 mb-4">What you'll learn</h2>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>Advanced function concepts including decorators and generators</li>
+        <li>Object-oriented programming in depth</li>
+        <li>Context managers and metaclasses</li>
+        <li>Advanced Python features and best practices</li>
+        <li>Real-world application of advanced concepts</li>
+      </ul>
+
+      <h2 class="text-2xl font-semibold mt-8 mb-4">Prerequisites</h2>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>Solid understanding of Python basics</li>
+        <li>Experience with functions and basic OOP concepts</li>
+        <li>Completion of Python Basics course recommended</li>
+      </ul>
+
+      <div class="mt-8 p-4 bg-blue-50 dark:bg-blue-900 rounded-lg">
+        <h3 class="text-xl font-semibold mb-2">Getting Started</h3>
+        <p>
+          Select a topic from the navigation menu on the left to begin your advanced Python journey. 
+          We recommend following the course in order, but feel free to jump to specific topics if you're already familiar with some concepts.
+        </p>
+      </div>
+    </div>
+  </div>
+</CourseLayout>

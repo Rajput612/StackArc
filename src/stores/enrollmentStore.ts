@@ -10,16 +10,21 @@ interface Enrollment {
 
 class EnrollmentStoreClass {
   private enrollments: Map<string, Enrollment>;
+  private enrolledCourses: Set<string>;
   private storageKey = 'course_enrollments';
 
   constructor() {
     this.enrollments = new Map();
-    this.loadFromStorage();
+    this.enrolledCourses = new Set();
+
+    this.loadEnrollmentsFromStorage();
+    this.loadCoursesFromStorage();
   }
 
-  private loadFromStorage() {
+  // Load enrollment data from localStorage
+  private loadEnrollmentsFromStorage() {
     if (typeof window === 'undefined') return;
-    
+
     const stored = localStorage.getItem(this.storageKey);
     if (stored) {
       const data = JSON.parse(stored);
@@ -27,37 +32,66 @@ class EnrollmentStoreClass {
     }
   }
 
-  private saveToStorage() {
+  // Load enrolled courses from localStorage
+  private loadCoursesFromStorage() {
     if (typeof window === 'undefined') return;
-    
+
+    const stored = localStorage.getItem('enrolledCourses');
+    this.enrolledCourses = new Set(stored ? JSON.parse(stored) : []);
+  }
+
+  // Save enrollment data to localStorage
+  private saveEnrollmentsToStorage() {
+    if (typeof window === 'undefined') return;
+
     const data = Object.fromEntries(this.enrollments);
     localStorage.setItem(this.storageKey, JSON.stringify(data));
   }
 
+  // Save enrolled courses to localStorage
+  private saveCoursesToStorage() {
+    if (typeof window === 'undefined') return;
+
+    localStorage.setItem('enrolledCourses', JSON.stringify(Array.from(this.enrolledCourses)));
+  }
+
+  // Enroll a user in a course
   enroll(courseId: string, userId: string) {
     const enrollment: Enrollment = {
       courseId,
       userId,
       progress: {
         completedConcepts: [],
-        lastAccessed: new Date().toISOString()
+        lastAccessed: new Date().toISOString(),
       },
-      status: 'active'
+      status: 'active',
     };
 
     this.enrollments.set(`${courseId}_${userId}`, enrollment);
-    this.saveToStorage();
+    this.enrolledCourses.add(courseId);
+
+    this.saveEnrollmentsToStorage();
+    this.saveCoursesToStorage();
     window.dispatchEvent(new CustomEvent('enrollmentChanged'));
   }
 
-  isEnrolled(courseId: string, userId: string = 'user123'): boolean {
-    return this.enrollments.has(`${courseId}_${userId}`);
+  // Unenroll from a course
+  unenroll(courseId: string) {
+    this.enrolledCourses.delete(courseId);
+    this.saveCoursesToStorage();
   }
 
+  // Check if a user is enrolled in a course
+  isEnrolled(courseId: string, userId: string = 'user123'): boolean {
+    return this.enrollments.has(`${courseId}_${userId}`) || this.enrolledCourses.has(courseId);
+  }
+
+  // Get enrollment details
   getEnrollment(courseId: string, userId: string = 'user123'): Enrollment | null {
     return this.enrollments.get(`${courseId}_${userId}`) || null;
   }
 
+  // Update progress for a course
   updateProgress(courseId: string, userId: string, conceptId: string) {
     const enrollment = this.getEnrollment(courseId, userId);
     if (!enrollment) return;
@@ -66,41 +100,12 @@ class EnrollmentStoreClass {
       enrollment.progress.completedConcepts.push(conceptId);
     }
     enrollment.progress.lastAccessed = new Date().toISOString();
-    
+
     this.enrollments.set(`${courseId}_${userId}`, enrollment);
-    this.saveToStorage();
+    this.saveEnrollmentsToStorage();
     window.dispatchEvent(new CustomEvent('enrollmentChanged'));
   }
 }
 
-export const EnrollmentStore = new EnrollmentStoreClass();
-class EnrollmentStoreClass {
-  private enrolledCourses: Set<string>;
-
-  constructor() {
-    // Load enrolled courses from localStorage if available
-    const stored = localStorage.getItem('enrolledCourses');
-    this.enrolledCourses = new Set(stored ? JSON.parse(stored) : []);
-  }
-
-  enroll(courseId: string): void {
-    this.enrolledCourses.add(courseId);
-    this.saveToStorage();
-  }
-
-  unenroll(courseId: string): void {
-    this.enrolledCourses.delete(courseId);
-    this.saveToStorage();
-  }
-
-  isEnrolled(courseId: string): boolean {
-    return this.enrolledCourses.has(courseId);
-  }
-
-  private saveToStorage(): void {
-    localStorage.setItem('enrolledCourses', JSON.stringify(Array.from(this.enrolledCourses)));
-  }
-}
-
-// Create a singleton instance
+// Export a singleton instance
 export const EnrollmentStore = new EnrollmentStoreClass();

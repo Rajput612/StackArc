@@ -1,26 +1,45 @@
 ---
 import MainLayout from './MainLayout.astro';
-import CourseNavigation from '../components/CourseNavigation.astro';
+import CourseSidebar from '../components/CourseSidebar.astro';
 
 interface Props {
   courseId: string;
   concepts: any[];
   currentConceptId: string;
   title: string;
+  currentTopicId: string;
+  courseType: string;
 }
 
-const { courseId, concepts, currentConceptId, title } = Astro.props;
+const { courseId, concepts, currentConceptId, title, currentTopicId, courseType } = Astro.props;
 ---
 
 <MainLayout title={title}>
-  <div class="flex min-h-screen">
-    <CourseNavigation
-      courseId={courseId}
-      concepts={concepts}
-      currentConceptId={currentConceptId}
-    />
-    <main class="flex-1 overflow-y-auto">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 overflow-y-auto fixed h-[calc(100vh-4rem)] top-16">
+      <CourseSidebar currentTopicId={currentTopicId} courseType={courseType} />
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 ml-64 overflow-auto">
       <slot />
     </main>
   </div>
 </MainLayout>
+
+<style>
+  /* Custom scrollbar for webkit browsers */
+  aside::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  aside::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  aside::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.5);
+    border-radius: 2px;
+  }
+</style>

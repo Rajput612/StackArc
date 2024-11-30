@@ -5,11 +5,10 @@ import Navigation from '../components/Navigation.astro';
 const { title = 'StackArc - Learn Python Programming' } = Astro.props;
 ---
 
-<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
@@ -32,7 +31,7 @@ const { title = 'StackArc - Learn Python Programming' } = Astro.props;
   </head>
   <body class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
     <Navigation />
-    <main>
+    <main class="pt-[4rem]"> 
       <slot />
     </main>
     <div class="fixed bottom-4 right-4 z-50">

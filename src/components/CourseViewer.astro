@@ -1,27 +1,27 @@
 ---
-import { marked } from 'marked';
-import CodePlayground from './CodePlayground.astro';
+import { marked } from 'marked'
+import CodePlayground from './CodePlayground.astro'
 
 interface Exercise {
-  title: string;
-  description: string;
-  code?: string;
-  solution?: string;
+  title: string
+  description: string
+  code?: string
+  solution?: string
 }
 
 interface Props {
-  title: string;
-  content: string;
-  duration: string;
-  difficulty: string;
-  prerequisites?: string[];
-  exercises: Exercise[];
+  title: string
+  content: string
+  duration: string
+  difficulty: string
+  prerequisites?: string[]
+  exercises: Exercise[]
 }
 
-const { title, content, duration, difficulty, prerequisites, exercises } = Astro.props;
+const { title, content, duration, difficulty, prerequisites, exercises } = Astro.props
 
 // Convert markdown to HTML
-const htmlContent = marked(content);
+const htmlContent = marked(content)
 ---
 
 <div class="max-w-7xl mx-auto px-4 py-8">
@@ -48,22 +48,19 @@ const htmlContent = marked(content);
   </header>
 
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-    <!-- Course Content -->
     <div class="prose dark:prose-invert max-w-none">
       <Fragment set:html={htmlContent} />
     </div>
 
-    <!-- Interactive Playground -->
     <div class="sticky top-8">
       <CodePlayground
-        initialCode="# Try the code examples here!
-print('Hello, World!')"
+        initialCode={`# Try the code examples here!
+print('Hello, World!')`}
         height="600px"
       />
     </div>
   </div>
 
-  <!-- Exercises -->
   <section class="mt-16 space-y-8">
     <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Practice Exercises</h2>
     {exercises.map((exercise, index) => (
@@ -92,11 +89,10 @@ print('Hello, World!')"
 </div>
 
 <script>
-  // Handle solution buttons
-  document.querySelectorAll('.view-solution').forEach(button => {
-    button.addEventListener('click', () => {
-      const solution = button.getAttribute('data-solution');
-      alert(`Solution:\n\n${solution}`);
-    });
-  });
+document.querySelectorAll('.view-solution').forEach(button => {
+  button.addEventListener('click', () => {
+    const solution = button.getAttribute('data-solution')
+    alert(`Solution:\n\n${solution}`)
+  })
+})
 </script>

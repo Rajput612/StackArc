@@ -1,0 +1,62 @@
+---
+import CourseLayout from '../../../layouts/CourseLayout.astro';
+import { pythonAdvancedTopics } from './topics';
+
+export function getStaticPaths() {
+  const paths = [];
+  pythonAdvancedTopics.forEach(section => {
+    section.topics.forEach(topic => {
+      paths.push({
+        params: { topicId: topic.id },
+        props: { topic, section }
+      });
+    });
+  });
+  return paths;
+}
+
+const { topic, section } = Astro.props;
+const { topicId } = Astro.params;
+---
+
+<CourseLayout title={topic.title} currentTopicId={topicId} courseType="python-advanced">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <nav class="text-sm breadcrumbs mb-6">
+      <ol class="list-none p-0 inline-flex">
+        <li class="flex items-center">
+          <a href="/courses" class="text-blue-600 dark:text-blue-400">Courses</a>
+          <span class="mx-2 text-gray-500 dark:text-gray-400">/</span>
+        </li>
+        <li class="flex items-center">
+          <a href="/courses/python-advanced" class="text-blue-600 dark:text-blue-400">Python Advanced</a>
+          <span class="mx-2 text-gray-500 dark:text-gray-400">/</span>
+        </li>
+        <li class="flex items-center">
+          <span class="text-gray-500 dark:text-gray-400">{section.title}</span>
+          <span class="mx-2 text-gray-500 dark:text-gray-400">/</span>
+        </li>
+        <li class="text-gray-800 dark:text-gray-200">{topic.title}</li>
+      </ol>
+    </nav>
+
+    <article class="prose dark:prose-invert max-w-none">
+      <h1>{topic.title}</h1>
+      <div set:html={topic.content} />
+    </article>
+  </div>
+</CourseLayout>
+
+<style>
+  /* Syntax highlighting */
+  .token.comment { color: #6a9955; }
+  .token.keyword { color: #569cd6; }
+  .token.string { color: #ce9178; }
+  .token.number { color: #b5cea8; }
+  .token.function { color: #dcdcaa; }
+  .token.operator { color: #d4d4d4; }
+
+  /* Additional prose styles */
+  .prose h1 {
+    @apply text-3xl font-bold text-gray-900 dark:text-white mb-8;
+  }
+</style>

@@ -1,0 +1,98 @@
+---
+import CourseLayout from '../../../layouts/CourseLayout.astro';
+import { pythonBasicsTopics } from './topics';
+
+export function getStaticPaths() {
+  const paths = [];
+  pythonBasicsTopics.forEach(section => {
+    section.topics.forEach(topic => {
+      paths.push({
+        params: { topicId: topic.id },
+        props: { topic, section }
+      });
+    });
+  });
+  return paths;
+}
+
+const { topic, section } = Astro.props;
+const { topicId } = Astro.params;
+---
+
+<CourseLayout title={topic.title} currentTopicId={topicId} courseType="python-basics">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <nav class="text-sm breadcrumbs mb-6">
+      <ol class="list-none p-0 inline-flex">
+        <li class="flex items-center">
+          <a href="/courses" class="text-blue-600 dark:text-blue-400">Courses</a>
+          <span class="mx-2 text-gray-500 dark:text-gray-400">/</span>
+        </li>
+        <li class="flex items-center">
+          <a href="/courses/python-basics" class="text-blue-600 dark:text-blue-400">Python Basics</a>
+          <span class="mx-2 text-gray-500 dark:text-gray-400">/</span>
+        </li>
+        <li class="flex items-center">
+          <span class="text-gray-500 dark:text-gray-400">{section.title}</span>
+          <span class="mx-2 text-gray-500 dark:text-gray-400">/</span>
+        </li>
+        <li class="text-gray-800 dark:text-gray-200">{topic.title}</li>
+      </ol>
+    </nav>
+
+    <article class="prose dark:prose-invert max-w-none">
+      <h1>{topic.title}</h1>
+      <div set:html={topic.content} />
+    </article>
+  </div>
+</CourseLayout>
+
+<style is:global>
+  /* Syntax highlighting styles */
+  .prose pre {
+    background-color: #1a1a1a;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .prose code {
+    color: #e6e6e6;
+  }
+
+  /* Specific language tokens */
+  .token.comment { color: #6a9955; }
+  .token.string { color: #ce9178; }
+  .token.number { color: #b5cea8; }
+  .token.keyword { color: #569cd6; }
+  .token.function { color: #dcdcaa; }
+  .token.operator { color: #d4d4d4; }
+
+  /* Additional prose styles */
+  .prose h1 {
+    @apply text-3xl font-bold text-gray-900 dark:text-white mb-8;
+  }
+
+  .prose h2 {
+    @apply text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4;
+  }
+
+  .prose h3 {
+    @apply text-xl font-semibold text-gray-900 dark:text-white mt-6 mb-3;
+  }
+
+  .prose p {
+    @apply text-gray-700 dark:text-gray-300 mb-4;
+  }
+
+  .prose ul {
+    @apply list-disc list-inside text-gray-700 dark:text-gray-300 mb-4 ml-4;
+  }
+
+  .prose li {
+    @apply mb-2;
+  }
+
+  .prose strong {
+    @apply text-gray-900 dark:text-white font-semibold;
+  }
+</style>

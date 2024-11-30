@@ -1,0 +1,154 @@
+---
+import CourseLayout from '../../../layouts/CourseLayout.astro';
+
+const title = "Python Basics - StackArc";
+const description = "Master the fundamentals of Python programming with our comprehensive course. Perfect for beginners!";
+const pythonBasics = {
+  title: "Python Basics",
+  description: "Master the fundamentals of Python programming with our comprehensive course. Perfect for beginners!",
+  sections: [
+    {
+      title: "Getting Started",
+      topics: [
+        { id: "introduction", title: "Introduction to Python", duration: "10 min" },
+        { id: "installation", title: "Python Installation & Setup", duration: "15 min" },
+        { id: "first-program", title: "Your First Python Program", duration: "20 min" },
+        { id: "ide-setup", title: "IDE Setup and Tools", duration: "15 min" }
+      ]
+    },
+    {
+      title: "Basic Syntax",
+      topics: [
+        { id: "syntax", title: "Python Syntax", duration: "25 min" },
+        { id: "comments", title: "Comments", duration: "10 min" },
+        { id: "variables", title: "Variables", duration: "30 min" },
+        { id: "data-types", title: "Data Types", duration: "35 min" },
+        { id: "numbers", title: "Numbers", duration: "25 min" },
+        { id: "casting", title: "Type Casting", duration: "20 min" },
+        { id: "strings", title: "Strings", duration: "40 min" }
+      ]
+    },
+    {
+      title: "Operators and Control Flow",
+      topics: [
+        { id: "operators", title: "Operators", duration: "35 min" },
+        { id: "booleans", title: "Booleans", duration: "20 min" },
+        { id: "conditions", title: "If...Else", duration: "30 min" },
+        { id: "while-loops", title: "While Loops", duration: "25 min" },
+        { id: "for-loops", title: "For Loops", duration: "30 min" },
+        { id: "break-continue", title: "Break and Continue", duration: "20 min" }
+      ]
+    },
+    {
+      title: "Data Structures",
+      topics: [
+        { id: "lists", title: "Lists", duration: "45 min" },
+        { id: "tuples", title: "Tuples", duration: "30 min" },
+        { id: "sets", title: "Sets", duration: "35 min" },
+        { id: "dictionaries", title: "Dictionaries", duration: "40 min" },
+        { id: "arrays", title: "Arrays", duration: "25 min" }
+      ]
+    },
+    {
+      title: "Functions and Modules",
+      topics: [
+        { id: "functions", title: "Functions", duration: "45 min" },
+        { id: "lambda", title: "Lambda Functions", duration: "25 min" },
+        { id: "arrays", title: "Arrays", duration: "30 min" },
+        { id: "modules", title: "Modules", duration: "35 min" },
+        { id: "pip", title: "PIP Package Manager", duration: "20 min" }
+      ]
+    },
+    {
+      title: "File Handling",
+      topics: [
+        { id: "files", title: "File Handling", duration: "40 min" },
+        { id: "read-files", title: "Read Files", duration: "30 min" },
+        { id: "write-files", title: "Write/Create Files", duration: "30 min" },
+        { id: "delete-files", title: "Delete Files", duration: "20 min" }
+      ]
+    },
+    {
+      title: "Error Handling",
+      topics: [
+        { id: "try-except", title: "Try...Except", duration: "35 min" },
+        { id: "user-input", title: "User Input", duration: "25 min" },
+        { id: "string-formatting", title: "String Formatting", duration: "30 min" }
+      ]
+    },
+    {
+      title: "Object-Oriented Basics",
+      topics: [
+        { id: "classes", title: "Classes and Objects", duration: "45 min" },
+        { id: "inheritance", title: "Inheritance", duration: "40 min" },
+        { id: "iterators", title: "Iterators", duration: "30 min" },
+        { id: "scope", title: "Scope", duration: "25 min" }
+      ]
+    }
+  ]
+};
+---
+
+<CourseLayout title={title} courseType="python-basics">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">{title}</h1>
+      <p class="text-xl text-gray-600 dark:text-gray-400">{description}</p>
+    </div>
+
+    <div class="prose dark:prose-invert prose-lg max-w-none">
+      <h2>Welcome to Python Basics</h2>
+      <p>
+        This comprehensive course will teach you everything you need to know about Python programming,
+        from the very basics to more advanced concepts. Whether you're a complete beginner or have
+        some programming experience, this course is designed to help you master Python step by step.
+      </p>
+
+      <h3>Course Structure</h3>
+      <p>
+        The course is divided into 8 main sections, each focusing on essential Python concepts.
+        You'll find:
+      </p>
+      <ul>
+        <li>Clear explanations with practical examples</li>
+        <li>Interactive code samples you can try</li>
+        <li>Practice exercises to reinforce your learning</li>
+        <li>Progressive difficulty to build your skills</li>
+      </ul>
+
+      <h3>Getting Started</h3>
+      <p>
+        To begin your Python journey, select "Introduction to Python" from the sidebar navigation.
+        Each topic builds upon the previous ones, so we recommend following the course in order.
+        However, you're free to jump to specific topics if you're already familiar with some concepts.
+      </p>
+
+      <div class="bg-blue-50 dark:bg-blue-900/50 p-4 rounded-lg mt-8">
+        <h4 class="text-blue-900 dark:text-blue-100 font-semibold">Prerequisites</h4>
+        <ul class="mt-2 space-y-2 text-blue-800 dark:text-blue-200">
+          <li>No prior programming experience required</li>
+          <li>Basic computer skills</li>
+          <li>Enthusiasm to learn!</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</CourseLayout>
+
+<style>
+  .prose h2 {
+    @apply text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4;
+  }
+  
+  .prose h3 {
+    @apply text-xl font-semibold text-gray-900 dark:text-white mt-6 mb-3;
+  }
+  
+  .prose p {
+    @apply text-gray-700 dark:text-gray-300 mb-4;
+  }
+  
+  .prose ul {
+    @apply list-disc list-inside text-gray-700 dark:text-gray-300 mb-4 ml-4;
+  }
+</style>

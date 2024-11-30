@@ -1,0 +1,101 @@
+---
+import CourseLayout from '../../../layouts/CourseLayout.astro'
+import ConceptList from '../../../components/ConceptList.astro'
+import { courseContent } from '../../../config/courseContent'
+
+const course = courseContent['data-structures']
+---
+
+<CourseLayout title={`${course.title} - StackArc`}>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center">
+      <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+        {course.title}
+      </h1>
+      <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+        {course.description}
+      </p>
+    </div>
+
+    <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Course Info -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Course Information</h2>
+        <dl class="space-y-4">
+          <div>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Duration</dt>
+            <dd class="mt-1 text-sm text-gray-900 dark:text-white">{course.duration}</dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Level</dt>
+            <dd class="mt-1 text-sm text-gray-900 dark:text-white">{course.level}</dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Rating</dt>
+            <dd class="mt-1 text-sm text-gray-900 dark:text-white">⭐ {course.rating}/5.0</dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Enrolled</dt>
+            <dd class="mt-1 text-sm text-gray-900 dark:text-white">{course.enrolled} students</dd>
+          </div>
+        </dl>
+      </div>
+
+      <!-- What You'll Learn -->
+      <div class="md:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">What You'll Learn</h2>
+        <ul class="space-y-3">
+          <li class="flex gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-gray-600 dark:text-gray-300">Understand fundamental data structures: Arrays, Lists, and Stacks</span>
+          </li>
+          <li class="flex gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-gray-600 dark:text-gray-300">Master advanced data structures: Trees, Graphs, and Hash Tables</span>
+          </li>
+          <li class="flex gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-gray-600 dark:text-gray-300">Learn time and space complexity analysis</span>
+          </li>
+          <li class="flex gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-gray-600 dark:text-gray-300">Implement data structures from scratch in Python</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Course Content -->
+    <div class="mt-12">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Course Content</h2>
+      <ConceptList concepts={course.concepts} courseId={course.id} />
+    </div>
+
+    <!-- Prerequisites -->
+    <div class="mt-12 bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Prerequisites</h2>
+      <ul class="space-y-2">
+        <li class="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Basic Python programming knowledge
+        </li>
+        <li class="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Understanding of basic algorithms
+        </li>
+      </ul>
+    </div>
+  </div>
+</CourseLayout>
