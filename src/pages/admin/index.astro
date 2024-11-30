@@ -1,0 +1,163 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { isAdmin } from '../../utils/auth';
+
+// Redirect if not admin
+if (!isAdmin()) {
+  return Astro.redirect('/login');
+}
+
+// All Categories
+const allCategories = [
+  {
+    title: "Programming Languages",
+    icon: "💻",
+    courses: 25,
+    color: "from-blue-500 to-indigo-600"
+  },
+  {
+    title: "Web Development",
+    icon: "🌐",
+    courses: 30,
+    color: "from-green-500 to-emerald-600"
+  },
+  {
+    title: "Data Science",
+    icon: "📊",
+    courses: 20,
+    color: "from-purple-500 to-pink-600"
+  },
+  {
+    title: "Mobile Development",
+    icon: "📱",
+    courses: 15,
+    color: "from-orange-500 to-red-600"
+  },
+  {
+    title: "DevOps & Cloud",
+    icon: "☁️",
+    courses: 18,
+    color: "from-cyan-500 to-blue-600"
+  },
+  {
+    title: "Artificial Intelligence",
+    icon: "🤖",
+    courses: 12,
+    color: "from-rose-500 to-pink-600"
+  }
+];
+
+// Platform Statistics
+const stats = [
+  { label: "Total Users", value: "10,234" },
+  { label: "Active Courses", value: "120+" },
+  { label: "Total Revenue", value: "$124,500" },
+  { label: "Course Completion", value: "78%" }
+];
+
+// Recent Activities
+const recentActivities = [
+  { type: "new_user", message: "New user registration: John Doe", time: "2 minutes ago" },
+  { type: "course_publish", message: "New course published: Advanced React", time: "1 hour ago" },
+  { type: "revenue", message: "Revenue milestone reached: $120,000", time: "3 hours ago" },
+  { type: "user_milestone", message: "User milestone: 10,000 users", time: "1 day ago" }
+];
+
+---
+
+<MainLayout title="Admin Dashboard - Learning Platform">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Header -->
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Admin Dashboard</h1>
+        <p class="text-gray-600 dark:text-gray-400">Manage your learning platform</p>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        {stats.map(stat => (
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+            <p class="text-sm text-gray-600 dark:text-gray-400">{stat.label}</p>
+            <p class="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
+          </div>
+        ))}
+      </div>
+
+      <!-- Main Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Categories Overview -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white">Course Categories</h2>
+              <a href="/admin/categories" class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">
+                Manage Categories →
+              </a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {allCategories.map(category => (
+                <div class="flex items-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                  <div class="text-2xl mr-4">{category.icon}</div>
+                  <div>
+                    <h3 class="font-medium text-gray-900 dark:text-white">{category.title}</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">{category.courses} courses</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Quick Actions</h2>
+            <div class="grid grid-cols-2 gap-4">
+              <button class="p-4 bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900/70 transition-colors">
+                Add New Course
+              </button>
+              <button class="p-4 bg-green-50 dark:bg-green-900/50 text-green-600 dark:text-green-400 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/70 transition-colors">
+                Manage Users
+              </button>
+              <button class="p-4 bg-purple-50 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/70 transition-colors">
+                View Analytics
+              </button>
+              <button class="p-4 bg-pink-50 dark:bg-pink-900/50 text-pink-600 dark:text-pink-400 rounded-lg hover:bg-pink-100 dark:hover:bg-pink-900/70 transition-colors">
+                Platform Settings
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Recent Activity</h2>
+          <div class="space-y-4">
+            {recentActivities.map(activity => (
+              <div class="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                <div class="flex-shrink-0">
+                  {activity.type === 'new_user' && '👤'}
+                  {activity.type === 'course_publish' && '📚'}
+                  {activity.type === 'revenue' && '💰'}
+                  {activity.type === 'user_milestone' && '🎯'}
+                </div>
+                <div>
+                  <p class="text-sm text-gray-900 dark:text-white">{activity.message}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">{activity.time}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <button class="w-full mt-4 p-2 text-sm text-indigo-600 hover:text-indigo-700 font-medium">
+            View All Activity →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-cyan-500;
+  }
+</style>

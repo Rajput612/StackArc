@@ -1,0 +1,151 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import TechniqueExplanation from '../../components/TechniqueExplanation';
+import ProblemSolution from '../../components/ProblemSolution';
+
+const floydCycleTechnique = {
+  name: "Floyd's Cycle Detection",
+  description: "A technique to detect cycles in a linked list using two pointers moving at different speeds.",
+  explanation: "Also known as the 'tortoise and hare' algorithm, this technique uses two pointers - one moving at twice the speed of the other. If there's a cycle, the fast pointer will eventually meet the slow pointer.",
+  implementation: `def detect_cycle(head):
+    if not head or not head.next:
+        return False
+        
+    slow = fast = head
+    
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow == fast:
+            return True
+            
+    return False`,
+  steps: [
+    "Initialize slow and fast pointers to head",
+    "Move slow pointer one step at a time",
+    "Move fast pointer two steps at a time",
+    "If pointers meet, cycle exists",
+    "If fast reaches end, no cycle exists"
+  ],
+  timeComplexity: "O(n)",
+  spaceComplexity: "O(1)",
+  complexityExplanation: "The algorithm uses only two pointers regardless of input size, making it space-efficient. In the worst case, we might need to traverse the entire list once."
+};
+
+const reversalTechnique = {
+  name: "Reversal Technique",
+  description: "A technique to reverse parts of or the entire linked list, useful in many problems.",
+  explanation: "The reversal technique involves carefully managing three pointers to reverse the links between nodes without losing the rest of the list.",
+  implementation: `def reverse_between(head, left, right):
+    if not head:
+        return None
+
+    # Move to starting position
+    dummy = ListNode(0)
+    dummy.next = head
+    prev = dummy
+
+    for _ in range(left - 1):
+        prev = prev.next
+    
+    # Reverse from left to right
+    current = prev.next
+    for _ in range(right - left):
+        temp = current.next
+        current.next = temp.next
+        temp.next = prev.next
+        prev.next = temp
+    
+    return dummy.next`,
+  steps: [
+    "Create a dummy node to handle edge cases",
+    "Move to the starting position",
+    "Maintain three pointers: prev, curr, and next",
+    "Reverse links between nodes",
+    "Connect reversed portion with rest of list"
+  ],
+  timeComplexity: "O(n)",
+  spaceComplexity: "O(1)",
+  complexityExplanation: "We only use a constant amount of extra space for pointers. Time complexity is linear as we might need to traverse most of the list."
+};
+
+const problems = [
+  {
+    title: "Reorder List",
+    difficulty: "Medium",
+    description: "Given a singly linked list L: L0→L1→…→Ln-1→Ln, reorder it to: L0→Ln→L1→Ln-1→L2→Ln-2→…",
+    examples: [
+      {
+        input: "1->2->3->4",
+        output: "1->4->2->3",
+        explanation: "The first half remains in order while the second half is reversed and interleaved"
+      }
+    ],
+    approach: "We can solve this by finding the middle, reversing the second half, and then merging the two halves.",
+    solution: `def reorderList(head):
+    if not head or not head.next:
+        return
+    
+    # Find middle
+    slow = fast = head
+    while fast.next and fast.next.next:
+        slow = slow.next
+        fast = fast.next.next
+    
+    # Reverse second half
+    prev = None
+    curr = slow.next
+    slow.next = None
+    while curr:
+        next_temp = curr.next
+        curr.next = prev
+        prev = curr
+        curr = next_temp
+    
+    # Merge two halves
+    first = head
+    second = prev
+    while second:
+        temp1 = first.next
+        temp2 = second.next
+        first.next = second
+        second.next = temp1
+        first = temp1
+        second = temp2`,
+    timeComplexity: "O(n)",
+    spaceComplexity: "O(1)",
+    complexityExplanation: "We perform three linear operations: finding middle, reversing second half, and merging. Each operation takes O(n) time but uses only constant extra space."
+  }
+];
+---
+
+<MainLayout title="Advanced Linked List Techniques">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold text-gray-900 mb-6">Advanced Linked List Techniques</h1>
+    
+    <div class="mb-8">
+      <p class="text-gray-600">
+        Advanced linked list techniques combine multiple concepts to solve complex problems efficiently.
+        Understanding these techniques is crucial for tackling challenging algorithmic problems.
+      </p>
+    </div>
+
+    <TechniqueExplanation technique={floydCycleTechnique} client:load />
+    <TechniqueExplanation technique={reversalTechnique} client:load />
+
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Practice Problems</h2>
+    {problems.map(problem => (
+      <ProblemSolution problem={problem} client:load />
+    ))}
+
+    <div class="bg-indigo-50 p-6 rounded-lg mb-8">
+      <h3 class="text-lg font-semibold text-indigo-800 mb-3">Advanced Tips</h3>
+      <ul class="space-y-2 text-gray-700">
+        <li>Always draw out the pointer movements when solving complex problems</li>
+        <li>Consider using dummy nodes to handle edge cases</li>
+        <li>Be careful with null pointers and boundary conditions</li>
+        <li>Test with small examples before implementing the full solution</li>
+      </ul>
+    </div>
+  </div>
+</MainLayout>

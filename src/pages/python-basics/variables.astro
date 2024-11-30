@@ -1,0 +1,182 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+
+// Check authentication
+const checkAuth = async (Astro) => {
+  const response = await fetch('http://localhost:8080/api/user', {
+    credentials: 'include',
+    headers: Astro.request.headers
+  });
+  
+  if (!response.ok) {
+    return Astro.redirect('/login');
+  }
+
+  const data = await response.json();
+  if (!data.success) {
+    return Astro.redirect('/login');
+  }
+
+  return { userType: data.userType };
+};
+
+const userData = await checkAuth(Astro);
+
+// Content for different user levels
+const lessonContent = {
+  children: {
+    title: "Fun with Variables! 🎈",
+    introduction: "Let's learn about variables - they're like magical boxes that can hold numbers, words, and more!",
+    examples: [
+      {
+        title: "Creating Your First Variable",
+        code: "# Let's create a variable to store your age\nmy_age = 10\nprint(f'I am {my_age} years old!')",
+        explanation: "Here, we made a variable called my_age and put the number 10 in it. Then we told Python to show us the age!"
+      },
+      {
+        title: "Changing Variable Values",
+        code: "# Variables can change, just like you grow older!\nmy_age = 10\nprint(f'Last year I was {my_age} years old')\nmy_age = 11\nprint(f'Now I am {my_age} years old!')",
+        explanation: "See how we can change what's in our variable? It's like magic! 🎩✨"
+      }
+    ]
+  },
+  intermediate: {
+    title: "Variables and Data Types",
+    introduction: "Understanding variables and their types is fundamental to Python programming. Let's explore how to declare, use, and modify variables.",
+    examples: [
+      {
+        title: "Variable Declaration and Types",
+        code: "# Different types of variables\nage = 25              # Integer\nheight = 1.75         # Float\nname = 'Alice'        # String\nis_student = True     # Boolean\n\nprint(f'Type of age: {type(age)}')\nprint(f'Type of height: {type(height)}')\nprint(f'Type of name: {type(name)}')\nprint(f'Type of is_student: {type(is_student)}')",
+        explanation: "Python automatically determines the type of variable based on the value assigned. This is called dynamic typing."
+      },
+      {
+        title: "Variable Scope",
+        code: "def my_function():\n    x = 10  # Local variable\n    print(f'Inside function: {x}')\n\nx = 5  # Global variable\nmy_function()\nprint(f'Outside function: {x}')",
+        explanation: "Variables have different scopes. Local variables are only accessible within their defined function."
+      }
+    ]
+  },
+  professional: {
+    title: "Advanced Variable Concepts",
+    introduction: "Deep dive into Python's variable implementation, memory management, and advanced concepts like mutability and identity.",
+    examples: [
+      {
+        title: "Object Identity and Mutability",
+        code: "# Understanding object references\na = [1, 2, 3]\nb = a\nb.append(4)\n\nprint(f'a: {a}')\nprint(f'b: {b}')\nprint(f'a is b: {a is b}')\n\n# Immutable vs Mutable\nx = 'hello'\ny = x\ny = 'world'\n\nprint(f'x: {x}')\nprint(f'y: {y}')\nprint(f'x is y: {x is y}')",
+        explanation: "This demonstrates the difference between mutable and immutable objects, and how Python handles object references."
+      },
+      {
+        title: "Memory Management",
+        code: "import sys\n\n# Size of variables in memory\nx = 42\ny = 'Hello, World!'\nz = [1, 2, 3, 4, 5]\n\nprint(f'Size of x: {sys.getsizeof(x)} bytes')\nprint(f'Size of y: {sys.getsizeof(y)} bytes')\nprint(f'Size of z: {sys.getsizeof(z)} bytes')",
+        explanation: "Understanding how Python allocates memory for different types of variables is crucial for writing efficient code."
+      }
+    ]
+  }
+};
+
+const content = lessonContent[userData.userType];
+---
+
+<MainLayout title={content.title}>
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold text-gradient mb-6">
+      {content.title}
+    </h1>
+
+    <div class="prose dark:prose-invert max-w-none">
+      <p class="text-xl mb-8">
+        {content.introduction}
+      </p>
+
+      <div class="space-y-12">
+        {content.examples.map((example) => (
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-semibold mb-4">
+              {example.title}
+            </h2>
+            
+            <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 mb-4">
+              <pre class="language-python"><code>{example.code}</code></pre>
+            </div>
+
+            <p class="text-gray-600 dark:text-gray-300">
+              {example.explanation}
+            </p>
+
+            <div class="mt-6">
+              <button
+                class="run-code-btn bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors"
+                data-code={example.code}
+              >
+                Run Code
+              </button>
+              <div class="output-area mt-4 hidden"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-pink-500;
+  }
+  
+  :global(.dark) .text-gradient {
+    @apply from-purple-400 to-pink-400;
+  }
+
+  .prose {
+    @apply text-gray-900 dark:text-gray-100;
+  }
+
+  .output-area {
+    @apply bg-gray-50 dark:bg-gray-900 p-4 rounded-lg mt-4 font-mono text-sm;
+  }
+
+  .output-area:not(:empty) {
+    @apply block;
+  }
+</style>
+
+<script>
+  // Initialize code execution functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const runButtons = document.querySelectorAll('.run-code-btn');
+    
+    runButtons.forEach(button => {
+      button.addEventListener('click', async () => {
+        const code = button.getAttribute('data-code');
+        const outputArea = button.parentElement?.querySelector('.output-area');
+        
+        if (!outputArea) return;
+        
+        outputArea.classList.remove('hidden');
+        outputArea.textContent = 'Running...';
+        
+        try {
+          const response = await fetch('http://localhost:8080/api/execute', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({ code })
+          });
+          
+          const data = await response.json();
+          
+          if (data.success) {
+            outputArea.textContent = data.output || 'Code executed successfully!';
+          } else {
+            outputArea.textContent = `Error: ${data.error}`;
+          }
+        } catch (error) {
+          outputArea.textContent = `Error: ${error.message}`;
+        }
+      });
+    });
+  });
+</script>

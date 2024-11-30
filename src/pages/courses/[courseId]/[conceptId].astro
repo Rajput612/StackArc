@@ -1,0 +1,49 @@
+---
+import CourseLayout from '../../../layouts/CourseLayout.astro';
+import CourseViewer from '../../../components/CourseViewer.astro';
+import { courseContent } from '../../../config/courseContent';
+
+export async function getStaticPaths() {
+  const paths = [];
+  
+  for (const [courseId, course] of Object.entries(courseContent)) {
+    for (const concept of course.concepts) {
+      paths.push({
+        params: {
+          courseId,
+          conceptId: concept.id
+        },
+        props: {
+          course,
+          concept
+        }
+      });
+    }
+  }
+  
+  return paths;
+}
+
+const { courseId, conceptId } = Astro.params;
+const { course, concept } = Astro.props;
+
+if (!course || !concept) {
+  return Astro.redirect('/404');
+}
+---
+
+<CourseLayout
+  title={`${course.title} - ${concept.title}`}
+  courseId={courseId}
+  concepts={course.concepts}
+  currentConceptId={conceptId}
+>
+  <CourseViewer
+    title={concept.title}
+    content={concept.content}
+    duration={concept.duration}
+    difficulty={concept.difficulty}
+    prerequisites={concept.prerequisites}
+    exercises={concept.exercises}
+  />
+</CourseLayout>

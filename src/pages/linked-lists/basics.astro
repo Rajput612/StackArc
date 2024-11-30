@@ -1,0 +1,88 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import CodeBlock from '../../components/CodeBlock';
+
+const basicOperationsCode = `class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class LinkedList:
+    def __init__(self):
+        self.head = None
+    
+    def insert_front(self, val):
+        new_node = ListNode(val)
+        new_node.next = self.head
+        self.head = new_node
+    
+    def insert_end(self, val):
+        new_node = ListNode(val)
+        if not self.head:
+            self.head = new_node
+            return
+            
+        current = self.head
+        while current.next:
+            current = current.next
+        current.next = new_node
+    
+    def delete_front(self):
+        if not self.head:
+            return
+        self.head = self.head.next
+    
+    def delete_end(self):
+        if not self.head:
+            return
+        if not self.head.next:
+            self.head = None
+            return
+            
+        current = self.head
+        while current.next.next:
+            current = current.next
+        current.next = None`;
+---
+
+<MainLayout title="Linked List Basics">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold text-gray-900 mb-6">Basic Linked List Operations</h1>
+    
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Core Operations</h2>
+      <p class="text-gray-600 mb-6">
+        Understanding basic linked list operations is fundamental to working with this data structure effectively.
+        Let's explore each operation and its time complexity.
+      </p>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Implementation Example</h3>
+        <CodeBlock code={basicOperationsCode} />
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Time Complexity</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li>Insert at front: O(1)</li>
+            <li>Insert at end: O(n)</li>
+            <li>Delete from front: O(1)</li>
+            <li>Delete from end: O(n)</li>
+            <li>Search: O(n)</li>
+          </ul>
+        </div>
+        
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Common Pitfalls</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li>Not handling empty lists</li>
+            <li>Not updating head/tail pointers</li>
+            <li>Memory leaks in languages without GC</li>
+            <li>Lost references during operations</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>

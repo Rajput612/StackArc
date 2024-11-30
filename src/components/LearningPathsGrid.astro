@@ -1,0 +1,37 @@
+---
+import LearningPathCard from './LearningPathCard.astro';
+
+interface LearningPath {
+  title: string;
+  description: string;
+  duration: string;
+  courses: number;
+  icon: string;
+  color: string;
+  includes?: string[];
+}
+
+interface Props {
+  paths: LearningPath[];
+  title: string;
+  viewAllLink: string;
+}
+
+const { paths, title, viewAllLink } = Astro.props;
+---
+
+<section>
+  <div class="flex justify-between items-center mb-8">
+    <h2 class="text-3xl font-bold text-gray-900 dark:text-white">
+      {title}
+    </h2>
+    <a href={viewAllLink} class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 font-medium">
+      View All →
+    </a>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    {paths.map(path => (
+      <LearningPathCard path={path} />
+    ))}
+  </div>
+</section>

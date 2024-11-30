@@ -1,0 +1,122 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import CodeBlock from '../../components/CodeBlock';
+import ProblemCard from '../../components/ProblemCard';
+
+const reverseListCode = `def reverse_linked_list(head):
+    prev = None
+    current = head
+    
+    while current:
+        next_temp = current.next
+        current.next = prev
+        prev = current
+        current = next_temp
+    
+    return prev`;
+
+const findMiddleCode = `def find_middle_node(head):
+    if not head or not head.next:
+        return head
+        
+    slow = fast = head
+    
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        
+    return slow`;
+---
+
+<MainLayout title="Linked List Patterns">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold text-gray-900 mb-6">Common Linked List Patterns</h1>
+    
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Overview</h2>
+      <p class="text-gray-600 mb-6">
+        Certain patterns appear frequently in linked list problems. Understanding these patterns
+        helps in solving a wide variety of algorithmic challenges efficiently.
+      </p>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">1. Reversing a Linked List</h3>
+        <CodeBlock code={reverseListCode} />
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">2. Finding Middle Node</h3>
+        <CodeBlock code={findMiddleCode} />
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Common Patterns</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li>Two-pointer technique</li>
+            <li>Floyd's cycle detection</li>
+            <li>Merge sorted lists</li>
+            <li>Recursive traversal</li>
+          </ul>
+        </div>
+        
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">When to Use</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li>Cycle detection</li>
+            <li>List manipulation</li>
+            <li>Finding intersections</li>
+            <li>Palindrome verification</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-6">Practice Problems</h2>
+      
+      <ProblemCard
+        client:load
+        title="Detect Cycle"
+        difficulty="Medium"
+        description="Given a linked list, determine if it has a cycle in it."
+        constraints={[
+          "The number of nodes in the list is in the range [0, 104]",
+          "-105 ≤ Node.val ≤ 105",
+          "pos is -1 or a valid index in the linked-list"
+        ]}
+        examples={[
+          {
+            input: "head = [3,2,0,-4], pos = 1",
+            output: "true"
+          },
+          {
+            input: "head = [1,2], pos = 0",
+            output: "true"
+          }
+        ]}
+      />
+
+      <ProblemCard
+        client:load
+        title="Palindrome Linked List"
+        difficulty="Easy"
+        description="Given the head of a singly linked list, return true if it is a palindrome."
+        constraints={[
+          "The number of nodes in the list is in the range [1, 105]",
+          "0 ≤ Node.val ≤ 9"
+        ]}
+        examples={[
+          {
+            input: "head = [1,2,2,1]",
+            output: "true"
+          },
+          {
+            input: "head = [1,2]",
+            output: "false"
+          }
+        ]}
+      />
+    </div>
+  </div>
+</MainLayout>

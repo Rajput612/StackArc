@@ -1,0 +1,153 @@
+---
+const { userType } = Astro.props;
+
+const dashboardContent = {
+  child: {
+    title: "Python for Kids",
+    welcomeMessage: "Welcome young Python explorer! Ready for an adventure?",
+    features: [
+      {
+        title: "Python Basics",
+        description: "Learn Python through fun games and stories!",
+        icon: "🐍"
+      },
+      {
+        title: "Python Games",
+        description: "Create your own games with Python!",
+        icon: "🎮"
+      },
+      {
+        title: "Python Projects",
+        description: "Build cool Python projects!",
+        icon: "🚀"
+      },
+      {
+        title: "Python Badges",
+        description: "Earn badges as you master Python!",
+        icon: "🏅"
+      }
+    ]
+  },
+  teen: {
+    title: "Python Developer Path",
+    welcomeMessage: "Hey future Python developer! Ready to level up?",
+    features: [
+      {
+        title: "Core Python",
+        description: "Master Python fundamentals and OOP",
+        icon: "📚"
+      },
+      {
+        title: "Python Projects",
+        description: "Build real-world Python applications",
+        icon: "💻"
+      },
+      {
+        title: "Python Community",
+        description: "Join our Python coding community",
+        icon: "👥"
+      },
+      {
+        title: "Python Blog",
+        description: "Share your Python learning journey",
+        icon: "✍️"
+      }
+    ]
+  },
+  prof: {
+    title: "Professional Python Development",
+    welcomeMessage: "Welcome to advanced Python development",
+    features: [
+      {
+        title: "Advanced Python",
+        description: "Master advanced Python concepts and patterns",
+        icon: "🎯"
+      },
+      {
+        title: "Python Web Dev",
+        description: "Build web applications with Django and FastAPI",
+        icon: "🌐"
+      },
+      {
+        title: "Python DevOps",
+        description: "Learn Python deployment and automation",
+        icon: "🔄"
+      },
+      {
+        title: "Python Architecture",
+        description: "Design scalable Python applications",
+        icon: "🏗️"
+      }
+    ]
+  },
+  admin: {
+    title: "Admin Control Panel",
+    welcomeMessage: "Welcome to the Platform Administration",
+    features: [
+      {
+        title: "Course Management",
+        description: "Manage courses across all programming languages and technologies",
+        icon: "📚"
+      },
+      {
+        title: "User Administration",
+        description: "Manage users, roles, and permissions across the platform",
+        icon: "👥"
+      },
+      {
+        title: "Content Management",
+        description: "Control and organize all platform content and resources",
+        icon: "📋"
+      },
+      {
+        title: "Platform Analytics",
+        description: "Comprehensive analytics and reporting dashboard",
+        icon: "📊"
+      },
+      {
+        title: "System Settings",
+        description: "Configure platform settings and integrations",
+        icon: "⚙️"
+      },
+      {
+        title: "Quality Assurance",
+        description: "Monitor and maintain content quality standards",
+        icon: "✅"
+      }
+    ]
+  }
+};
+
+const content = dashboardContent[userType] || dashboardContent.child;
+---
+
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center">
+      <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+        {content.title}
+      </h1>
+      <p class="text-xl text-gray-600 dark:text-gray-300 mb-12">
+        {content.welcomeMessage}
+      </p>
+    </div>
+
+    <div class="mt-10">
+      <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        {content.features.map((feature) => (
+          <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300 stackarc-border">
+            <div class="p-6">
+              <div class="text-4xl mb-4">{feature.icon}</div>
+              <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                {feature.title}
+              </h3>
+              <p class="text-gray-500 dark:text-gray-400">
+                {feature.description}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>

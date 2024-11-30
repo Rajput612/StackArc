@@ -1,0 +1,107 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import CodeBlock from '../../components/CodeBlock';
+
+const memoryAllocationCode = `# Memory allocation example
+import sys
+
+# Create a list with integers
+numbers = [1, 2, 3, 4, 5]
+
+# Get memory size of the list
+size_of_list = sys.getsizeof(numbers)
+print(f"Size of list: {size_of_list} bytes")
+
+# Memory address of elements
+for i, num in enumerate(numbers):
+    print(f"Element {i} at address: {id(num)}")`;
+
+const dynamicArrayCode = `class DynamicArray:
+    def __init__(self):
+        self.size = 0
+        self.capacity = 1
+        self.array = self._create_array(self.capacity)
+    
+    def _create_array(self, capacity):
+        # Creates a new array with given capacity
+        return [None] * capacity
+    
+    def append(self, element):
+        if self.size == self.capacity:
+            # Double the capacity when full
+            self._resize(2 * self.capacity)
+        
+        self.array[self.size] = element
+        self.size += 1
+    
+    def _resize(self, new_capacity):
+        # Create a new array with increased capacity
+        new_array = self._create_array(new_capacity)
+        
+        # Copy elements to new array
+        for i in range(self.size):
+            new_array[i] = self.array[i]
+        
+        self.array = new_array
+        self.capacity = new_capacity`;
+---
+
+<MainLayout title="Array Memory Management">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold text-gray-900 mb-6">Array Memory Management</h1>
+    
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Memory Layout</h2>
+      <p class="text-gray-600 mb-6">
+        Arrays store elements in contiguous memory locations, which means all elements are placed next to each other in memory.
+        This property enables constant-time access but can make resizing operations expensive.
+      </p>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Memory Allocation Example</h3>
+        <CodeBlock code={memoryAllocationCode} />
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Static Arrays</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li>Fixed size allocated at creation</li>
+            <li>Cannot grow or shrink</li>
+            <li>Memory allocated on stack</li>
+            <li>Better cache performance</li>
+          </ul>
+        </div>
+        
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Dynamic Arrays</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li>Can grow and shrink</li>
+            <li>Memory allocated on heap</li>
+            <li>Amortized O(1) insertion</li>
+            <li>Uses resizing strategy</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Dynamic Array Implementation</h3>
+        <p class="text-gray-600 mb-4">
+          Dynamic arrays (like Python's list) automatically resize when they run out of capacity.
+          Here's how they work under the hood:
+        </p>
+        <CodeBlock code={dynamicArrayCode} />
+      </div>
+
+      <div class="bg-yellow-50 p-6 rounded-lg">
+        <h3 class="text-lg font-semibold text-yellow-800 mb-2">Memory Management Tips</h3>
+        <ul class="space-y-2 text-gray-700">
+          <li>Pre-allocate arrays when size is known</li>
+          <li>Be mindful of memory fragmentation</li>
+          <li>Consider using array pools for frequent allocations</li>
+          <li>Watch out for memory leaks in manual implementations</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</MainLayout>

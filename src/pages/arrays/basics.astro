@@ -1,0 +1,94 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import CodePlayground from '../../components/CodePlayground';
+
+const basicOperationsCode = `# Basic Array Operations in Python
+
+def demonstrate_array_operations():
+    print("1. Creating an array")
+    arr = [1, 2, 3, 4, 5]
+    print(f"Initial array: {arr}\\n")
+
+    print("2. Accessing elements (O(1))")
+    first_element = arr[0]
+    last_element = arr[-1]
+    print(f"First element: {first_element}")
+    print(f"Last element: {last_element}\\n")
+
+    print("3. Inserting elements")
+    arr.append(6)
+    print(f"After append(6): {arr}")
+    arr.insert(2, 7)
+    print(f"After insert(2, 7): {arr}\\n")
+
+    print("4. Deleting elements")
+    popped = arr.pop()
+    print(f"Popped from end: {popped}")
+    print(f"After pop(): {arr}")
+    popped_index = arr.pop(2)
+    print(f"Popped from index 2: {popped_index}")
+    print(f"After pop(2): {arr}")
+    del arr[1]
+    print(f"After del arr[1]: {arr}\\n")
+
+    print("5. Traversing array")
+    print("Simple traversal:")
+    for element in arr:
+        print(f"  Element: {element}")
+    
+    print("\\nTraversal with index:")
+    for i, element in enumerate(arr):
+        print(f"  Index {i}: {element}")
+
+# Run the demonstration
+demonstrate_array_operations()
+
+# Now you can experiment with your own array operations below
+# For example, try creating a new array and performing different operations:
+my_array = [10, 20, 30, 40, 50]
+# Add your code here`;
+
+---
+
+<MainLayout title="Array Basics">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold text-gray-900 mb-6">Basic Array Operations</h1>
+    
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Core Operations</h2>
+      <p class="text-gray-600 mb-6">
+        Understanding basic array operations is fundamental to working with arrays effectively.
+        Let's explore each operation and its time complexity.
+      </p>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Implementation Example</h3>
+        <CodePlayground client:load initialCode={basicOperationsCode} showExamples={false} />
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Time Complexity</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li>Access: O(1)</li>
+            <li>Insert at end: O(1)</li>
+            <li>Insert at position: O(n)</li>
+            <li>Delete at end: O(1)</li>
+            <li>Delete at position: O(n)</li>
+            <li>Search: O(n)</li>
+          </ul>
+        </div>
+        
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Common Pitfalls</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li>Index out of bounds</li>
+            <li>Modifying while iterating</li>
+            <li>Not considering resizing costs</li>
+            <li>Inefficient insertions/deletions</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>

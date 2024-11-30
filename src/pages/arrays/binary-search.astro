@@ -1,0 +1,257 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import CodePlayground from '../../components/CodePlayground';
+import { UserProvider } from '../../contexts/UserContext';
+import { topics } from '../../config/topics';
+
+// This will run on the server
+const checkAccess = async (Astro) => {
+  // Check if user is logged in
+  const response = await fetch('http://localhost:8080/api/user', {
+    credentials: 'include',
+    headers: Astro.request.headers
+  });
+  
+  if (!response.ok) {
+    return Astro.redirect('/login');
+  }
+
+  const data = await response.json();
+  if (!data.success) {
+    return Astro.redirect('/login');
+  }
+
+  // Check if user has access to this topic
+  const userTopics = topics[data.userType];
+  const hasAccess = userTopics.some(section => 
+    section.topics.some(topic => topic.path === '/arrays/binary-search')
+  );
+
+  if (!hasAccess) {
+    return Astro.redirect('/access-denied');
+  }
+
+  return { userType: data.userType };
+};
+
+const accessData = await checkAccess(Astro);
+---
+
+<MainLayout title="Binary Search">
+  <div class="max-w-6xl mx-auto px-4 py-12">
+    <div class="text-center mb-16">
+      <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600 mb-4">
+        Binary Search
+      </h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        {accessData.userType === 'children' ? 
+          "Let's learn how to find numbers quickly with a fun guessing game! 🎮" :
+          accessData.userType === 'intermediate' ?
+          "Master the art of efficient searching with the divide-and-conquer approach." :
+          "Explore advanced binary search patterns and their applications in solving complex search problems."}
+      </p>
+    </div>
+    
+    <div class="space-y-16">
+      {/* Basic Binary Search Section */}
+      <section class="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div class="p-8">
+          <div class="flex items-center space-x-4 mb-6">
+            <div class="h-12 w-12 rounded-xl bg-indigo-100 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900">Basic Binary Search</h2>
+              <p class="text-gray-600">
+                {accessData.userType === 'children' ? 
+                  "Let's learn how to find numbers quickly with a fun guessing game! 🎮" :
+                  accessData.userType === 'intermediate' ?
+                  "Foundation of efficient searching in sorted arrays" :
+                  "Basic template for standard binary search"}
+              </p>
+            </div>
+          </div>
+          
+          <div class="prose prose-indigo max-w-none mb-8">
+            <p class="text-gray-600">
+              {accessData.userType === 'children' ? 
+                "We can find numbers super fast! 🚀" :
+                accessData.userType === 'intermediate' ?
+                "Binary search is an efficient algorithm that reduces the search space by half in each step." :
+                "Access array element only once per iteration"}
+            </p>
+          </div>
+          
+          <div class="rounded-xl overflow-hidden">
+            <UserProvider client:load>
+              <CodePlayground client:load initialCode={BASIC_BINARY_SEARCH} showExamples={false} />
+            </UserProvider>
+          </div>
+        </div>
+      </section>
+
+      {/* Advanced Applications Section */}
+      <section class="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div class="p-8">
+          <div class="flex items-center space-x-4 mb-6">
+            <div class="h-12 w-12 rounded-xl bg-purple-100 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900">Advanced Applications</h2>
+              <p class="text-gray-600">
+                {accessData.userType === 'children' ? 
+                  "Let's learn how to find numbers quickly with a fun guessing game! 🎮" :
+                  accessData.userType === 'intermediate' ?
+                  "Beyond simple searching" :
+                  "Find first occurrences, peak elements, and more"}
+              </p>
+            </div>
+          </div>
+          
+          <div class="prose prose-purple max-w-none mb-8">
+            <p class="text-gray-600">
+              {accessData.userType === 'children' ? 
+                "We can find numbers super fast! 🚀" :
+                accessData.userType === 'intermediate' ?
+                "Binary search can be adapted to solve various complex problems beyond simple element search." :
+                "Useful for finding first/last position or comparing neighbors"}
+            </p>
+          </div>
+          
+          <div class="rounded-xl overflow-hidden">
+            <UserProvider client:load>
+              <CodePlayground client:load initialCode={ADVANCED_BINARY_SEARCH} showExamples={false} />
+            </UserProvider>
+          </div>
+        </div>
+      </section>
+
+      {/* Templates Section */}
+      <section class="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div class="p-8">
+          <div class="flex items-center space-x-4 mb-6">
+            <div class="h-12 w-12 rounded-xl bg-pink-100 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900">Binary Search Templates</h2>
+              <p class="text-gray-600">
+                {accessData.userType === 'children' ? 
+                  "Let's learn how to find numbers quickly with a fun guessing game! 🎮" :
+                  accessData.userType === 'intermediate' ?
+                  "Ready-to-use patterns for different scenarios" :
+                  "Master these templates to tackle any binary search problem effectively"}
+              </p>
+            </div>
+          </div>
+          
+          <div class="prose prose-pink max-w-none mb-8">
+            <p class="text-gray-600">
+              {accessData.userType === 'children' ? 
+                "We can find numbers super fast! 🚀" :
+                accessData.userType === 'intermediate' ?
+                "Different problems require different binary search patterns." :
+                "Useful for finding first/last position or comparing neighbors"}
+            </p>
+          </div>
+          
+          <div class="rounded-xl overflow-hidden">
+            <UserProvider client:load>
+              <CodePlayground client:load initialCode={BINARY_SEARCH_TEMPLATES} showExamples={false} />
+            </UserProvider>
+          </div>
+        </div>
+      </section>
+
+      {/* Quick Reference Section */}
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8">
+          <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            Key Characteristics
+          </h3>
+          <ul class="space-y-3 text-gray-600">
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-indigo-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Time Complexity: O(log n)
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-indigo-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Space Complexity: O(1)
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-indigo-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Requires sorted array
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-indigo-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Halves search space each step
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-8">
+          <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+            </svg>
+            Common Use Cases
+          </h3>
+          <ul class="space-y-3 text-gray-600">
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-purple-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Finding element in sorted array
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-purple-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Finding first/last occurrence
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-purple-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Finding peak elements
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-purple-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Search in rotated arrays
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-pink-500;
+  }
+  
+  :global(.dark) .text-gradient {
+    @apply from-purple-400 to-pink-400;
+  }
+</style>

@@ -1,0 +1,23 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CodePlayground from '../components/CodePlayground';
+---
+
+<Layout title="Python Playground">
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold mb-8 text-center text-white">Python Code Playground</h1>
+    <div class="max-w-4xl mx-auto">
+      <p class="text-gray-300 mb-6 text-center">
+        Experiment with Python code, try different examples, and see the results instantly!
+      </p>
+      <CodePlayground client:load height="h-96" />
+    </div>
+  </main>
+</Layout>
+
+<style>
+  main {
+    min-height: calc(100vh - 4rem);
+    background-color: #1a1a1a;
+  }
+</style>

@@ -1,0 +1,146 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+---
+
+<MainLayout title="Login - StackArc">
+  <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+    <div class="w-full max-w-md">
+      <!-- Header -->
+      <div class="text-center mb-10">
+        <h1 class="text-4xl font-bold mb-4">
+          Welcome to <span class="text-gradient">Stack<span class="text-indigo-600 dark:text-indigo-400">Arc</span></span>
+        </h1>
+        <p class="text-xl text-gray-600 dark:text-gray-400">
+          Continue Your Python Journey
+        </p>
+      </div>
+
+      <!-- Form Container -->
+      <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+        <form id="loginForm" class="space-y-6">
+          <!-- Username Field -->
+          <div>
+            <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Username
+            </label>
+            <input
+              id="username"
+              name="username"
+              type="text"
+              required
+              class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              placeholder="Enter your username"
+            />
+          </div>
+
+          <!-- Password Field -->
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              required
+              class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              placeholder="Enter your password"
+            />
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            class="w-full flex justify-center py-3 px-4 rounded-lg text-white bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 font-medium transition-all duration-200 transform hover:scale-[1.02]"
+          >
+            Sign In
+          </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="mt-6">
+          <div class="relative">
+            <div class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+              <span class="px-2 bg-white dark:bg-gray-800 text-gray-500">
+                New to StackArc?
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sign Up Link -->
+        <div class="mt-6">
+          <a
+            href="/signup"
+            class="w-full flex justify-center py-3 px-4 rounded-lg border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 font-medium transition-all duration-200 transform hover:scale-[1.02]"
+          >
+            Create Account
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>
+
+<script>
+  const dummyUsers = {
+    child: { password: 'child', type: 'child' },
+    teen: { password: 'teen', type: 'teen' },
+    prof: { password: 'prof', type: 'prof' },
+    admin: { password: 'admin', type: 'admin' }
+  };
+
+  const form = document.getElementById('loginForm');
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(form);
+    const username = formData.get('username');
+    const password = formData.get('password');
+
+    // Check if it's a dummy user
+    const user = dummyUsers[username];
+    if (user && user.password === password) {
+      // Create a dummy token
+      const token = btoa(JSON.stringify({ username, type: user.type }));
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify({ 
+        username, 
+        type: user.type,
+        name: username.charAt(0).toUpperCase() + username.slice(1)
+      }));
+      window.location.href = '/dashboard';
+      return;
+    }
+
+    // If not a dummy user, try the real API
+    try {
+      const response = await fetch('http://localhost:8000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        window.location.href = '/dashboard';
+      } else {
+        throw new Error(data.message || 'Invalid credentials');
+      }
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'An error occurred');
+    }
+  });
+</script>

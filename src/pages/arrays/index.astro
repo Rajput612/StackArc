@@ -1,0 +1,66 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import ArrayVisualizer from '../../components/visualizers/ArrayVisualizer';
+---
+
+<MainLayout title="Arrays">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold text-gray-900 mb-6">Arrays</h1>
+    
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Introduction to Arrays</h2>
+      <p class="text-gray-600 mb-6">
+        An array is a fundamental data structure that stores elements in contiguous memory locations.
+        Understanding arrays is crucial as they form the basis for many other data structures and algorithms.
+      </p>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Key Concepts</h3>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li>Contiguous memory allocation</li>
+          <li>Zero-based indexing</li>
+          <li>Fixed size (in most implementations)</li>
+          <li>Direct access to elements</li>
+        </ul>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Learning Path</h3>
+        <div class="space-y-4">
+          <a href="/arrays/basics" class="block p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">
+            <h4 class="text-lg font-semibold text-indigo-800 mb-2">1. Basic Operations</h4>
+            <p class="text-gray-600">Learn fundamental array operations: access, insert, delete, and traverse</p>
+          </a>
+          
+          <a href="/arrays/memory" class="block p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">
+            <h4 class="text-lg font-semibold text-indigo-800 mb-2">2. Memory Management</h4>
+            <p class="text-gray-600">Understand how arrays are stored in memory and their implications</p>
+          </a>
+          
+          <a href="/arrays/patterns" class="block p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">
+            <h4 class="text-lg font-semibold text-indigo-800 mb-2">3. Common Patterns</h4>
+            <p class="text-gray-600">Master common array patterns and problem-solving strategies</p>
+          </a>
+          
+          <a href="/arrays/techniques" class="block p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">
+            <h4 class="text-lg font-semibold text-indigo-800 mb-2">4. Advanced Techniques</h4>
+            <p class="text-gray-600">Learn advanced techniques like Two Pointers, Sliding Window, and more</p>
+          </a>
+        </div>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Interactive Visualization</h3>
+        <ArrayVisualizer client:load />
+      </div>
+
+      <div class="bg-yellow-50 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold text-yellow-800 mb-2">Pro Tip</h3>
+        <p class="text-gray-700">
+          Master the basics before moving on to advanced techniques. A solid understanding of array fundamentals
+          will make learning complex algorithms much easier.
+        </p>
+      </div>
+    </div>
+  </div>
+</MainLayout>

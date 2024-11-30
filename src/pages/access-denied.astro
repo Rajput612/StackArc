@@ -1,0 +1,28 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+---
+
+<MainLayout title="Access Denied - Python Learning Platform">
+  <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full text-center">
+      <div class="mb-8">
+        <h1 class="text-4xl font-bold text-red-600 mb-4">Access Denied</h1>
+        <p class="text-xl text-gray-600">
+          This content is not available for your current level.
+        </p>
+      </div>
+      
+      <div class="space-y-4">
+        <p class="text-gray-600">
+          Keep learning and complete the prerequisites to unlock more advanced topics!
+        </p>
+        
+        <div class="flex justify-center space-x-4">
+          <a href="/" class="inline-block bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700 transition-colors">
+            Go to Homepage
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>

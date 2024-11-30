@@ -1,0 +1,111 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import CodeBlock from '../../components/CodeBlock';
+import ProblemCard from '../../components/ProblemCard';
+
+const twoSumCode = `def two_sum(nums: List[int], target: int) -> List[int]:
+    left, right = 0, len(nums) - 1
+    
+    while left < right:
+        current_sum = nums[left] + nums[right]
+        if current_sum == target:
+            return [left, right]
+        elif current_sum < target:
+            left += 1
+        else:
+            right -= 1
+            
+    return []  # No solution found`;
+
+const palindromeCode = `def is_palindrome(s: str) -> bool:
+    # Convert to lowercase and remove non-alphanumeric characters
+    s = ''.join(c.lower() for c in s if c.isalnum())
+    
+    left, right = 0, len(s) - 1
+    while left < right:
+        if s[left] != s[right]:
+            return False
+        left += 1
+        right -= 1
+    
+    return True`;
+---
+
+<MainLayout title="Two Pointers Technique">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold text-gray-900 mb-6">Two Pointers Technique</h1>
+    
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Overview</h2>
+      <p class="text-gray-600 mb-6">
+        The two pointers technique is used to solve array problems by maintaining two pointers that traverse the array.
+        This technique is particularly useful for solving problems that involve searching pairs or comparing elements.
+      </p>
+
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">Common Use Cases</h3>
+      <ul class="list-disc list-inside text-gray-600 mb-6">
+        <li>Finding pairs that sum to a target value</li>
+        <li>Detecting palindromes</li>
+        <li>Merging sorted arrays</li>
+        <li>Container with most water</li>
+      </ul>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Example 1: Two Sum (Sorted Array)</h3>
+        <CodeBlock code={twoSumCode} />
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Example 2: Valid Palindrome</h3>
+        <CodeBlock code={palindromeCode} />
+      </div>
+    </div>
+
+    <div class="mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-6">Practice Problems</h2>
+      
+      <ProblemCard
+        client:load
+        title="Container With Most Water"
+        difficulty="Medium"
+        description="Given n non-negative integers representing an array of heights where the width of each bar is 1, find two lines that together with the x-axis forms a container that would hold the most water."
+        constraints={[
+          "n == height.length",
+          "2 ≤ n ≤ 105",
+          "0 ≤ height[i] ≤ 104"
+        ]}
+        examples={[
+          {
+            input: "height = [1,8,6,2,5,4,8,3,7]",
+            output: "49"
+          },
+          {
+            input: "height = [1,1]",
+            output: "1"
+          }
+        ]}
+      />
+
+      <ProblemCard
+        client:load
+        title="3Sum"
+        difficulty="Medium"
+        description="Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0."
+        constraints={[
+          "3 ≤ nums.length ≤ 3000",
+          "-105 ≤ nums[i] ≤ 105"
+        ]}
+        examples={[
+          {
+            input: "nums = [-1,0,1,2,-1,-4]",
+            output: "[[-1,-1,2],[-1,0,1]]"
+          },
+          {
+            input: "nums = [0,1,1]",
+            output: "[]"
+          }
+        ]}
+      />
+    </div>
+  </div>
+</MainLayout>

@@ -1,0 +1,111 @@
+---
+interface Props {
+  initialCode?: string;
+  language?: string;
+  height?: string;
+}
+
+const {
+  initialCode = '# Write your Python code here\n\n',
+  language = 'python',
+  height = '400px'
+} = Astro.props;
+---
+
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+  <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+    <div class="flex space-x-2">
+      <button class="px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors" id="run-code">
+        Run ▶
+      </button>
+      <button class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" id="reset-code">
+        Reset
+      </button>
+    </div>
+    <div class="flex items-center space-x-4">
+      <select id="theme-select" class="px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800">
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+      <select id="font-size" class="px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800">
+        <option value="12">12px</option>
+        <option value="14" selected>14px</option>
+        <option value="16">16px</option>
+        <option value="18">18px</option>
+      </select>
+    </div>
+  </div>
+  
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-4" style={`height: ${height}`}>
+    <!-- Code Editor -->
+    <div class="relative h-full">
+      <div id="editor" class="absolute inset-0 font-mono">{initialCode}</div>
+    </div>
+    
+    <!-- Output -->
+    <div class="border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-gray-700">
+      <div class="p-4 h-full">
+        <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Output:</h3>
+        <pre id="output" class="font-mono text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap h-[calc(100%-2rem)] overflow-auto"></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Import Monaco Editor
+  import * as monaco from 'monaco-editor';
+  
+  // Initialize editor
+  let editor = monaco.editor.create(document.getElementById('editor'), {
+    value: initialCode,
+    language: 'python',
+    theme: 'vs',
+    minimap: { enabled: false },
+    fontSize: 14,
+    automaticLayout: true
+  });
+  
+  // Theme switching
+  const themeSelect = document.getElementById('theme-select');
+  themeSelect.addEventListener('change', (e) => {
+    const theme = e.target.value === 'dark' ? 'vs-dark' : 'vs';
+    monaco.editor.setTheme(theme);
+  });
+  
+  // Font size
+  const fontSelect = document.getElementById('font-size');
+  fontSelect.addEventListener('change', (e) => {
+    editor.updateOptions({ fontSize: parseInt(e.target.value) });
+  });
+  
+  // Run code
+  const runButton = document.getElementById('run-code');
+  const output = document.getElementById('output');
+  
+  runButton.addEventListener('click', async () => {
+    const code = editor.getValue();
+    output.textContent = 'Running...';
+    
+    try {
+      // Here we'll integrate with your Python execution backend
+      // For now, we'll just show the code
+      output.textContent = `Code to execute:\n${code}`;
+    } catch (error) {
+      output.textContent = `Error: ${error.message}`;
+    }
+  });
+  
+  // Reset code
+  const resetButton = document.getElementById('reset-code');
+  resetButton.addEventListener('click', () => {
+    editor.setValue(initialCode);
+    output.textContent = '';
+  });
+</script>
+
+<style is:global>
+  .monaco-editor {
+    padding-top: 8px;
+  }
+</style>

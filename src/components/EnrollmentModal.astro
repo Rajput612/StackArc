@@ -1,0 +1,120 @@
+---
+interface Props {
+  courseId: string;
+  courseTitle: string;
+  conceptCount: number;
+  duration: number;
+}
+
+const { courseId, courseTitle, conceptCount, duration } = Astro.props;
+---
+
+<div
+  id="enrollment-modal"
+  class="fixed inset-0 z-50 hidden"
+  role="dialog"
+  aria-modal="true"
+>
+  <!-- Backdrop -->
+  <div class="fixed inset-0 bg-gray-900 bg-opacity-50 transition-opacity"></div>
+
+  <!-- Modal -->
+  <div class="fixed inset-0 z-10 overflow-y-auto">
+    <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+      <div class="relative transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+        <div class="absolute right-0 top-0 pr-4 pt-4">
+          <button
+            type="button"
+            class="close-modal rounded-md text-gray-400 hover:text-gray-500"
+          >
+            <span class="sr-only">Close</span>
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="sm:flex sm:items-start">
+          <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900 sm:mx-0 sm:h-10 sm:w-10">
+            <svg class="h-6 w-6 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5" />
+            </svg>
+          </div>
+          <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+            <h3 class="text-xl font-semibold leading-6 text-gray-900 dark:text-white">
+              Enroll in {courseTitle}
+            </h3>
+            <div class="mt-4">
+              <div class="space-y-4 text-sm text-gray-600 dark:text-gray-400">
+                <p>You're about to enroll in this comprehensive Python course that includes:</p>
+                <ul class="list-disc list-inside space-y-2">
+                  <li>{conceptCount} learning concepts</li>
+                  <li>{duration} minutes of content</li>
+                  <li>Interactive coding exercises</li>
+                  <li>Hands-on projects</li>
+                  <li>Progress tracking</li>
+                </ul>
+                <p class="mt-4 font-medium text-indigo-600 dark:text-indigo-400">
+                  Ready to start your Python journey?
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+          <button
+            type="button"
+            class="enroll-button inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
+            data-course-id={courseId}
+          >
+            Enroll Now
+          </button>
+          <button
+            type="button"
+            class="close-modal mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-gray-200 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 sm:mt-0 sm:w-auto"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { EnrollmentStore } from '../stores/enrollmentStore';
+
+  // Modal handling
+  const modal = document.getElementById('enrollment-modal');
+  const closeButtons = document.querySelectorAll('.close-modal');
+  const enrollButton = document.querySelector('.enroll-button');
+
+  // Close modal
+  function closeModal() {
+    modal.classList.add('hidden');
+  }
+
+  // Close on button click
+  closeButtons.forEach(button => {
+    button.addEventListener('click', closeModal);
+  });
+
+  // Close on outside click
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+
+  // Enroll button click
+  enrollButton.addEventListener('click', () => {
+    const courseId = enrollButton.getAttribute('data-course-id');
+    EnrollmentStore.enroll(courseId);
+    window.location.href = `/courses/${courseId}`;
+  });
+
+  // Expose show modal function globally
+  window.showEnrollmentModal = () => {
+    modal.classList.remove('hidden');
+  };
+</script>

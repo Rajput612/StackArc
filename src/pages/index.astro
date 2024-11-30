@@ -1,0 +1,314 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+
+// Featured Categories
+const categories = [
+  {
+    title: "Development",
+    icon: "💻",
+    courses: 230,
+    color: "from-blue-500 to-indigo-600"
+  },
+  {
+    title: "Business",
+    icon: "📊",
+    courses: 185,
+    color: "from-green-500 to-emerald-600"
+  },
+  {
+    title: "Design",
+    icon: "🎨",
+    courses: 156,
+    color: "from-purple-500 to-pink-600"
+  },
+  {
+    title: "Marketing",
+    icon: "📱",
+    courses: 142,
+    color: "from-orange-500 to-red-600"
+  },
+  {
+    title: "Data Science",
+    icon: "📈",
+    courses: 168,
+    color: "from-cyan-500 to-blue-600"
+  },
+  {
+    title: "Personal Growth",
+    icon: "🌱",
+    courses: 124,
+    color: "from-yellow-500 to-orange-600"
+  }
+];
+
+// Trending Courses
+const trendingCourses = [
+  {
+    title: "Complete Web Development Bootcamp",
+    instructor: "Sarah Johnson",
+    rating: 4.8,
+    students: 15234,
+    price: 89.99,
+    image: "/images/web-dev.jpg",
+    icon: "🌐",
+    badge: "Bestseller",
+    badgeColor: "bg-yellow-100 text-yellow-800"
+  },
+  {
+    title: "Data Science & Machine Learning",
+    instructor: "Michael Chen",
+    rating: 4.9,
+    students: 12456,
+    price: 94.99,
+    image: "/images/data-science.jpg",
+    icon: "🤖",
+    badge: "Hot & New",
+    badgeColor: "bg-red-100 text-red-800"
+  },
+  {
+    title: "Financial Analysis & Modeling",
+    instructor: "Emma Williams",
+    rating: 4.7,
+    students: 8923,
+    price: 79.99,
+    image: "/images/finance.jpg",
+    icon: "📈",
+    badge: "Trending",
+    badgeColor: "bg-green-100 text-green-800"
+  }
+];
+
+// Learning Paths
+const learningPaths = [
+  {
+    title: "Full-Stack Developer",
+    description: "Master both frontend and backend development",
+    duration: "6 months",
+    courses: 12,
+    icon: "🎯",
+    color: "from-indigo-500 to-blue-600"
+  },
+  {
+    title: "Data Scientist",
+    description: "From statistics to deep learning",
+    duration: "8 months",
+    courses: 15,
+    icon: "📊",
+    color: "from-purple-500 to-indigo-600"
+  },
+  {
+    title: "UX/UI Designer",
+    description: "Design beautiful and functional interfaces",
+    duration: "4 months",
+    courses: 8,
+    icon: "🎨",
+    color: "from-pink-500 to-rose-600"
+  }
+];
+
+---
+
+<MainLayout title="StackArc - Learn Anything, Achieve Everything">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <!-- Hero Section -->
+    <div class="relative overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 to-blue-700 opacity-90"></div>
+      <div class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+          <div class="text-center">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6">
+              Learn Anything,<br />Achieve Everything
+            </h1>
+            <p class="text-xl sm:text-2xl text-indigo-100 mb-8 max-w-3xl mx-auto">
+              Join millions of learners worldwide and explore your potential with expert-led courses in tech, business, design, and more.
+            </p>
+            <div class="max-w-2xl mx-auto">
+              <div class="relative">
+                <input
+                  type="text"
+                  placeholder="What do you want to learn today?"
+                  class="w-full px-6 py-4 rounded-full text-lg focus:ring-4 focus:ring-indigo-400 border-none shadow-lg"
+                />
+                <button class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition-colors">
+                  Search
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Stats -->
+      <div class="relative bg-white/10 backdrop-blur-sm py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div class="text-white">
+              <div class="text-3xl font-bold">1M+</div>
+              <div class="text-indigo-100">Students</div>
+            </div>
+            <div class="text-white">
+              <div class="text-3xl font-bold">2K+</div>
+              <div class="text-indigo-100">Courses</div>
+            </div>
+            <div class="text-white">
+              <div class="text-3xl font-bold">500+</div>
+              <div class="text-indigo-100">Instructors</div>
+            </div>
+            <div class="text-white">
+              <div class="text-3xl font-bold">50+</div>
+              <div class="text-indigo-100">Languages</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-20">
+      <!-- Categories -->
+      <section>
+        <div class="flex justify-between items-center mb-8">
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white">
+            Featured Categories
+          </h2>
+          <a href="/categories" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 font-medium">
+            View All →
+          </a>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          {categories.map(category => (
+            <a href={`/categories/${category.title.toLowerCase()}`} class="group">
+              <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all p-6 text-center border border-gray-100 dark:border-gray-700">
+                <div class="text-4xl mb-3 transform group-hover:scale-110 transition-transform">
+                  {category.icon}
+                </div>
+                <h3 class="font-semibold text-gray-900 dark:text-white mb-1">
+                  {category.title}
+                </h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                  {category.courses} courses
+                </p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <!-- Trending Courses -->
+      <section>
+        <div class="flex justify-between items-center mb-8">
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white">
+            Trending Now
+          </h2>
+          <a href="/courses" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 font-medium">
+            View All →
+          </a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {trendingCourses.map(course => (
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-lg transition-all overflow-hidden border border-gray-100 dark:border-gray-700">
+              <div class="relative aspect-video bg-gray-100 dark:bg-gray-700">
+                <div class="absolute inset-0 flex items-center justify-center text-6xl">
+                  {course.icon}
+                </div>
+                {course.badge && (
+                  <span class={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-medium ${course.badgeColor}`}>
+                    {course.badge}
+                  </span>
+                )}
+              </div>
+              <div class="p-6">
+                <h3 class="font-bold text-xl text-gray-900 dark:text-white mb-2">
+                  {course.title}
+                </h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">
+                  by {course.instructor}
+                </p>
+                <div class="flex items-center mb-3">
+                  <div class="flex items-center">
+                    <span class="text-yellow-400 mr-1">★</span>
+                    <span class="font-medium text-gray-900 dark:text-white">{course.rating}</span>
+                  </div>
+                  <span class="mx-2 text-gray-300 dark:text-gray-600">•</span>
+                  <span class="text-sm text-gray-500 dark:text-gray-400">
+                    {course.students.toLocaleString()} students
+                  </span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-2xl font-bold text-gray-900 dark:text-white">
+                    ${course.price}
+                  </span>
+                  <button class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors">
+                    Add to Cart
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Learning Paths -->
+      <section>
+        <div class="flex justify-between items-center mb-8">
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white">
+            Learning Paths
+          </h2>
+          <a href="/paths" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 font-medium">
+            View All →
+          </a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {learningPaths.map(path => (
+            <div class="group relative overflow-hidden rounded-xl">
+              <div class={`absolute inset-0 bg-gradient-to-r ${path.color} opacity-90 group-hover:opacity-100 transition-opacity`}></div>
+              <div class="relative p-8">
+                <div class="text-5xl mb-4">{path.icon}</div>
+                <h3 class="text-2xl font-bold text-white mb-2">
+                  {path.title}
+                </h3>
+                <p class="text-white/80 mb-4">
+                  {path.description}
+                </p>
+                <div class="flex items-center text-white/90 text-sm">
+                  <span class="mr-4">{path.duration}</span>
+                  <span>{path.courses} courses</span>
+                </div>
+                <div class="absolute bottom-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button class="px-4 py-2 bg-white text-indigo-600 rounded-lg font-medium hover:bg-indigo-50 transition-colors">
+                    View Path →
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="bg-gradient-to-r from-indigo-600 to-blue-700 rounded-2xl overflow-hidden">
+        <div class="px-8 py-16 md:px-16 text-center">
+          <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+            Ready to Start Your Learning Journey?
+          </h2>
+          <p class="text-xl text-indigo-100 mb-8 max-w-2xl mx-auto">
+            Join our community of learners and start your journey towards mastery today.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <button class="px-8 py-3 bg-white text-indigo-600 rounded-lg font-semibold hover:bg-indigo-50 transition-colors">
+              Get Started
+            </button>
+            <button class="px-8 py-3 bg-transparent border-2 border-white text-white rounded-lg font-semibold hover:bg-white/10 transition-colors">
+              Browse Courses
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-cyan-500;
+  }
+</style>

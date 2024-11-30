@@ -1,0 +1,188 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import CodePlayground from '../../components/CodePlayground';
+import ProblemCard from '../../components/ProblemCard';
+
+const SLIDING_WINDOW_CODE = `# Sliding Window Technique Examples
+
+def max_subarray_sum(nums, k):
+    """Find maximum sum of any contiguous subarray of size k."""
+    if not nums or k <= 0 or k > len(nums):
+        return 0
+        
+    # Calculate initial window sum
+    window_sum = sum(nums[:k])
+    max_sum = window_sum
+    
+    print(f"Initial window sum: {window_sum} (elements: {nums[:k]})")
+    
+    # Slide the window
+    for i in range(k, len(nums)):
+        # Add new element and remove first element of previous window
+        window_sum = window_sum + nums[i] - nums[i - k]
+        max_sum = max(max_sum, window_sum)
+        print(f"Window at index {i-k+1}-{i}: sum = {window_sum} (elements: {nums[i-k+1:i+1]})")
+        
+    return max_sum
+
+# Test the function
+nums = [1, 4, 2, 10, 2, 3, 1, 0, 20]
+k = 4
+
+print(f"Array: {nums}")
+print(f"Window size: {k}\\n")
+max_sum = max_subarray_sum(nums, k)
+print(f"\\nMaximum sum of any {k} consecutive elements: {max_sum}")`;
+
+const SLIDING_WINDOW_ADVANCED_CODE = `# Advanced Sliding Window Examples
+
+def find_longest_substring(s: str) -> int:
+    """
+    Find the length of longest substring without repeating characters.
+    Example: "abcabcbb" -> 3 ("abc")
+    """
+    if not s:
+        return 0
+        
+    char_index = {}  # Store the index of each character
+    max_length = 0
+    start = 0
+    
+    print(f"String: {s}\\n")
+    print("Finding longest substring without repeating characters:")
+    
+    for end, char in enumerate(s):
+        # If we find a repeating character, update the start pointer
+        if char in char_index and char_index[char] >= start:
+            old_start = start
+            start = char_index[char] + 1
+            print(f"Found repeat '{char}' at index {end}, moving window from {old_start} to {start}")
+        else:
+            print(f"Adding '{char}' at index {end}")
+        
+        char_index[char] = end
+        current_length = end - start + 1
+        max_length = max(max_length, current_length)
+        print(f"Current substring: {s[start:end+1]} (length: {current_length})\\n")
+    
+    return max_length
+
+def find_anagrams(s: str, p: str) -> list:
+    """
+    Find all start indices of anagrams of pattern p in string s.
+    Example: s = "cbaebabacd", p = "abc" -> [0, 6]
+    """
+    if len(p) > len(s):
+        return []
+    
+    p_count = {}
+    window_count = {}
+    
+    # Count characters in pattern
+    for char in p:
+        p_count[char] = p_count.get(char, 0) + 1
+    
+    # Initialize first window
+    for char in s[:len(p)]:
+        window_count[char] = window_count.get(char, 0) + 1
+    
+    result = []
+    if window_count == p_count:
+        result.append(0)
+    
+    print(f"String: {s}")
+    print(f"Pattern: {p}\\n")
+    print(f"Pattern character count: {p_count}")
+    
+    # Slide window
+    for i in range(len(p), len(s)):
+        # Remove first character of previous window
+        first_char = s[i - len(p)]
+        window_count[first_char] -= 1
+        if window_count[first_char] == 0:
+            del window_count[first_char]
+            
+        # Add new character
+        new_char = s[i]
+        window_count[new_char] = window_count.get(new_char, 0) + 1
+        
+        print(f"Window at index {i-len(p)+1}: {s[i-len(p)+1:i+1]}")
+        print(f"Window character count: {window_count}")
+        
+        if window_count == p_count:
+            result.append(i - len(p) + 1)
+            print(f"Found anagram at index {i-len(p)+1}\\n")
+        else:
+            print("Not an anagram\\n")
+    
+    return result
+
+# Test the functions
+print("Example 1: Longest Substring Without Repeating Characters")
+print("-" * 50)
+test_string = "abcabcbb"
+length = find_longest_substring(test_string)
+print(f"Length of longest substring without repeating characters: {length}\\n\\n")
+
+print("Example 2: Find All Anagrams")
+print("-" * 50)
+s = "cbaebabacd"
+p = "abc"
+indices = find_anagrams(s, p)
+print(f"Indices of anagrams: {indices}")`;
+---
+
+<MainLayout title="Sliding Window Technique">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold text-gray-900 mb-6">Sliding Window Technique</h1>
+    
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Introduction</h2>
+      <p class="text-gray-600 mb-6">
+        The sliding window technique is used to solve array/string problems where we need to find or calculate
+        something among all the contiguous subarrays or substrings of a given size. It helps reduce time
+        complexity from O(n*k) to O(n) by reusing the result of previous calculations.
+      </p>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Basic Example: Maximum Subarray Sum</h3>
+        <p class="text-gray-600 mb-4">
+          This example demonstrates how to find the maximum sum of any contiguous subarray of size k.
+          The code shows how we can efficiently calculate this by sliding a window over the array.
+        </p>
+        <CodePlayground client:load initialCode={SLIDING_WINDOW_CODE} showExamples={false} />
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Advanced Examples</h3>
+        <p class="text-gray-600 mb-4">
+          Here are some more complex examples using the sliding window technique:
+          1. Finding the longest substring without repeating characters
+          2. Finding all anagrams of a pattern in a string
+        </p>
+        <CodePlayground client:load initialCode={SLIDING_WINDOW_ADVANCED_CODE} showExamples={false} />
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">When to Use</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li>Finding subarrays of fixed size k</li>
+            <li>Finding longest/shortest substring with condition</li>
+            <li>Finding min/max/sum in sliding window</li>
+            <li>String pattern matching problems</li>
+          </ul>
+        </div>
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Key Points</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li>Reduces time complexity from O(n*k) to O(n)</li>
+            <li>Maintains window invariants</li>
+            <li>Uses auxiliary space for window state</li>
+            <li>Common in string/array problems</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>

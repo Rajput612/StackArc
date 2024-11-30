@@ -1,0 +1,102 @@
+---
+import { marked } from 'marked';
+import CodePlayground from './CodePlayground.astro';
+
+interface Exercise {
+  title: string;
+  description: string;
+  code?: string;
+  solution?: string;
+}
+
+interface Props {
+  title: string;
+  content: string;
+  duration: string;
+  difficulty: string;
+  prerequisites?: string[];
+  exercises: Exercise[];
+}
+
+const { title, content, duration, difficulty, prerequisites, exercises } = Astro.props;
+
+// Convert markdown to HTML
+const htmlContent = marked(content);
+---
+
+<div class="max-w-7xl mx-auto px-4 py-8">
+  <header class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">{title}</h1>
+    <div class="flex flex-wrap gap-4 text-sm">
+      <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full">
+        {duration}
+      </span>
+      <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full">
+        {difficulty}
+      </span>
+    </div>
+    {prerequisites && prerequisites.length > 0 && (
+      <div class="mt-4">
+        <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Prerequisites:</h3>
+        <ul class="list-disc list-inside text-sm text-gray-600 dark:text-gray-400">
+          {prerequisites.map(prereq => (
+            <li>{prereq}</li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </header>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Course Content -->
+    <div class="prose dark:prose-invert max-w-none">
+      <Fragment set:html={htmlContent} />
+    </div>
+
+    <!-- Interactive Playground -->
+    <div class="sticky top-8">
+      <CodePlayground
+        initialCode="# Try the code examples here!
+print('Hello, World!')"
+        height="600px"
+      />
+    </div>
+  </div>
+
+  <!-- Exercises -->
+  <section class="mt-16 space-y-8">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Practice Exercises</h2>
+    {exercises.map((exercise, index) => (
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+          {index + 1}. {exercise.title}
+        </h3>
+        <p class="text-gray-600 dark:text-gray-400 mb-4">
+          {exercise.description}
+        </p>
+        <CodePlayground
+          initialCode={exercise.code}
+          height="200px"
+        />
+        <div class="mt-4 flex gap-4">
+          <button
+            class="view-solution px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            data-solution={exercise.solution}
+          >
+            View Solution
+          </button>
+        </div>
+      </div>
+    ))}
+  </section>
+</div>
+
+<script>
+  // Handle solution buttons
+  document.querySelectorAll('.view-solution').forEach(button => {
+    button.addEventListener('click', () => {
+      const solution = button.getAttribute('data-solution');
+      alert(`Solution:\n\n${solution}`);
+    });
+  });
+</script>

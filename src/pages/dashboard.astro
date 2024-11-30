@@ -1,0 +1,97 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import DashboardContent from '../components/DashboardContent.astro';
+---
+
+<MainLayout title="Dashboard - StackArc">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div id="dashboard-container" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <!-- Dashboard content will be loaded here -->
+      <div id="loading-spinner" class="flex justify-center items-center py-20">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
+      </div>
+    </div>
+  </div>
+</MainLayout>
+
+<script>
+  import { isAuthenticated, getUserData, handleAuthRedirect } from '../utils/auth';
+
+  // Check authentication on page load
+  document.addEventListener('DOMContentLoaded', async () => {
+    if (!handleAuthRedirect()) return;
+
+    const user = getUserData();
+    if (!user) return;
+
+    try {
+      // Show loading spinner
+      const spinner = document.getElementById('loading-spinner');
+      const container = document.getElementById('dashboard-container');
+
+      // Load dashboard content based on user type
+      const response = await fetch(`/api/dashboard?type=${user.type}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to load dashboard');
+      }
+
+      const data = await response.json();
+      
+      // Hide spinner and show content
+      spinner.style.display = 'none';
+      container.innerHTML = data.content;
+
+      // Initialize any dashboard-specific functionality
+      initializeDashboard();
+    } catch (error) {
+      console.error('Error loading dashboard:', error);
+      // Show error message to user
+      document.getElementById('dashboard-container').innerHTML = `
+        <div class="text-center py-12">
+          <div class="text-red-500 text-xl mb-4">Failed to load dashboard content</div>
+          <button onclick="window.location.reload()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+            Try Again
+          </button>
+        </div>
+      `;
+    }
+  });
+
+  function initializeDashboard() {
+    // Add any dashboard-specific initialization code here
+    const user = getUserData();
+    
+    // Update user info in the dashboard
+    const userNameElements = document.querySelectorAll('.user-name');
+    userNameElements.forEach(el => {
+      el.textContent = user.username;
+    });
+
+    // Add event listeners for dashboard interactions
+    document.querySelectorAll('.dashboard-action').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const action = e.target.dataset.action;
+        handleDashboardAction(action);
+      });
+    });
+  }
+
+  function handleDashboardAction(action) {
+    // Handle different dashboard actions
+    switch (action) {
+      case 'profile':
+        window.location.href = '/profile';
+        break;
+      case 'settings':
+        window.location.href = '/settings';
+        break;
+      // Add more actions as needed
+    }
+  }
+</script>

@@ -1,0 +1,91 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import ArrayVisualizer from '../components/visualizers/ArrayVisualizer';
+import CodePlayground from '../components/CodePlayground';
+
+const ARRAY_CODE = `# Array Operations in Python
+
+# 1. Creating arrays
+numbers = [1, 2, 3, 4, 5]
+fruits = ['apple', 'banana', 'orange']
+
+# 2. Accessing elements
+print("First number:", numbers[0])
+print("Last fruit:", fruits[-1])
+
+# 3. Modifying elements
+numbers[2] = 10
+print("\\nModified numbers:", numbers)
+
+# 4. Array methods
+numbers.append(6)
+print("\\nAfter append:", numbers)
+
+numbers.insert(1, 15)
+print("After insert at index 1:", numbers)
+
+popped = numbers.pop()
+print("Popped element:", popped)
+print("After pop:", numbers)
+
+# 5. Array operations
+print("\\nArray length:", len(numbers))
+print("Sum of numbers:", sum(numbers))
+print("Maximum value:", max(numbers))
+print("Minimum value:", min(numbers))
+
+# 6. Slicing
+print("\\nSlicing examples:")
+print("First three elements:", numbers[:3])
+print("Last three elements:", numbers[-3:])
+print("Every second element:", numbers[::2])`;
+---
+
+<MainLayout title="Arrays">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold text-gray-900 mb-6">Arrays</h1>
+    
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Introduction to Arrays</h2>
+      <p class="text-gray-600 mb-6">
+        An array is a fundamental data structure that stores elements in contiguous memory locations.
+        Each element can be accessed directly using its index.
+      </p>
+      
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Array Operations Visualization</h3>
+        <ArrayVisualizer client:load />
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Try Array Operations</h3>
+        <p class="text-gray-600 mb-4">
+          Experiment with different array operations in Python. Modify the code below and see the results instantly!
+        </p>
+        <CodePlayground client:load initialCode={ARRAY_CODE} showExamples={false} />
+      </div>
+
+      <div class="space-y-6">
+        <div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-3">Time Complexity</h3>
+          <ul class="list-disc list-inside text-gray-600 space-y-2">
+            <li>Access: O(1)</li>
+            <li>Search: O(n)</li>
+            <li>Insertion: O(n)</li>
+            <li>Deletion: O(n)</li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-3">Common Techniques</h3>
+          <ul class="list-disc list-inside text-gray-600 space-y-2">
+            <li>Two Pointers</li>
+            <li>Sliding Window</li>
+            <li>Prefix Sum</li>
+            <li>Binary Search</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>

@@ -1,0 +1,126 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { courseContent } from '../../config/courseContent';
+import EnrollmentModal from '../../components/EnrollmentModal.astro';
+
+const courses = Object.values(courseContent);
+
+// Function to truncate text
+const truncate = (str: string, length: number) => {
+  if (str.length <= length) return str;
+  return str.slice(0, length) + '...';
+};
+---
+
+<MainLayout title="StackArc - Available Courses">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <!-- Hero Section -->
+    <div class="relative overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 to-blue-700 opacity-90"></div>
+      <div class="relative pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto text-center">
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6">
+            Python Learning Paths
+          </h1>
+          <p class="text-xl text-indigo-100 mb-8 max-w-3xl mx-auto">
+            Start your Python journey with our comprehensive, hands-on courses
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Course Grid -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {courses.map(course => {
+          const conceptCount = course.concepts.length;
+          const totalDuration = course.concepts.reduce((acc, concept) => {
+            const minutes = parseInt(concept.duration);
+            return acc + minutes;
+          }, 0);
+          
+          return (
+            <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700" style="height: 280px;">
+              <div class="p-6 pb-24">
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-1">
+                  {course.title}
+                </h2>
+                <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
+                  <span>{Math.ceil(totalDuration/60)} weeks</span>
+                  <span>•</span>
+                  <span>Beginner</span>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
+                  {truncate(course.description, 100)}
+                </p>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-1">
+                    <span class="text-yellow-400">★</span>
+                    <span class="font-medium">{course.rating || '4.8'}</span>
+                  </div>
+                  <div class="text-sm text-gray-600 dark:text-gray-400">
+                    {course.enrolled || '1,234'} enrolled
+                  </div>
+                </div>
+              </div>
+
+              <div class="absolute bottom-0 left-0 right-0 p-6 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+                <button
+                  class="enroll-button w-full text-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                  data-course-id={course.id}
+                  data-course-title={course.title}
+                  data-concept-count={conceptCount}
+                  data-duration={totalDuration}
+                >
+                  Enroll Now
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </div>
+
+  <!-- Enrollment Modal -->
+  {courses.map(course => (
+    <EnrollmentModal
+      courseId={course.id}
+      courseTitle={course.title}
+      conceptCount={course.concepts.length}
+      duration={course.concepts.reduce((acc, concept) => acc + parseInt(concept.duration), 0)}
+    />
+  ))}
+</MainLayout>
+
+<script>
+  import { EnrollmentStore } from '../../stores/enrollmentStore';
+
+  // Handle enroll button clicks
+  document.querySelectorAll('.enroll-button').forEach(button => {
+    button.addEventListener('click', () => {
+      const courseId = button.getAttribute('data-course-id');
+      if (EnrollmentStore.isEnrolled(courseId)) {
+        window.location.href = `/courses/${courseId}`;
+      } else {
+        window.showEnrollmentModal();
+      }
+    });
+  });
+</script>
+
+<style>
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

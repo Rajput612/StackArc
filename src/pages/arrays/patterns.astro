@@ -1,0 +1,127 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import CodeBlock from '../../components/CodeBlock';
+import ProblemCard from '../../components/ProblemCard';
+
+const kadaneCode = `def kadanes_algorithm(arr):
+    max_ending_here = max_so_far = arr[0]
+    
+    for num in arr[1:]:
+        max_ending_here = max(num, max_ending_here + num)
+        max_so_far = max(max_so_far, max_ending_here)
+    
+    return max_so_far`;
+
+const dutchFlagCode = `def dutch_national_flag(arr):
+    low = mid = 0
+    high = len(arr) - 1
+    
+    while mid <= high:
+        if arr[mid] == 0:
+            arr[low], arr[mid] = arr[mid], arr[low]
+            low += 1
+            mid += 1
+        elif arr[mid] == 1:
+            mid += 1
+        else:  # arr[mid] == 2
+            arr[mid], arr[high] = arr[high], arr[mid]
+            high -= 1
+    
+    return arr`;
+---
+
+<MainLayout title="Array Patterns">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold text-gray-900 mb-6">Common Array Patterns</h1>
+    
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Overview</h2>
+      <p class="text-gray-600 mb-6">
+        Certain patterns appear frequently in array problems. Understanding these patterns
+        helps in solving a wide variety of algorithmic challenges efficiently.
+      </p>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">1. Kadane's Algorithm</h3>
+        <p class="text-gray-600 mb-4">
+          Used for finding the maximum subarray sum in a one-dimensional array.
+        </p>
+        <CodeBlock code={kadaneCode} />
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">2. Dutch National Flag</h3>
+        <p class="text-gray-600 mb-4">
+          Used for sorting an array containing three distinct values (usually 0, 1, and 2).
+        </p>
+        <CodeBlock code={dutchFlagCode} />
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Common Patterns</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li>Prefix/Suffix arrays</li>
+            <li>Cyclic sort</li>
+            <li>In-place reversal</li>
+            <li>Merge intervals</li>
+          </ul>
+        </div>
+        
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">When to Use</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li>Subarray problems</li>
+            <li>Sorting with constraints</li>
+            <li>Space optimization</li>
+            <li>Range queries</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-6">Practice Problems</h2>
+      
+      <ProblemCard
+        client:load
+        title="Maximum Product Subarray"
+        difficulty="Medium"
+        description="Given an integer array nums, find a contiguous non-empty subarray within the array that has the largest product, and return the product."
+        constraints={[
+          "1 ≤ nums.length ≤ 2 * 104",
+          "-10 ≤ nums[i] ≤ 10",
+          "The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer."
+        ]}
+        examples={[
+          {
+            input: "nums = [2,3,-2,4]",
+            output: "6"
+          },
+          {
+            input: "nums = [-2,0,-1]",
+            output: "0"
+          }
+        ]}
+      />
+
+      <ProblemCard
+        client:load
+        title="Sort Colors"
+        difficulty="Medium"
+        description="Given an array nums with n objects colored red, white, or blue, sort them in-place so that objects of the same color are adjacent."
+        constraints={[
+          "n == nums.length",
+          "1 ≤ n ≤ 300",
+          "nums[i] is either 0, 1, or 2"
+        ]}
+        examples={[
+          {
+            input: "nums = [2,0,2,1,1,0]",
+            output: "[0,0,1,1,2,2]"
+          }
+        ]}
+      />
+    </div>
+  </div>
+</MainLayout>

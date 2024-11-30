@@ -1,0 +1,26 @@
+---
+import MainLayout from './MainLayout.astro';
+import CourseNavigation from '../components/CourseNavigation.astro';
+
+interface Props {
+  courseId: string;
+  concepts: any[];
+  currentConceptId: string;
+  title: string;
+}
+
+const { courseId, concepts, currentConceptId, title } = Astro.props;
+---
+
+<MainLayout title={title}>
+  <div class="flex min-h-screen">
+    <CourseNavigation
+      courseId={courseId}
+      concepts={concepts}
+      currentConceptId={currentConceptId}
+    />
+    <main class="flex-1 overflow-y-auto">
+      <slot />
+    </main>
+  </div>
+</MainLayout>

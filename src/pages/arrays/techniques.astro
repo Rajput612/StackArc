@@ -1,0 +1,431 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import CodePlayground from '../../components/CodePlayground';
+
+// Code examples for different user levels
+const CHILDREN_PREFIX_SUM = `# Let's learn about adding numbers quickly! 
+
+numbers = [2, 4, 1, 5, 3]  # Our list of numbers
+print("Our numbers:", numbers)
+
+# Let's add them up one by one
+running_total = 0
+print("\\nLet's add them up:")
+for num in numbers:
+    running_total += num
+    print(f"Adding {num}: Total is now {running_total}")
+
+print("\\nThe final sum is:", running_total)
+print("Great job! You've learned about adding numbers! ")`;
+
+const INTERMEDIATE_PREFIX_SUM = `# Prefix Sum Example
+def build_prefix_sum(arr):
+    """Build prefix sum array for efficient range sum queries."""
+    prefix = [0] * (len(arr) + 1)
+    print("Building prefix sum array:")
+    for i in range(len(arr)):
+        prefix[i + 1] = prefix[i] + arr[i]
+        print(f"Step {i + 1}: Adding {arr[i]}, Prefix sum: {prefix[i + 1]}")
+    return prefix
+
+# Example usage
+numbers = [4, 2, 7, 1, 5]
+print(f"Original array: {numbers}\\n")
+
+prefix = build_prefix_sum(numbers)
+print(f"\\nComplete prefix sum array: {prefix}")
+
+# Calculate some range sums
+start, end = 1, 3
+sum_range = prefix[end + 1] - prefix[start]
+print(f"\\nSum from index {start} to {end}: {sum_range}")`;
+
+const PROFESSIONAL_PREFIX_SUM = `# Advanced Prefix Sum Applications
+
+class PrefixSumProcessor:
+    def __init__(self, arr):
+        self.arr = arr
+        self.prefix = self._build_prefix_sum()
+        
+    def _build_prefix_sum(self):
+        n = len(self.arr)
+        prefix = [0] * (n + 1)
+        for i in range(n):
+            prefix[i + 1] = prefix[i] + self.arr[i]
+        return prefix
+    
+    def range_sum(self, left: int, right: int) -> int:
+        """O(1) range sum query."""
+        return self.prefix[right + 1] - self.prefix[left]
+    
+    def find_subarray_with_sum(self, target: int) -> tuple:
+        """Find a subarray that sums to target using prefix sum."""
+        sum_map = {0: -1}  # prefix_sum: index
+        for i in range(len(self.arr)):
+            curr_sum = self.prefix[i + 1]
+            if curr_sum - target in sum_map:
+                start = sum_map[curr_sum - target] + 1
+                return (start, i)
+            sum_map[curr_sum] = i
+        return None
+
+# Example usage
+arr = [4, 2, -1, 3, 7, -2, 1]
+processor = PrefixSumProcessor(arr)
+
+print(f"Array: {arr}")
+print(f"Prefix sums: {processor.prefix[1:]}\\n")
+
+# Range sum queries
+print("Range sum queries:")
+queries = [(0, 2), (1, 4), (3, 6)]
+for left, right in queries:
+    sum_val = processor.range_sum(left, right)
+    print(f"Sum[{left}..{right}] = {sum_val}")
+
+# Find subarray with sum
+target = 8
+result = processor.find_subarray_with_sum(target)
+if result:
+    start, end = result
+    print(f"\\nSubarray with sum {target}: {arr[start:end+1]}")
+    print(f"Indices: [{start}..{end}]")`;
+
+const TWO_POINTERS_CODE = `# Two Pointers Technique Examples
+
+def two_sum_sorted(arr, target):
+    """Find two numbers in sorted array that sum to target."""
+    left, right = 0, len(arr) - 1
+    
+    print(f"Array: {arr}")
+    print(f"Target sum: {target}\\n")
+    print("Starting two pointers search:")
+    
+    while left < right:
+        current_sum = arr[left] + arr[right]
+        print(f"Left pointer: {left} (value: {arr[left]})")
+        print(f"Right pointer: {right} (value: {arr[right]})")
+        print(f"Current sum: {current_sum}\\n")
+        
+        if current_sum == target:
+            return [left, right]
+        elif current_sum < target:
+            left += 1
+            print("Sum too small, moving left pointer right\\n")
+        else:
+            right -= 1
+            print("Sum too large, moving right pointer left\\n")
+    
+    return []
+
+def remove_duplicates(arr):
+    """Remove duplicates from sorted array in-place."""
+    if not arr:
+        return 0
+        
+    write_pos = 1
+    print(f"Original array: {arr}\\n")
+    
+    for read_pos in range(1, len(arr)):
+        if arr[read_pos] != arr[read_pos - 1]:
+            print(f"Found new element {arr[read_pos]} at position {read_pos}")
+            print(f"Writing to position {write_pos}")
+            arr[write_pos] = arr[read_pos]
+            write_pos += 1
+            print(f"Current array state: {arr}\\n")
+    
+    return write_pos
+
+# Test two sum
+print("Example 1: Two Sum in Sorted Array")
+print("-" * 40)
+sorted_arr = [2, 3, 4, 7, 11, 15]
+target = 9
+result = two_sum_sorted(sorted_arr, target)
+print(f"Found indices: {result}\\n\\n")
+
+# Test remove duplicates
+print("Example 2: Remove Duplicates")
+print("-" * 40)
+nums = [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]
+length = remove_duplicates(nums)
+print(f"Array after removing duplicates (first {length} elements): {nums[:length]}")`;
+
+const KADANES_CODE = `# Kadane's Algorithm and Dynamic Programming Examples
+
+def kadanes_algorithm(arr):
+    """Find maximum subarray sum using Kadane's algorithm."""
+    max_ending_here = max_so_far = arr[0]
+    start = end = temp_start = 0
+    
+    print(f"Array: {arr}\\n")
+    print("Running Kadane's algorithm:")
+    
+    for i in range(1, len(arr)):
+        # Decide whether to start new subarray or extend existing one
+        if arr[i] > max_ending_here + arr[i]:
+            max_ending_here = arr[i]
+            temp_start = i
+        else:
+            max_ending_here = max_ending_here + arr[i]
+            
+        print(f"Position {i}, Value: {arr[i]}")
+        print(f"Max ending here: {max_ending_here}")
+        
+        # Update maximum sum found so far
+        if max_ending_here > max_so_far:
+            max_so_far = max_ending_here
+            start = temp_start
+            end = i
+            print(f"New maximum sum: {max_so_far}")
+            print(f"Subarray: {arr[start:end+1]}\\n")
+        else:
+            print("No new maximum found\\n")
+    
+    return max_so_far, arr[start:end+1]
+
+def longest_increasing_subsequence(arr):
+    """Find length of longest increasing subsequence using dynamic programming."""
+    if not arr:
+        return 0
+        
+    # dp[i] represents length of LIS ending at index i
+    dp = [1] * len(arr)
+    prev = [-1] * len(arr)  # Store previous element in LIS
+    
+    print(f"Array: {arr}\\n")
+    print("Building longest increasing subsequence:")
+    
+    for i in range(1, len(arr)):
+        print(f"\\nChecking position {i} (value: {arr[i]}):")
+        for j in range(i):
+            if arr[i] > arr[j] and dp[j] + 1 > dp[i]:
+                dp[i] = dp[j] + 1
+                prev[i] = j
+                print(f"  Found longer subsequence: length {dp[i]}")
+                print(f"  Previous element: {arr[j]} at position {j}")
+    
+    # Reconstruct the subsequence
+    max_length = max(dp)
+    max_index = dp.index(max_length)
+    
+    subsequence = []
+    while max_index != -1:
+        subsequence.append(arr[max_index])
+        max_index = prev[max_index]
+    subsequence.reverse()
+    
+    print(f"\\nFinal result:")
+    print(f"Length of longest increasing subsequence: {max_length}")
+    print(f"One possible subsequence: {subsequence}")
+    return max_length, subsequence
+
+# Test Kadane's Algorithm
+print("Example 1: Maximum Subarray Sum (Kadane's Algorithm)")
+print("-" * 50)
+arr1 = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+max_sum, max_subarray = kadanes_algorithm(arr1)
+print(f"Maximum sum: {max_sum}")
+print(f"Maximum subarray: {max_subarray}\\n\\n")
+
+# Test Longest Increasing Subsequence
+print("Example 2: Longest Increasing Subsequence")
+print("-" * 50)
+arr2 = [10, 9, 2, 5, 3, 7, 101, 18]
+length, subsequence = longest_increasing_subsequence(arr2)`;
+
+---
+
+<MainLayout title="Array Techniques">
+  <div class="max-w-6xl mx-auto px-4 py-12">
+    <div class="text-center mb-16">
+      <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-teal-600 mb-4">
+        Array Techniques
+      </h1>
+      <p class="text-xl text-gray-600">
+        Master essential array manipulation techniques through interactive examples
+      </p>
+    </div>
+
+    <div class="space-y-16">
+      {/* Prefix Sum Section */}
+      <section class="space-y-8">
+        <div class="flex items-center space-x-4">
+          <div class="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10h-6m-2-5h8m-8 0a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <h2 class="text-3xl font-bold text-gray-900">Prefix Sum</h2>
+        </div>
+
+        <div class="grid grid-cols-1 gap-8">
+          {/* Children's Version */}
+          <div class="bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-6">
+            <h3 class="text-xl font-bold text-purple-900 mb-4"> Fun with Numbers!</h3>
+            <p class="text-purple-800 mb-6">Let's learn how to add numbers quickly and have fun doing it! Perfect for young learners.</p>
+            <CodePlayground
+              initialCode={CHILDREN_PREFIX_SUM}
+              difficulty="children"
+              title=" Fun Number Adding!"
+              client:load
+            />
+          </div>
+
+          {/* Intermediate Version */}
+          <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6">
+            <h3 class="text-xl font-bold text-blue-900 mb-4"> Prefix Sum Technique</h3>
+            <p class="text-blue-800 mb-6">Learn how to efficiently calculate range sums using the prefix sum technique.</p>
+            <CodePlayground
+              initialCode={INTERMEDIATE_PREFIX_SUM}
+              difficulty="intermediate"
+              title=" Prefix Sum Implementation"
+              client:load
+            />
+          </div>
+
+          {/* Professional Version */}
+          <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6">
+            <h3 class="text-xl font-bold text-gray-900 mb-4"> Advanced Prefix Sum Applications</h3>
+            <p class="text-gray-800 mb-6">Explore professional implementations and advanced applications of prefix sums.</p>
+            <CodePlayground
+              initialCode={PROFESSIONAL_PREFIX_SUM}
+              difficulty="professional"
+              title=" Advanced Prefix Sum"
+              client:load
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Two Pointers Section */}
+      <section class="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div class="p-8">
+          <div class="flex items-center space-x-4 mb-6">
+            <div class="h-12 w-12 rounded-xl bg-teal-100 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900">Two Pointers Technique</h2>
+              <p class="text-gray-600">Elegant solutions for array manipulation</p>
+            </div>
+          </div>
+          
+          <div class="prose prose-teal max-w-none mb-8">
+            <p class="text-gray-600">
+              The two pointers technique offers elegant solutions for array problems involving searching,
+              removing duplicates, or finding pairs that satisfy certain conditions.
+            </p>
+          </div>
+          
+          <div class="rounded-xl overflow-hidden">
+            <CodePlayground client:load initialCode={TWO_POINTERS_CODE} showExamples={false} />
+          </div>
+        </div>
+      </section>
+
+      {/* Dynamic Programming Section */}
+      <section class="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div class="p-8">
+          <div class="flex items-center space-x-4 mb-6">
+            <div class="h-12 w-12 rounded-xl bg-cyan-100 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900">Dynamic Programming Techniques</h2>
+              <p class="text-gray-600">Optimal solutions through subproblem decomposition</p>
+            </div>
+          </div>
+          
+          <div class="prose prose-cyan max-w-none mb-8">
+            <p class="text-gray-600">
+              Dynamic programming techniques like Kadane's algorithm and Longest Increasing Subsequence
+              solve complex array problems by breaking them down into simpler subproblems.
+            </p>
+          </div>
+          
+          <div class="rounded-xl overflow-hidden">
+            <CodePlayground client:load initialCode={KADANES_CODE} showExamples={false} />
+          </div>
+        </div>
+      </section>
+
+      {/* Quick Reference Section */}
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-gradient-to-br from-blue-50 to-teal-50 rounded-2xl p-8">
+          <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            Time Complexities
+          </h3>
+          <ul class="space-y-3 text-gray-600">
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Prefix Sum Build: O(n)
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Range Sum Query: O(1)
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Two Pointers: O(n)
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Kadane's Algorithm: O(n)
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-2xl p-8">
+          <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-teal-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            When to Use
+          </h3>
+          <ul class="space-y-3 text-gray-600">
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-teal-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Prefix Sum: Range sum queries
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-teal-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Two Pointers: Searching pairs, removing duplicates
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-teal-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Kadane: Maximum subarray problems
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-teal-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              LIS: Subsequence problems
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </div>
+</MainLayout>

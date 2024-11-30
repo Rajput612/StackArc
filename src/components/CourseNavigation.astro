@@ -1,0 +1,46 @@
+---
+interface Concept {
+  id: string;
+  title: string;
+  description: string;
+}
+
+interface Props {
+  courseId: string;
+  concepts: Concept[];
+  currentConceptId: string;
+}
+
+const { courseId, concepts, currentConceptId } = Astro.props;
+---
+
+<div class="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
+  <div class="p-4">
+    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Course Content</h2>
+    <nav class="space-y-1">
+      {concepts.map((concept, index) => {
+        const isActive = concept.id === currentConceptId;
+        return (
+          <a
+            href={`/courses/${courseId}/${concept.id}`}
+            class={`block px-4 py-2 rounded-lg text-sm ${
+              isActive
+                ? 'bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
+            }`}
+          >
+            <div class="flex items-center">
+              <span class="w-6 text-sm">{index + 1}.</span>
+              <span class="flex-1">{concept.title}</span>
+            </div>
+            <p class={`ml-6 text-xs mt-1 ${
+              isActive ? 'text-indigo-500 dark:text-indigo-400' : 'text-gray-500 dark:text-gray-500'
+            }`}>
+              {concept.description}
+            </p>
+          </a>
+        );
+      })}
+    </nav>
+  </div>
+</div>

@@ -1,0 +1,200 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import CodePlayground from '../../components/CodePlayground';
+
+const STRING_BASICS_CODE = `# String Operations and Methods
+
+# 1. String Creation and Basic Operations
+text = "Hello, World!"
+print(f"Original string: {text}")
+print(f"Length: {len(text)}")
+print(f"Uppercase: {text.upper()}")
+print(f"Lowercase: {text.lower()}")
+print(f"Title case: {text.title()}")
+
+# 2. String Slicing
+print("\\nString Slicing:")
+print(f"First 5 characters: {text[:5]}")
+print(f"Last 6 characters: {text[-6:]}")
+print(f"Characters 7-12: {text[7:12]}")
+print(f"Reverse string: {text[::-1]}")
+
+# 3. String Methods
+print("\\nString Methods:")
+words = "python,java,javascript,c++"
+print(f"Split string: {words.split(',')}")
+print(f"Join words: {'|'.join(words.split(','))}")
+print(f"Replace: {text.replace('World', 'Python')}")
+print(f"Find 'World': {text.find('World')}")
+print(f"Count 'l': {text.count('l')}")
+
+# 4. String Formatting
+name = "Alice"
+age = 25
+print("\\nString Formatting:")
+print("Using .format(): {} is {} years old".format(name, age))
+print(f"Using f-string: {name} is {age} years old")
+print("Using % operator: %s is %d years old" % (name, age))`;
+
+const STRING_ALGORITHMS_CODE = `# Common String Algorithms
+
+def is_palindrome(s: str) -> bool:
+    """Check if string is palindrome (same forwards and backwards)."""
+    # Remove non-alphanumeric chars and convert to lowercase
+    s = ''.join(c.lower() for c in s if c.isalnum())
+    return s == s[::-1]
+
+def count_words(s: str) -> dict:
+    """Count frequency of each word in string."""
+    words = s.lower().split()
+    return {word: words.count(word) for word in set(words)}
+
+def longest_common_prefix(strs: list) -> str:
+    """Find longest common prefix among list of strings."""
+    if not strs:
+        return ""
+    
+    shortest = min(strs, key=len)
+    for i, char in enumerate(shortest):
+        for other in strs:
+            if other[i] != char:
+                return shortest[:i]
+    return shortest
+
+# Test palindrome function
+test_strings = [
+    "A man, a plan, a canal: Panama",
+    "race a car",
+    "Was it a car or a cat I saw?"
+]
+
+print("Testing palindrome function:")
+for s in test_strings:
+    print(f"'{s}' -> {is_palindrome(s)}")
+
+# Test word frequency counter
+text = "the quick brown fox jumps over the lazy dog the fox"
+print("\\nWord frequency:")
+for word, count in count_words(text).items():
+    print(f"'{word}': {count}")
+
+# Test longest common prefix
+string_lists = [
+    ["flower", "flow", "flight"],
+    ["dog", "racecar", "car"],
+    ["interspecies", "interstellar", "interstate"]
+]
+
+print("\\nLongest common prefix:")
+for strings in string_lists:
+    prefix = longest_common_prefix(strings)
+    print(f"{strings} -> '{prefix}'")`;
+
+const REGEX_CODE = `# Regular Expressions in Python
+import re
+
+# Test string
+text = '''
+Contact information:
+Email: john.doe@example.com
+Phone: (123) 456-7890
+Website: https://www.example.com
+Twitter: @johndoe
+'''
+
+# 1. Email pattern
+email_pattern = r'\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b'
+emails = re.findall(email_pattern, text)
+print("Emails found:", emails)
+
+# 2. Phone number pattern
+phone_pattern = r'\\(\\d{3}\\)\\s\\d{3}-\\d{4}'
+phones = re.findall(phone_pattern, text)
+print("\\nPhone numbers found:", phones)
+
+# 3. URL pattern
+url_pattern = r'https?://(?:www\\.)?[\\w-]+(?:\\.[\\w-]+)+[\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-]'
+urls = re.findall(url_pattern, text)
+print("\\nURLs found:", urls)
+
+# 4. Twitter handle pattern
+twitter_pattern = r'@[\\w\\d]+'
+handles = re.findall(twitter_pattern, text)
+print("\\nTwitter handles found:", handles)
+
+# String replacement using regex
+# Replace email domain
+new_text = re.sub(
+    r'@example\\.com',
+    '@newemail.com',
+    text
+)
+print("\\nAfter replacing email domain:")
+print(new_text)
+
+# Advanced regex example: Parsing log entries
+log_text = '''
+2023-10-15 10:30:15 INFO User login successful
+2023-10-15 10:30:18 ERROR Database connection failed
+2023-10-15 10:31:22 WARNING High memory usage detected
+'''
+
+log_pattern = r'(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}) (INFO|ERROR|WARNING) (.+)'
+print("\\nParsing log entries:")
+for match in re.finditer(log_pattern, log_text):
+    timestamp, level, message = match.groups()
+    print(f"Time: {timestamp}")
+    print(f"Level: {level}")
+    print(f"Message: {message}\\n")`;
+---
+
+<MainLayout title="String Operations">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold text-gray-900 mb-6">String Operations</h1>
+    
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Basic String Operations</h2>
+      <p class="text-gray-600 mb-6">
+        Strings are one of the most commonly used data types in programming. Python provides a rich set of operations
+        and methods for string manipulation, including slicing, concatenation, and formatting.
+      </p>
+      
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Try String Operations</h3>
+        <CodePlayground client:load initialCode={STRING_BASICS_CODE} showExamples={false} />
+      </div>
+
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4 mt-12">String Algorithms</h2>
+      <p class="text-gray-600 mb-6">
+        Many programming problems involve string manipulation. Here are some common string algorithms including
+        palindrome checking, word frequency counting, and finding the longest common prefix.
+      </p>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Try String Algorithms</h3>
+        <CodePlayground client:load initialCode={STRING_ALGORITHMS_CODE} showExamples={false} />
+      </div>
+
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4 mt-12">Regular Expressions</h2>
+      <p class="text-gray-600 mb-6">
+        Regular expressions (regex) are powerful tools for pattern matching and text processing. Python's re module
+        provides comprehensive support for regular expressions.
+      </p>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Try Regular Expressions</h3>
+        <CodePlayground client:load initialCode={REGEX_CODE} showExamples={false} />
+      </div>
+
+      <div class="bg-yellow-50 p-6 rounded-lg mt-8">
+        <h3 class="text-lg font-semibold text-yellow-800 mb-2">Key Points</h3>
+        <ul class="list-disc list-inside text-gray-700 space-y-2">
+          <li>Strings in Python are immutable - operations create new strings</li>
+          <li>String slicing provides powerful ways to extract substrings</li>
+          <li>Regular expressions are essential for complex pattern matching</li>
+          <li>Python's f-strings offer convenient string formatting</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</MainLayout>

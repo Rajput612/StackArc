@@ -1,0 +1,208 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import CodePlayground from '../../components/CodePlayground';
+
+const STACK_CODE = `# Stack Implementation and Operations
+class Stack:
+    def __init__(self):
+        self.items = []
+    
+    def push(self, item):
+        self.items.append(item)
+        print(f"Pushed {item}. Stack: {self.items}")
+    
+    def pop(self):
+        if not self.is_empty():
+            item = self.items.pop()
+            print(f"Popped {item}. Stack: {self.items}")
+            return item
+        print("Stack is empty!")
+    
+    def peek(self):
+        if not self.is_empty():
+            print(f"Top element: {self.items[-1]}")
+            return self.items[-1]
+        print("Stack is empty!")
+    
+    def is_empty(self):
+        return len(self.items) == 0
+    
+    def size(self):
+        return len(self.items)
+
+# Create and use a stack
+stack = Stack()
+
+print("Testing stack operations:\\n")
+
+# Push elements
+print("Pushing elements:")
+for i in range(1, 6):
+    stack.push(i)
+
+print("\\nPeeking at top element:")
+stack.peek()
+
+print("\\nPopping elements:")
+for _ in range(3):
+    stack.pop()
+
+print("\\nStack size:", stack.size())`;
+
+const QUEUE_CODE = `# Queue Implementation and Operations
+from collections import deque
+
+class Queue:
+    def __init__(self):
+        self.items = deque()
+    
+    def enqueue(self, item):
+        self.items.append(item)
+        print(f"Enqueued {item}. Queue: {list(self.items)}")
+    
+    def dequeue(self):
+        if not self.is_empty():
+            item = self.items.popleft()
+            print(f"Dequeued {item}. Queue: {list(self.items)}")
+            return item
+        print("Queue is empty!")
+    
+    def front(self):
+        if not self.is_empty():
+            print(f"Front element: {self.items[0]}")
+            return self.items[0]
+        print("Queue is empty!")
+    
+    def is_empty(self):
+        return len(self.items) == 0
+    
+    def size(self):
+        return len(self.items)
+
+# Create and use a queue
+queue = Queue()
+
+print("Testing queue operations:\\n")
+
+# Enqueue elements
+print("Enqueuing elements:")
+for i in range(1, 6):
+    queue.enqueue(i)
+
+print("\\nChecking front element:")
+queue.front()
+
+print("\\nDequeuing elements:")
+for _ in range(3):
+    queue.dequeue()
+
+print("\\nQueue size:", queue.size())`;
+
+const PRIORITY_QUEUE_CODE = `# Priority Queue Implementation
+import heapq
+
+class PriorityQueue:
+    def __init__(self):
+        self.items = []
+        self.index = 0
+    
+    def push(self, item, priority):
+        # Lower priority number = higher priority
+        heapq.heappush(self.items, (priority, self.index, item))
+        self.index += 1
+        print(f"Added '{item}' with priority {priority}")
+        self.display_queue()
+    
+    def pop(self):
+        if not self.is_empty():
+            priority, _, item = heapq.heappop(self.items)
+            print(f"Removed '{item}' (priority: {priority})")
+            self.display_queue()
+            return item
+        print("Priority Queue is empty!")
+    
+    def is_empty(self):
+        return len(self.items) == 0
+    
+    def display_queue(self):
+        if self.is_empty():
+            print("Queue is empty")
+        else:
+            print("Current queue (priority, item):")
+            for p, _, i in sorted(self.items):
+                print(f"  Priority {p}: {i}")
+        print()
+
+# Create and use a priority queue
+pq = PriorityQueue()
+
+print("Testing priority queue operations:\\n")
+
+# Add tasks with priorities
+tasks = [
+    ("Read emails", 3),
+    ("Fix critical bug", 1),
+    ("Write documentation", 2),
+    ("Team meeting", 1),
+    ("Code review", 2)
+]
+
+print("Adding tasks with priorities:")
+for task, priority in tasks:
+    pq.push(task, priority)
+
+print("\\nProcessing tasks in priority order:")
+while not pq.is_empty():
+    pq.pop()`;
+---
+
+<MainLayout title="Stacks & Queues">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold text-gray-900 mb-6">Stacks & Queues</h1>
+    
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Stack Implementation</h2>
+      <p class="text-gray-600 mb-6">
+        A stack is a Last-In-First-Out (LIFO) data structure. Elements are added and removed from the same end,
+        like a stack of plates. Common operations include push (add), pop (remove), and peek (view top).
+      </p>
+      
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Try Stack Operations</h3>
+        <CodePlayground client:load initialCode={STACK_CODE} showExamples={false} />
+      </div>
+
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4 mt-12">Queue Implementation</h2>
+      <p class="text-gray-600 mb-6">
+        A queue is a First-In-First-Out (FIFO) data structure. Elements are added at one end and removed from the other,
+        like a line of people waiting. Common operations include enqueue (add), dequeue (remove), and front (view first).
+      </p>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Try Queue Operations</h3>
+        <CodePlayground client:load initialCode={QUEUE_CODE} showExamples={false} />
+      </div>
+
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4 mt-12">Priority Queue</h2>
+      <p class="text-gray-600 mb-6">
+        A priority queue is a special type of queue where elements have associated priorities. Elements with higher
+        priority are served before elements with lower priority, regardless of their order in the queue.
+      </p>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Try Priority Queue Operations</h3>
+        <CodePlayground client:load initialCode={PRIORITY_QUEUE_CODE} showExamples={false} />
+      </div>
+
+      <div class="bg-blue-50 p-6 rounded-lg mt-8">
+        <h3 class="text-lg font-semibold text-blue-800 mb-2">Key Points</h3>
+        <ul class="list-disc list-inside text-gray-700 space-y-2">
+          <li>Stacks follow LIFO (Last-In-First-Out) principle</li>
+          <li>Queues follow FIFO (First-In-First-Out) principle</li>
+          <li>Priority Queues serve elements based on priority</li>
+          <li>All operations typically have O(1) time complexity, except for Priority Queue operations which are O(log n)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</MainLayout>

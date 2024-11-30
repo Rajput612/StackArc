@@ -1,0 +1,95 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import CodeBlock from '../../components/CodeBlock';
+
+const memoryManagementCode = `# Memory management example in C++
+struct Node {
+    int data;
+    Node* next;
+    
+    Node(int val) : data(val), next(nullptr) {}
+};
+
+class LinkedList {
+private:
+    Node* head;
+    
+public:
+    LinkedList() : head(nullptr) {}
+    
+    ~LinkedList() {
+        // Clean up memory
+        Node* current = head;
+        while (current) {
+            Node* next = current->next;
+            delete current;
+            current = next;
+        }
+    }
+    
+    void insert(int val) {
+        Node* newNode = new Node(val);  // Allocate memory
+        newNode->next = head;
+        head = newNode;
+    }
+    
+    void remove() {
+        if (!head) return;
+        
+        Node* temp = head;
+        head = head->next;
+        delete temp;  // Free memory
+    }
+};`;
+---
+
+<MainLayout title="Linked List Memory Management">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold text-gray-900 mb-6">Linked List Memory Management</h1>
+    
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Memory Layout</h2>
+      <p class="text-gray-600 mb-6">
+        Unlike arrays, linked lists allocate memory dynamically for each node.
+        This provides flexibility but requires careful memory management in languages without garbage collection.
+      </p>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Memory Management Example</h3>
+        <CodeBlock code={memoryManagementCode} />
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Advantages</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li>Dynamic size allocation</li>
+            <li>No contiguous memory needed</li>
+            <li>Efficient insertions/deletions</li>
+            <li>Memory efficient for sparse data</li>
+          </ul>
+        </div>
+        
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Disadvantages</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li>Extra memory for pointers</li>
+            <li>No cache locality</li>
+            <li>Memory fragmentation</li>
+            <li>Manual memory management needed</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-yellow-50 p-6 rounded-lg">
+        <h3 class="text-lg font-semibold text-yellow-800 mb-2">Memory Management Tips</h3>
+        <ul class="space-y-2 text-gray-700">
+          <li>Always free memory in languages without GC</li>
+          <li>Be careful with circular references</li>
+          <li>Implement proper destructors</li>
+          <li>Consider using smart pointers in C++</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</MainLayout>
