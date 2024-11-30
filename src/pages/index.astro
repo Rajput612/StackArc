@@ -44,6 +44,17 @@ const categories = [
 // Trending Courses
 const trendingCourses = [
   {
+    title: "Python Fundamentals",
+    instructor: "Sunil Kumar",
+    rating: 4.8,
+    students: 15234,
+    price: 89.99,
+     image: '/images/python-basics.jpg',
+    icon: '🐍',
+    badge: "Bestseller",
+    badgeColor: "bg-yellow-100 text-yellow-800"
+  },
+  {
     title: "Complete Web Development Bootcamp",
     instructor: "Sarah Johnson",
     rating: 4.8,
@@ -64,17 +75,6 @@ const trendingCourses = [
     icon: "🤖",
     badge: "Hot & New",
     badgeColor: "bg-red-100 text-red-800"
-  },
-  {
-    title: "Financial Analysis & Modeling",
-    instructor: "Emma Williams",
-    rating: 4.7,
-    students: 8923,
-    price: 79.99,
-    image: "/images/finance.jpg",
-    icon: "📈",
-    badge: "Trending",
-    badgeColor: "bg-green-100 text-green-800"
   }
 ];
 
@@ -205,7 +205,7 @@ const learningPaths = [
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {trendingCourses.map(course => (
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-lg transition-all overflow-hidden border border-gray-100 dark:border-gray-700">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-lg transition-all overflow-hidden border border-gray-100 dark:border-gray-700 h-full flex flex-col">
               <div class="relative aspect-video bg-gray-100 dark:bg-gray-700">
                 <div class="absolute inset-0 flex items-center justify-center text-6xl">
                   {course.icon}
@@ -216,7 +216,7 @@ const learningPaths = [
                   </span>
                 )}
               </div>
-              <div class="p-6">
+              <div class="p-6 flex flex-col flex-grow">
                 <h3 class="font-bold text-xl text-gray-900 dark:text-white mb-2">
                   {course.title}
                 </h3>
@@ -233,7 +233,7 @@ const learningPaths = [
                     {course.students.toLocaleString()} students
                   </span>
                 </div>
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between mt-auto pt-4">
                   <span class="text-2xl font-bold text-gray-900 dark:text-white">
                     ${course.price}
                   </span>

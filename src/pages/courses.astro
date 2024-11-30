@@ -154,8 +154,8 @@ const itemsPerPage = 8;
         <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Available Courses</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {courses.filter(course => course.status === 'Available').map(course => (
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300">
-              <div class="p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 h-full">
+              <div class="p-6 flex flex-col h-full">
                 <div class="flex items-center mb-4">
                   <span class="text-4xl mr-3 filter drop-shadow-sm" role="img" aria-label={course.title}>
                     {course.icon}
@@ -172,7 +172,7 @@ const itemsPerPage = 8;
                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
                   {course.description}
                 </p>
-                <div class="space-y-4">
+                <div class="mt-auto space-y-4">
                   <div class="flex items-center justify-between text-sm">
                     <div class="flex items-center">
                       <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
@@ -200,8 +200,8 @@ const itemsPerPage = 8;
         <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Upcoming Courses</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {courses.filter(course => course.status === 'Coming Soon').map(course => (
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300">
-              <div class="p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 h-full">
+              <div class="p-6 flex flex-col h-full">
                 <div class="flex items-center mb-4">
                   <span class="text-4xl mr-3 filter drop-shadow-sm" role="img" aria-label={course.title}>
                     {course.icon}
@@ -218,7 +218,7 @@ const itemsPerPage = 8;
                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
                   {course.description}
                 </p>
-                <div class="space-y-2">
+                <div class="mt-auto space-y-2">
                   <p class="text-sm text-center text-gray-500 dark:text-gray-400">
                     Get notified when this course launches
                   </p>
