@@ -1,33 +1,40 @@
 ---
+import { onMount } from 'astro';
+
 interface Props {
   initialCode?: string;
   language?: string;
   height?: string;
+  id?: string;
 }
 
 const {
   initialCode = '# Write your Python code here\n\n',
   language = 'python',
-  height = '400px'
+  height = '400px',
+  id = 'editor-' + Math.random().toString(36).substr(2, 9)
 } = Astro.props;
+
+// Sanitize initialCode
+const sanitizedCode = initialCode.replace(/[^\x20-\x7E\n\t]/g, '');
 ---
 
 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
   <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
     <div class="flex space-x-2">
-      <button class="px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors" id="run-code">
+      <button class="px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors" id={`run-${id}`}>
         Run ▶
       </button>
-      <button class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" id="reset-code">
+      <button class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" id={`reset-${id}`}>
         Reset
       </button>
     </div>
     <div class="flex items-center space-x-4">
-      <select id="theme-select" class="px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800">
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
+      <select id={`theme-${id}`} class="px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800">
+        <option value="vs">Light</option>
+        <option value="vs-dark">Dark</option>
       </select>
-      <select id="font-size" class="px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800">
+      <select id={`font-${id}`} class="px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800">
         <option value="12">12px</option>
         <option value="14" selected>14px</option>
         <option value="16">16px</option>
@@ -38,78 +45,182 @@ const {
   
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-4" style={`height: ${height}`}>
     <!-- Code Editor -->
-    <div class="relative h-full">
-      <div id="editor" class="absolute inset-0 font-mono"></div>
+    <div class="relative h-full min-h-[300px]">
+      <div id={id} class="absolute inset-0"></div>
     </div>
     
     <!-- Output -->
     <div class="border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-gray-700">
       <div class="p-4 h-full">
         <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Output:</h3>
-        <pre id="output" class="font-mono text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap h-[calc(100%-2rem)] overflow-auto"></pre>
+        <pre id={`output-${id}`} class="font-mono text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap h-[calc(100%-2rem)] overflow-auto"></pre>
       </div>
     </div>
   </div>
 </div>
 
-<script>
-  import Editor from "@monaco-editor/react";
+<script define:vars={{ id, sanitizedCode }}>
+  // Dynamically import Monaco Editor
+  const loadMonaco = async () => {
+    const monaco = await import('monaco-editor');
+    const editorContainer = document.getElementById(id);
+    if (!editorContainer) return;
 
-  // Initialize editor with React component
-  const editorContainer = document.getElementById('editor');
-  
-  const editor = await Editor.render({
-    container: editorContainer,
-    value: initialCode,
-    language: 'python',
-    theme: 'vs',
-    options: {
+    // Set initial theme based on dark mode
+    const isDark = document.documentElement.classList.contains('dark');
+    const initialTheme = isDark ? 'vs-dark' : 'vs';
+
+    // Create editor
+    const editor = monaco.editor.create(editorContainer, {
+      value: sanitizedCode,
+      language: 'python',
+      theme: initialTheme,
+      automaticLayout: true,
       minimap: { enabled: false },
+      scrollBeyondLastLine: false,
       fontSize: 14,
-      automaticLayout: true
-    }
-  });
-  
-  // Theme switching
-  const themeSelect = document.getElementById('theme-select');
-  themeSelect.addEventListener('change', (e) => {
-    const theme = e.target.value === 'dark' ? 'vs-dark' : 'vs';
-    editor.setTheme(theme);
-  });
-  
-  // Font size
-  const fontSelect = document.getElementById('font-size');
-  fontSelect.addEventListener('change', (e) => {
-    editor.updateOptions({ fontSize: parseInt(e.target.value) });
-  });
-  
-  // Run code
-  const runButton = document.getElementById('run-code');
-  const output = document.getElementById('output');
-  
-  runButton.addEventListener('click', async () => {
-    const code = editor.getValue();
-    output.textContent = 'Running...';
-    
-    try {
-      // Here we'll integrate with your Python execution backend
-      // For now, we'll just show the code
-      output.textContent = `Code to execute:\n${code}`;
-    } catch (error) {
-      output.textContent = `Error: ${error.message}`;
-    }
-  });
-  
-  // Reset code
-  const resetButton = document.getElementById('reset-code');
-  resetButton.addEventListener('click', () => {
-    editor.setValue(initialCode);
-    output.textContent = '';
-  });
+      fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+      lineNumbers: 'on',
+      roundedSelection: true,
+      scrollbar: {
+        verticalScrollbarSize: 8,
+        horizontalScrollbarSize: 8
+      },
+      overviewRulerLanes: 0,
+      renderLineHighlight: 'all',
+      lineHeight: 21,
+      padding: { top: 8, bottom: 8 },
+      suggest: {
+        snippetsPreventQuickSuggestions: false
+      }
+    });
+
+    // Theme switching
+    const themeSelect = document.getElementById(`theme-${id}`);
+    themeSelect?.addEventListener('change', (e) => {
+      const theme = e.target.value;
+      monaco.editor.setTheme(theme);
+    });
+
+    // Font size
+    const fontSelect = document.getElementById(`font-${id}`);
+    fontSelect?.addEventListener('change', (e) => {
+      const fontSize = parseInt(e.target.value);
+      editor.updateOptions({ fontSize });
+    });
+
+    // Run code
+    const runButton = document.getElementById(`run-${id}`);
+    const output = document.getElementById(`output-${id}`);
+
+    runButton?.addEventListener('click', async () => {
+      if (!output) return;
+      const code = editor.getValue();
+      output.textContent = 'Running...';
+
+      try {
+        const response = await fetch('http://localhost:8080/api/execute', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({ code })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          output.textContent = data.output || 'Code executed successfully!';
+        } else {
+          output.textContent = `Error: ${data.error}`;
+        }
+      } catch (error) {
+        output.textContent = `Error: ${error.message}`;
+      }
+    });
+
+    // Reset code
+    const resetButton = document.getElementById(`reset-${id}`);
+    resetButton?.addEventListener('click', () => {
+      editor.setValue(sanitizedCode);
+      if (output) output.textContent = '';
+    });
+
+    // Handle dark mode changes
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          const isDark = document.documentElement.classList.contains('dark');
+          monaco.editor.setTheme(isDark ? 'vs-dark' : 'vs');
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      editor.layout();
+    });
+
+    // Return cleanup function
+    return () => {
+      editor.dispose();
+      observer.disconnect();
+    };
+  };
+
+  // Load Monaco when the component is mounted
+  if (document.readyState === 'complete') {
+    loadMonaco();
+  } else {
+    window.addEventListener('load', loadMonaco);
+  }
 </script>
 
-<style is:global>
-  .monaco-editor {
+<style>
+  /* Custom scrollbar */
+  #output::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  #output::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  .dark #output::-webkit-scrollbar-track {
+    background: #2d2d2d;
+  }
+
+  #output::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+
+  #output::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  .dark #output::-webkit-scrollbar-thumb {
+    background: #666;
+  }
+
+  .dark #output::-webkit-scrollbar-thumb:hover {
+    background: #777;
+  }
+
+  /* Monaco Editor container */
+  :global(.monaco-editor) {
     padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  :global(.monaco-editor .cursors-layer) {
+    border-radius: 2px;
   }
 </style>

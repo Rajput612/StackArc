@@ -1,237 +1,193 @@
-# Variables and Data Types in Python
+---
+title: "Variables & Data Types"
+description: "Learn about Python variables and different data types"
+level: "beginner"
+order: 3
+codeExamples:
+  - title: "Introduction to Variables"
+    description: "Basic variable creation and printing"
+    code: |
+      # Basic variable examples
+      name = "Alice"
+      age = 25
+      height = 1.75
+      is_student = True
 
-## Understanding Variables
+      print("Name:", name)
+      print("Age:", age)
+      print("Height:", height, "m")
+      print("Is student?", is_student)
 
-In Python, variables are like containers that store data. Think of them as labeled boxes where you can put different types of information.
+  - title: "Numbers in Python"
+    description: "Arithmetic operations and number types"
+    code: |
+      # Number operations
+      x = 10
+      y = 3
 
-### Basic Variable Assignment
+      print("Basic Operations:")
+      print("Addition:", x + y)        # 13
+      print("Subtraction:", x - y)     # 7
+      print("Multiplication:", x * y)  # 30
+      print("Division:", x / y)        # 3.3333...
+      print("Integer Division:", x // y)# 3
+      print("Modulus:", x % y)         # 1
+      print("Power:", x ** y)          # 1000
 
-```python
-# Simple variable assignment
-name = "John"
-age = 25
-height = 1.75
-is_student = True
+      # Float operations
+      price = 19.99
+      discount = 0.15
+      final_price = price * (1 - discount)
 
-# Print variable values
-print(f"Name: {name}")
-print(f"Age: {age}")
-print(f"Height: {height}")
-print(f"Student: {is_student}")
-```
+      print("\nPrice Calculation:")
+      print("Original price: $", price)
+      print("Discount:", discount*100, "%")
+      print("Final price: $", round(final_price, 2))
 
-## Common Data Types
+  - title: "Strings"
+    description: "String manipulation and formatting"
+    code: |
+      # String operations
+      text = "Hello, World!"
+      print("Original text:", text)
+      print("Uppercase:", text.upper())
+      print("Lowercase:", text.lower())
+      print("Length:", len(text))
 
-### 1. Strings (str)
-Text data enclosed in quotes.
+      # String methods
+      print("\nString methods:")
+      print("Replace:", text.replace("Hello", "Hi"))
+      print("Split:", text.split(","))
+      print("Strip:", "  spaces  ".strip())
 
-```python
-# String examples
-first_name = "Alice"
-last_name = 'Smith'
-full_name = first_name + " " + last_name  # String concatenation
-message = f"Hello, {full_name}!"  # f-string formatting
+      # String concatenation
+      first = "Hello"
+      last = "World"
+      print("\nConcatenation:", first + " " + last)
 
-# String methods
-print(full_name.upper())  # ALICE SMITH
-print(full_name.lower())  # alice smith
-print(len(full_name))     # 11 (length of string)
-```
+  - title: "Lists"
+    description: "List operations and methods"
+    code: |
+      # List examples
+      fruits = ["apple", "banana", "orange"]
+      numbers = [1, 2, 3, 4, 5]
 
-### 2. Numbers (int, float)
-Integers and decimal numbers.
+      # Basic operations
+      print("Fruits:", fruits)
+      print("First fruit:", fruits[0])
+      print("Last fruit:", fruits[-1])
 
-```python
-# Integer examples
-age = 25
-year = 2024
-population = 7_900_000_000  # Underscores for readability
+      # Modifying lists
+      fruits.append("grape")
+      fruits.insert(1, "mango")
+      print("\nAfter modifications:", fruits)
 
-# Float examples
-price = 19.99
-temperature = -3.5
-pi = 3.14159
+      # List methods
+      numbers.sort()
+      print("\nSorted numbers:", numbers)
+      print("Count of 5:", numbers.count(5))
+      print("Index of 3:", numbers.index(3))
 
-# Basic operations
-total = price * 2
-change = 50 - total
-print(f"Total: ${total:.2f}")
-print(f"Change: ${change:.2f}")
-```
+  - title: "Dictionaries"
+    description: "Dictionary operations and methods"
+    code: |
+      # Dictionary examples
+      person = {
+          "name": "Alice",
+          "age": 25,
+          "city": "New York",
+          "hobbies": ["reading", "coding", "music"]
+      }
 
-### 3. Booleans (bool)
-True or False values.
+      # Accessing values
+      print("Name:", person["name"])
+      print("Age:", person["age"])
+      print("First hobby:", person["hobbies"][0])
 
-```python
-# Boolean examples
-is_sunny = True
-is_raining = False
-is_weekend = True
+      # Modifying dictionaries
+      person["job"] = "Engineer"
+      person["age"] = 26
 
-# Boolean operations
-can_go_to_beach = is_sunny and not is_raining
-print(f"Can go to beach: {can_go_to_beach}")
-```
+      print("\nModified person:")
+      print("New job:", person["job"])
+      print("Updated age:", person["age"])
 
-## Real-World Examples
+      # Dictionary methods
+      print("\nDictionary Methods:")
+      print("Keys:", list(person.keys()))
+      print("Values:", list(person.values()))
+      print("Items:", list(person.items()))
 
-### 1. E-commerce Shopping Cart
-```python
-# Shopping cart example
-item_name = "Laptop"
-item_price = 999.99
-quantity = 2
-in_stock = True
+  - title: "Type Conversion"
+    description: "Converting between different data types"
+    code: |
+      # Type conversion examples
+      # String to number
+      text_number = "42"
+      number = int(text_number)
+      print("String to number:", number)
 
-# Calculate total
-subtotal = item_price * quantity
-tax_rate = 0.08
-tax = subtotal * tax_rate
-total = subtotal + tax
+      # Number to string
+      price = 19.99
+      price_text = str(price)
+      print("Number to string:", price_text)
 
-print(f"""
-Order Summary:
--------------
-Item: {item_name}
-Price: ${item_price:.2f}
-Quantity: {quantity}
-Subtotal: ${subtotal:.2f}
-Tax: ${tax:.2f}
-Total: ${total:.2f}
-""")
-```
+      # Type checking
+      values = [42, "hello", 3.14, True]
+      for value in values:
+          print("Value:", value, "Type:", type(value))
 
-### 2. Social Media Post
-```python
-# Social media post example
-username = "tech_enthusiast"
-post_content = "Just learned Python variables! 🐍"
-likes = 42
-is_shared = True
-post_time = "2024-01-15 14:30"
+---
+# Variables & Data Types in Python
 
-post_info = f"""
-{username} posted:
-"{post_content}"
-Likes: {likes}
-Shared: {is_shared}
-Time: {post_time}
-"""
-print(post_info)
-```
+Variables are essential building blocks in Python programming. They allow you to store and manipulate data in your programs.
 
-### 3. Weather App
-```python
-# Weather app example
-city = "San Francisco"
-temperature_celsius = 18.5
-temperature_fahrenheit = (temperature_celsius * 9/5) + 32
-humidity = 75
-is_raining = False
+## What are Variables?
 
-weather_report = f"""
-Weather Report for {city}:
--------------------------
-Temperature: {temperature_celsius}°C ({temperature_fahrenheit:.1f}°F)
-Humidity: {humidity}%
-Raining: {"Yes" if is_raining else "No"}
-"""
-print(weather_report)
-```
+Variables in Python are like containers that store data. They can hold different types of values, such as numbers, text, or more complex data structures. Python is dynamically typed, which means you don't need to declare the type of a variable explicitly.
 
-## Type Conversion (Casting)
+## Basic Data Types
 
-Sometimes you need to convert between different data types:
+Python has several built-in data types:
 
-```python
-# String to number
-user_input = "25"
-age = int(user_input)      # Convert to integer
-height = float("1.75")     # Convert to float
+1. **Numbers**
+   - Integers (int): Whole numbers like 5, -17, 1000
+   - Floating-point (float): Decimal numbers like 3.14, -0.001, 2.0
 
-# Number to string
-price = 19.99
-price_tag = str(price)     # Convert to string
+2. **Strings (str)**
+   - Text data enclosed in quotes: "Hello", 'Python'
+   - Can use single or double quotes
 
-# Examples
-quantity = int(input("How many items? "))
-price = float(input("Price per item: "))
-total = quantity * price
-print(f"Total cost: ${total:.2f}")
-```
+3. **Booleans (bool)**
+   - True or False values
+   - Used for logical operations
+
+4. **None**
+   - Represents absence of a value
+   - Similar to null in other languages
+
+## Variable Naming Rules
+
+When naming variables in Python:
+
+1. Names must start with a letter or underscore
+2. Can contain letters, numbers, and underscores
+3. Are case-sensitive (name ≠ Name)
+4. Cannot use Python keywords (like if, for, while)
+
+## Type Conversion
+
+Python provides built-in functions for converting between data types:
+- `int()`: Convert to integer
+- `float()`: Convert to floating-point
+- `str()`: Convert to string
+- `bool()`: Convert to boolean
 
 ## Best Practices
 
-1. **Use Descriptive Names**
-   ```python
-   # Good
-   user_age = 25
-   first_name = "John"
-
-   # Not so good
-   a = 25
-   fn = "John"
-   ```
-
-2. **Follow Python Naming Conventions**
-   ```python
-   # Variables use lowercase with underscores
-   user_name = "Alice"
-   total_cost = 99.99
-
-   # Constants are usually uppercase
-   MAX_ATTEMPTS = 3
-   PI = 3.14159
-   ```
-
-3. **Initialize Variables Before Use**
-   ```python
-   # Initialize with default values
-   counter = 0
-   message = ""
-   items = []
-   ```
-
-## Practice Exercises
-
-1. **Personal Information**
-   ```python
-   # Create variables for personal info
-   name = input("Enter your name: ")
-   age = int(input("Enter your age: "))
-   height = float(input("Enter your height in meters: "))
-   is_student = input("Are you a student? (yes/no): ").lower() == "yes"
-
-   # Print formatted information
-   print(f"""
-   Personal Information:
-   --------------------
-   Name: {name}
-   Age: {age}
-   Height: {height}m
-   Student: {is_student}
-   """)
-   ```
-
-2. **Temperature Converter**
-   ```python
-   # Convert between Celsius and Fahrenheit
-   celsius = float(input("Enter temperature in Celsius: "))
-   fahrenheit = (celsius * 9/5) + 32
-   print(f"{celsius}°C is equal to {fahrenheit:.1f}°F")
-   ```
-
-## Key Takeaways
-
-1. Variables store data and can be changed
-2. Python has several basic data types (str, int, float, bool)
-3. Use meaningful variable names
-4. Type conversion helps work with different data types
-5. Real-world applications often use multiple variables and types together
-
-## Next Steps
-
-- Practice creating variables with different data types
-- Try the practice exercises
-- Think about how variables could be used in your own projects
-- Explore more string formatting options
+1. Use descriptive names that explain the purpose
+2. Follow Python naming conventions:
+   - Use lowercase letters
+   - Separate words with underscores
+3. Initialize variables before using them
+4. Use meaningful constants instead of "magic numbers"

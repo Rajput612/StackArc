@@ -1,0 +1,274 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+import VariableAnimation from '../../../components/VariableAnimation.jsx';
+
+const introCode = `# Try this example:
+name = "Alice"      # Creates a string variable
+age = 25           # Creates an integer variable
+height = 1.75      # Creates a float variable
+is_student = True  # Creates a boolean variable
+name = "Bob"       # Updates existing variable
+del name           # Removes a variable`;
+
+const numbersCode = `# Integer operations
+x = 10
+y = 3
+
+print("Basic Operations:")
+print("Addition:", x + y)        # 13
+print("Subtraction:", x - y)     # 7
+print("Multiplication:", x * y)  # 30
+print("Division:", x / y)        # 3.3333...
+print("Integer Division:", x // y)# 3
+print("Modulus:", x % y)         # 1
+print("Power:", x ** y)          # 1000
+
+# Float operations
+price = 19.99
+discount = 0.15
+final_price = price * (1 - discount)
+print("\\nPrice Calculation:")
+print("Original price: $", price)
+print("Discount:", discount*100, "%")
+print("Final price: $", round(final_price, 2))
+
+# Complex numbers
+z = 2 + 3j
+print("\\nComplex number:", z)
+print("Real part:", z.real)
+print("Imaginary part:", z.imag)`;
+
+const stringsCode = `# String creation and concatenation
+first_name = "Alice"
+last_name = "Smith"
+full_name = first_name + " " + last_name
+
+print("String Operations:")
+print("Full name:", full_name)
+print("Uppercase:", full_name.upper())
+print("Lowercase:", full_name.lower())
+print("Length:", len(full_name), "characters")
+
+# String methods
+text = "   Hello, World!   "
+print("\\nString Methods:")
+print("Original:", text)
+print("Stripped:", text.strip())
+print("Replace:", text.replace("Hello", "Hi"))
+print("Split:", text.split(","))
+
+# String formatting
+name = "Bob"
+age = 30
+height = 1.85
+print("\\nString Formatting:")
+print("Using concatenation:", name, "is", age, "years old and", height, "m tall")
+print("Using .format():", "{} is {} years old".format(name, age))
+print("Using % operator:", "%s is %d years old" % (name, age))`;
+
+const listsCode = `# Creating lists
+fruits = ["apple", "banana", "orange"]
+mixed_list = [1, "hello", 3.14, True]
+
+# List operations
+print("List Operations:")
+print("Fruits:", fruits)
+print("First fruit:", fruits[0])
+print("Last fruit:", fruits[-1])
+
+# Modifying lists
+fruits.append("grape")
+fruits.insert(1, "mango")
+fruits.remove("banana")
+print("\\nModified fruits:", fruits)
+
+# List methods
+numbers = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3]
+print("\\nList Methods:")
+print("Original numbers:", numbers)
+numbers.sort()
+print("Sorted numbers:", numbers)
+print("Count of 5:", numbers.count(5))
+print("Index of 9:", numbers.index(9))
+
+# List slicing
+print("\\nList Slicing:")
+print("First three numbers:", numbers[:3])
+print("Last three numbers:", numbers[-3:])
+print("Every second number:", numbers[::2])`;
+
+const dictionariesCode = `# Creating dictionaries
+person = {
+    "name": "Alice",
+    "age": 25,
+    "city": "New York",
+    "hobbies": ["reading", "hiking", "photography"]
+}
+
+# Accessing dictionary values
+print("Dictionary Operations:")
+print("Name:", person["name"])
+print("Age:", person["age"])
+print("First hobby:", person["hobbies"][0])
+
+# Modifying dictionaries
+person['job'] = 'Engineer'
+person['age'] = 26
+print("\\nModified person:")
+print("New job:", person['job'])
+print("Updated age:", person['age'])
+
+# Dictionary methods
+print("\\nDictionary Methods:")
+print("Keys:", list(person.keys()))
+print("Values:", list(person.values()))
+print("Items:", list(person.items()))
+
+# Dictionary operations
+if "name" in person:
+    print("\\nFound name:", person.get('name'))
+
+# Nested dictionaries
+contacts = {
+    "Alice": {"phone": "123-456-7890", "email": "alice@email.com"},
+    "Bob": {"phone": "098-765-4321", "email": "bob@email.com"}
+}
+print("\\nNested Dictionaries:")
+print("Alice's phone:", contacts['Alice']['phone'])
+print("Bob's email:", contacts['Bob']['email'])`;
+
+const typeConversionCode = `# String to number conversion
+text_number = "42"
+number = int(text_number)
+print("String to number:", number)
+
+# Number to string conversion
+price = 19.99
+price_text = str(price)
+print("Number to string:", price_text)
+
+# Float to integer conversion
+pi = 3.14159
+pi_int = int(pi)
+print("Float to integer:", pi)
+
+# String to list conversion
+text = "Hello,World,Python"
+text_list = text.split(',')
+print("\\nString to list:", text_list)
+
+# List to string conversion
+words = ['Hello', 'World', 'Python']
+text = ' '.join(words)
+print("List to string:", text)
+
+# Type checking
+values = [42, "hello", 3.14, True, [1, 2, 3]]
+print("\\nType checking:")
+for value in values:
+    print("Value:", value, "Type:", type(value))`;
+---
+
+<MainLayout title="Python Variables & Data Types">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" />
+    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8">Python Variables & Data Types</h1>
+
+      <div class="space-y-12">
+        <!-- Introduction -->
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">Introduction to Variables</h2>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">
+            In Python, variables are containers for storing data values. Python has no command for declaring a variable - a variable is created the moment you first assign a value to it.
+            Click on line numbers to add breakpoints and use the Debug controls to watch how variables work in memory!
+          </p>
+          <div class="space-y-4">
+            <CodePlayground 
+              client:load 
+              initialCode={introCode} 
+            />
+            <div class="mt-8">
+              <VariableAnimation client:load />
+            </div>
+          </div>
+        </section>
+
+        <!-- Numbers -->
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">Numbers in Python</h2>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">
+            Python supports several types of numbers:
+            <ul class="list-disc list-inside ml-4 space-y-2">
+              <li>Integers (int) - Whole numbers, positive or negative</li>
+              <li>Floating point numbers (float) - Decimal numbers</li>
+              <li>Complex numbers (complex) - Numbers with real and imaginary parts</li>
+            </ul>
+          </p>
+          <CodePlayground client:load initialCode={numbersCode} />
+        </section>
+
+        <!-- Strings -->
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">Strings</h2>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">
+            Strings in Python are sequences of characters, surrounded by either single quotes ('...') or double quotes ("..."). 
+            Python provides many built-in methods to manipulate strings.
+          </p>
+          <CodePlayground client:load initialCode={stringsCode} />
+        </section>
+
+        <!-- Lists -->
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">Lists</h2>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">
+            Lists are ordered, changeable collections that can store different types of data. They are created using square brackets [].
+          </p>
+          <CodePlayground client:load initialCode={listsCode} />
+        </section>
+
+        <!-- Dictionaries -->
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">Dictionaries</h2>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">
+            Dictionaries are unordered collections of key-value pairs. They are created using curly braces {} with key:value syntax.
+          </p>
+          <CodePlayground client:load initialCode={dictionariesCode} />
+        </section>
+
+        <!-- Type Conversion -->
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">Type Conversion</h2>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">
+            Python provides built-in functions for converting between different data types. This is also known as type casting.
+          </p>
+          <CodePlayground client:load initialCode={typeConversionCode} />
+        </section>
+      </div>
+    </div>
+  </div>
+</MainLayout>
+
+<script>
+// Connect CodePlayground with VariableAnimation
+document.addEventListener('astro:page-load', () => {
+  const codePlayground = document.querySelector('[data-component="code-playground"]');
+  const variableAnimation = document.querySelector('[data-component="variable-animation"]');
+
+  if (codePlayground && variableAnimation) {
+    codePlayground.addEventListener('codeChange', (event) => {
+      variableAnimation.setAttribute('code', event.detail);
+    });
+
+    codePlayground.addEventListener('debuggerUpdate', (event) => {
+      variableAnimation.setAttribute('debuggerState', JSON.stringify(event.detail));
+    });
+  }
+});
+</script>
+
+<style>
+  /* Add any custom styles here */
+</style>

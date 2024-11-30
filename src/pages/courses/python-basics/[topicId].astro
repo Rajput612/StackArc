@@ -1,6 +1,7 @@
 ---
-import CourseLayout from '../../../layouts/CourseLayout.astro';
-import CodeSnippet from '../../../components/CodeSnippet.astro';
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
 import MarkdownIt from 'markdown-it';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -50,9 +51,12 @@ const md = new MarkdownIt({
 md.renderer.rules.fence = (tokens, idx) => {
   const token = tokens[idx];
   const code = token.content.trim();
-  const lang = token.info || 'python';
-  
-  return `<CodeSnippet code="${code.replace(/"/g, '&quot;')}" language="${lang}" />`;
+  const language = token.info.trim();
+
+  // Return a div that wraps the CodePlayground component
+  return `<div class="my-6">
+    <CodePlayground client:load initialCode={\`${code}\`} />
+  </div>`;
 };
 
 // Add classes to elements
@@ -82,7 +86,6 @@ md.renderer.rules.code_inline = (tokens, idx) => {
   return `<code class="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-sm font-mono">${code}</code>`;
 };
 
-// Parse the markdown content
 const htmlContent = md.render(content);
 
 // Get topic title from first h1 in content
@@ -90,17 +93,16 @@ const titleMatch = content.match(/^#\s+(.+)$/m);
 const title = titleMatch ? titleMatch[1] : 'Python Basics';
 ---
 
-<CourseLayout
-  title={title}
-  currentTopicId={topicId}
-  courseType="python-basics"
->
-  <div class="prose dark:prose-invert max-w-none">
-    <div class="content-wrapper">
-      <Fragment set:html={htmlContent} />
+<MainLayout title={`Python Basics - ${topicId.charAt(0).toUpperCase() + topicId.slice(1)}`}>
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" currentTopicId={topicId} />
+    <div class="flex-1 max-w-4xl px-4 py-8">
+      <article class="prose dark:prose-invert max-w-none">
+        <Fragment set:html={htmlContent} />
+      </article>
     </div>
   </div>
-</CourseLayout>
+</MainLayout>
 
 <style>
   .content-wrapper :global(.heading-1) {

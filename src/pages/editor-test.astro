@@ -1,0 +1,91 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import CodePlayground from '../components/CodePlayground';
+---
+
+<MainLayout title="Code Editor Test">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">Basic Python Example</h1>
+
+    <div class="space-y-8">
+      <!-- Example 1: Basic Variables -->
+      <div>
+        <h2 class="text-xl font-semibold mb-4">Variables and Data Types</h2>
+        <CodePlayground 
+          client:only="react"
+          initialCode={`# Let's learn about Python variables!
+
+# Numbers
+age = 25
+height = 1.75
+is_student = True
+
+# Strings
+name = "Alice"
+greeting = f"Hello, {name}!"
+
+# Print our variables
+print(f"Name: {name}")
+print(f"Age: {age}")
+print(f"Height: {height}m")
+print(f"Is student? {is_student}")
+print(greeting)`}
+        />
+      </div>
+
+      <!-- Example 2: Lists and Loops -->
+      <div>
+        <h2 class="text-xl font-semibold mb-4">Lists and Loops</h2>
+        <CodePlayground 
+          client:only="react"
+          initialCode={`# Working with lists and loops
+fruits = ["apple", "banana", "orange", "grape"]
+
+print("My fruit basket contains:")
+for i, fruit in enumerate(fruits, 1):
+    print(f"{i}. {fruit.capitalize()}")
+
+# List comprehension
+prices = [1.5, 0.8, 1.2, 2.0]
+discounted_prices = [price * 0.9 for price in prices]
+
+print("\\nOriginal prices:", prices)
+print("Discounted prices:", discounted_prices)`}
+        />
+      </div>
+
+      <!-- Example 3: Functions -->
+      <div>
+        <h2 class="text-xl font-semibold mb-4">Functions</h2>
+        <CodePlayground 
+          client:only="react"
+          initialCode={`# Define a simple function
+def calculate_area(length, width):
+    """Calculate the area of a rectangle"""
+    area = length * width
+    return area
+
+# Test the function
+length = 5
+width = 3
+
+area = calculate_area(length, width)
+print(f"The area of a {length}x{width} rectangle is: {area}")
+
+# Function with default parameter
+def greet(name, greeting="Hello"):
+    return f"{greeting}, {name}!"
+
+print(greet("Alice"))
+print(greet("Bob", greeting="Hi"))`}
+        />
+      </div>
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  .space-y-8 > * + * {
+    margin-top: 2rem;
+  }
+</style>
