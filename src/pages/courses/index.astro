@@ -4,12 +4,6 @@ import { courseContent } from '../../config/courseContent';
 import EnrollmentModal from '../../components/EnrollmentModal.astro';
 
 const courses = Object.values(courseContent);
-
-// Function to truncate text
-const truncate = (str: string, length: number) => {
-  if (str.length <= length) return str;
-  return str.slice(0, length) + '...';
-};
 ---
 
 <MainLayout title="StackArc - Available Courses">
@@ -31,7 +25,7 @@ const truncate = (str: string, length: number) => {
 
     <!-- Course Grid -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="course-grid">
         {courses.map(course => {
           const conceptCount = course.concepts.length;
           const totalDuration = course.concepts.reduce((acc, concept) => {
@@ -40,40 +34,39 @@ const truncate = (str: string, length: number) => {
           }, 0);
           
           return (
-            <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700" style="height: 280px;">
-              <div class="p-6 pb-24">
-                <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-1">
-                  {course.title}
-                </h2>
-                <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
-                  <span>{Math.ceil(totalDuration/60)} weeks</span>
-                  <span>•</span>
-                  <span>Beginner</span>
+            <div class="course-card bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700" data-course-id={course.id}>
+              <div class="p-6">
+                <div class="flex justify-between items-start mb-4">
+                  <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                    {course.title}
+                  </h2>
+                  <div class="enrollment-status"></div>
                 </div>
-                <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
-                  {truncate(course.description, 100)}
-                </p>
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-1">
-                    <span class="text-yellow-400">★</span>
-                    <span class="font-medium">{course.rating || '4.8'}</span>
+                <div class="space-y-4">
+                  <div class="flex items-center text-gray-600 dark:text-gray-400">
+                    <span class="material-icons mr-2">schedule</span>
+                    <span>{totalDuration} minutes</span>
                   </div>
-                  <div class="text-sm text-gray-600 dark:text-gray-400">
-                    {course.enrolled || '1,234'} enrolled
+                  <div class="flex items-center text-gray-600 dark:text-gray-400">
+                    <span class="material-icons mr-2">menu_book</span>
+                    <span>{conceptCount} concepts</span>
+                  </div>
+                  <div class="course-progress hidden">
+                    <div class="flex items-center text-gray-600 dark:text-gray-400">
+                      <span class="material-icons mr-2">trending_up</span>
+                      <span class="progress-text">0% complete</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-
-              <div class="absolute bottom-0 left-0 right-0 p-6 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
-                <button
-                  class="enroll-button w-full text-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-                  data-course-id={course.id}
-                  data-course-title={course.title}
-                  data-concept-count={conceptCount}
-                  data-duration={totalDuration}
-                >
-                  Enroll Now
-                </button>
+                
+                <div class="mt-6">
+                  <button
+                    class="course-button block w-full text-center px-4 py-2 rounded-lg transition-colors bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600"
+                    data-course-id={course.id}
+                  >
+                    Start Learning
+                  </button>
+                </div>
               </div>
             </div>
           );
@@ -82,7 +75,7 @@ const truncate = (str: string, length: number) => {
     </div>
   </div>
 
-  <!-- Enrollment Modal -->
+  <!-- Enrollment Modals -->
   {courses.map(course => (
     <EnrollmentModal
       courseId={course.id}
@@ -94,33 +87,79 @@ const truncate = (str: string, length: number) => {
 </MainLayout>
 
 <script>
-  import { EnrollmentStore } from '../../stores/enrollmentStore';
+  import { EnrollmentStore } from '../../stores/enhancedEnrollmentStore';
 
-  // Handle enroll button clicks
-  document.querySelectorAll('.enroll-button').forEach(button => {
-    button.addEventListener('click', () => {
-      const courseId = button.getAttribute('data-course-id');
-      if (EnrollmentStore.isEnrolled(courseId)) {
-        window.location.href = `/courses/${courseId}`;
-      } else {
-        window.showEnrollmentModal();
+  const userId = 'user123'; // Replace with actual user ID from auth system
+
+  // Update course cards with enrollment information
+  function updateCourseCards() {
+    document.querySelectorAll('.course-card').forEach(card => {
+      const courseId = card.getAttribute('data-course-id');
+      if (!courseId) return;
+
+      const isEnrolled = EnrollmentStore.isEnrolled(courseId, userId);
+      const enrollment = isEnrolled ? EnrollmentStore.getEnrollment(courseId, userId) : null;
+      
+      // Update enrollment status badge
+      const statusEl = card.querySelector('.enrollment-status');
+      if (isEnrolled && enrollment && statusEl) {
+        const statusClass = {
+          completed: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200',
+          paused: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-200',
+          active: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200'
+        }[enrollment.status];
+        
+        statusEl.innerHTML = `
+          <span class="px-2 py-1 rounded-full text-sm ${statusClass}">
+            ${enrollment.status.charAt(0).toUpperCase() + enrollment.status.slice(1)}
+          </span>
+        `;
+      }
+
+      // Update progress
+      const progressEl = card.querySelector('.course-progress');
+      const progressTextEl = card.querySelector('.progress-text');
+      if (isEnrolled && enrollment && progressEl && progressTextEl) {
+        progressEl.classList.remove('hidden');
+        const conceptCount = parseInt(card.querySelector('.material-icons:nth-child(2)').nextElementSibling.textContent);
+        const progress = Math.round((enrollment.progress.completedConcepts.length / conceptCount) * 100);
+        progressTextEl.textContent = `${progress}% complete`;
+      }
+
+      // Update button
+      const buttonEl = card.querySelector('.course-button');
+      if (buttonEl) {
+        if (isEnrolled) {
+          buttonEl.textContent = 'Continue Learning';
+          buttonEl.classList.remove('bg-indigo-600', 'hover:bg-indigo-700', 'dark:bg-indigo-500', 'dark:hover:bg-indigo-600');
+          buttonEl.classList.add('bg-indigo-100', 'text-indigo-700', 'hover:bg-indigo-200', 'dark:bg-indigo-900/50', 'dark:text-indigo-200', 'dark:hover:bg-indigo-800/50');
+        }
+
+        // Add click handler
+        buttonEl.addEventListener('click', () => {
+          const courseId = buttonEl.getAttribute('data-course-id');
+          if (isEnrolled) {
+            window.location.href = `/courses/${courseId}`;
+          } else if (courseId && typeof window.showEnrollmentModal === 'function') {
+            window.showEnrollmentModal(courseId);
+          }
+        });
       }
     });
+  }
+
+  // Update cards on page load
+  updateCourseCards();
+
+  // Update cards when enrollment changes
+  window.addEventListener('enrollmentChanged', (event) => {
+    updateCourseCards();
   });
 </script>
 
 <style>
-  .line-clamp-1 {
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+  .material-icons {
+    font-family: 'Material Icons';
+    font-size: 1.25rem;
   }
 </style>

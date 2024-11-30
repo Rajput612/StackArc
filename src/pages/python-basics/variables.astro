@@ -180,3 +180,73 @@ const content = lessonContent[userData.userType];
     });
   });
 </script>
+              <div class="output-area mt-4 hidden"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-pink-500;
+  }
+  
+  :global(.dark) .text-gradient {
+    @apply from-purple-400 to-pink-400;
+  }
+
+  .prose {
+    @apply text-gray-900 dark:text-gray-100;
+  }
+
+  .output-area {
+    @apply bg-gray-50 dark:bg-gray-900 p-4 rounded-lg mt-4 font-mono text-sm;
+  }
+
+  .output-area:not(:empty) {
+    @apply block;
+  }
+</style>
+
+<script>
+  // Initialize code execution functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const runButtons = document.querySelectorAll('.run-code-btn');
+    
+    runButtons.forEach(button => {
+      button.addEventListener('click', async () => {
+        const code = button.getAttribute('data-code');
+        const outputArea = button.parentElement?.querySelector('.output-area');
+        
+        if (!outputArea) return;
+        
+        outputArea.classList.remove('hidden');
+        outputArea.textContent = 'Running...';
+        
+        try {
+          const response = await fetch('http://localhost:8080/api/execute', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({ code })
+          });
+          
+          const data = await response.json();
+          
+          if (data.success) {
+            outputArea.textContent = data.output || 'Code executed successfully!';
+          } else {
+            outputArea.textContent = `Error: ${data.error}`;
+          }
+        } catch (error) {
+          outputArea.textContent = `Error: ${error.message}`;
+        }
+      });
+    });
+  });
+</script>
