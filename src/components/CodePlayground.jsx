@@ -1,58 +1,49 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Editor } from '@monaco-editor/react';
+
+const MAX_HISTORY_SIZE = 50; // Limit history size
+const MAX_OUTPUT_SIZE = 100; // Limit output size
 
 const CodePlayground = ({ initialCode = '# Write your Python code here\n' }) => {
   const editorRef = useRef(null);
-  const containerRef = useRef(null);
-  const decorationsRef = useRef([]);
   const [code, setCode] = useState(initialCode);
-  const [breakpoints, setBreakpoints] = useState(new Set());
   const [currentLine, setCurrentLine] = useState(null);
   const [isDebugging, setIsDebugging] = useState(false);
-  const [executionQueue, setExecutionQueue] = useState([]);
+  const [executionHistory, setExecutionHistory] = useState([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
   const [output, setOutput] = useState([]);
+  const [variables, setVariables] = useState(new Map());
 
-  // Custom event emitter
-  const emitEvent = (name, detail) => {
-    console.log('Emitting event:', name, detail); // Debug log
-    const event = new CustomEvent(name, { 
+  // Memoized event emitter
+  const emitDebuggerEvent = useCallback((detail) => {
+    window.dispatchEvent(new CustomEvent('debuggerUpdate', { 
       detail,
       bubbles: true,
       composed: true 
-    });
-    window.dispatchEvent(event); // Use window instead of containerRef
-  };
+    }));
+  }, []);
 
-  // Process Python line
-  const processLine = (line) => {
+  // Process Python line - memoized for performance
+  const processLine = useCallback((line) => {
     const trimmedLine = line.trim();
-    
-    // Skip empty lines and comments
-    if (!trimmedLine || trimmedLine.startsWith('#')) {
-      return null;
-    }
+    if (!trimmedLine || trimmedLine.startsWith('#')) return null;
 
-    // Handle variable assignment
     if (trimmedLine.includes('=')) {
-      const parts = trimmedLine.split('=');
-      const varName = parts[0].trim();
-      const varValue = parts.slice(1).join('=').trim();
+      const [varName, ...valueParts] = trimmedLine.split('=');
       return {
         type: 'assignment',
-        name: varName,
-        value: varValue
+        name: varName.trim(),
+        value: valueParts.join('=').trim()
       };
     }
 
-    // Handle del statement
     if (trimmedLine.startsWith('del ')) {
       return {
         type: 'deletion',
-        name: trimmedLine.slice(4).trim()
+        names: trimmedLine.slice(4).split(',').map(name => name.trim())
       };
     }
 
-    // Handle print statement
     if (trimmedLine.startsWith('print(')) {
       return {
         type: 'print',
@@ -61,233 +52,287 @@ const CodePlayground = ({ initialCode = '# Write your Python code here\n' }) => 
     }
 
     return null;
-  };
+  }, []);
 
-  // Execute a single line of code
-  const executeLine = (line, lineNumber) => {
+  // Execute a single line of code - memoized for performance
+  const executeLine = useCallback((line, lineNumber) => {
     try {
       const processed = processLine(line);
-      if (!processed) return;
+      if (!processed) return null;
 
-      console.log('Executing line:', processed); // Debug log
+      const result = {
+        line: lineNumber,
+        code: line,
+        type: processed.type,
+        output: null,
+        variables: new Map(variables),
+        event: null,
+        undoEvent: null,
+        lineState: new Map(variables)
+      };
 
       switch (processed.type) {
-        case 'assignment':
-          emitEvent('debuggerUpdate', {
-            currentLine: lineNumber,
-            code: line,
-            variables: {
-              name: processed.name,
-              value: processed.value,
-              operation: 'assign'
-            }
-          });
+        case 'assignment': {
+          const oldValue = result.variables.get(processed.name);
+          result.variables.set(processed.name, processed.value);
+          result.event = {
+            name: processed.name,
+            value: processed.value,
+            operation: 'assign'
+          };
           break;
-
-        case 'deletion':
-          emitEvent('debuggerUpdate', {
-            currentLine: lineNumber,
-            code: line,
-            variables: {
-              name: processed.name,
-              operation: 'delete'
-            }
-          });
-          break;
-
-        case 'print':
-          setOutput(prev => [...prev, processed.value]);
-          emitEvent('debuggerUpdate', {
-            currentLine: lineNumber,
-            code: line
-          });
-          break;
-      }
-    } catch (error) {
-      console.error('Error executing line:', error); // Debug log
-      setOutput(prev => [...prev, `Error: ${error.message}`]);
-    }
-  };
-
-  function handleEditorDidMount(editor, monaco) {
-    editorRef.current = editor;
-
-    // Add click handler for breakpoints
-    editor.onMouseDown((e) => {
-      if (e.target.type === monaco.editor.MouseTargetType.GUTTER_GLYPH_MARGIN) {
-        const lineNumber = e.target.position.lineNumber;
-        const newBreakpoints = new Set(breakpoints);
-        
-        if (newBreakpoints.has(lineNumber)) {
-          newBreakpoints.delete(lineNumber);
-        } else {
-          newBreakpoints.add(lineNumber);
         }
-        
-        setBreakpoints(newBreakpoints);
+        case 'deletion': {
+          processed.names.forEach(name => {
+            if (result.variables.has(name)) {
+              result.variables.delete(name);
+              result.event = {
+                name,
+                operation: 'delete',
+                executeImmediately: true
+              };
+            }
+          });
+          break;
+        }
+        case 'print': {
+          let value = processed.value;
+          result.variables.forEach((val, name) => {
+            value = value.replace(new RegExp(name, 'g'), val);
+          });
+          try {
+            value = Function('"use strict";return (' + value + ')')();
+          } catch (e) {
+            // If evaluation fails, use raw value
+          }
+          result.output = value;
+          break;
+        }
       }
-    });
-  }
 
-  function handleEditorChange(value) {
-    setCode(value);
-  }
+      return result;
+    } catch (error) {
+      console.error('Error executing line:', error);
+      return null;
+    }
+  }, [processLine, variables]);
 
-  // Update editor decorations when currentLine changes
-  useEffect(() => {
-    if (!editorRef.current || currentLine === null) {
-      if (decorationsRef.current.length > 0) {
-        editorRef.current?.deltaDecorations(decorationsRef.current, []);
-        decorationsRef.current = [];
-      }
+  // Start debugging - memoized
+  const startDebugging = useCallback(() => {
+    setIsDebugging(true);
+    setCurrentLine(null);
+    setOutput([]);
+    setVariables(new Map());
+    setHistoryIndex(-1);
+    setExecutionHistory([]);
+    emitDebuggerEvent({ isStarting: true });
+  }, [emitDebuggerEvent]);
+
+  // Step forward - memoized
+  const stepForward = useCallback(() => {
+    if (!isDebugging) return;
+
+    const lines = code.split('\n');
+    const nextLine = historyIndex + 1;
+    
+    if (nextLine >= lines.length) {
+      stopDebugging();
       return;
     }
 
-    const editor = editorRef.current;
-    const model = editor.getModel();
-    
-    if (!model) return;
+    // First highlight the next line
+    setCurrentLine(nextLine);
+    setHistoryIndex(nextLine);
 
-    // Create decoration for the current line
-    const newDecorations = [{
-      range: {
-        startLineNumber: currentLine,
-        startColumn: 1,
-        endLineNumber: currentLine,
-        endColumn: model.getLineMaxColumn(currentLine)
-      },
-      options: {
-        inlineClassName: 'currentLineText',
-        className: 'currentLine'
+    // Execute the previous line's result if it exists
+    if (nextLine > 0) {
+      const prevResult = executeLine(lines[nextLine - 1], nextLine - 1);
+      if (prevResult) {
+        setExecutionHistory(prev => {
+          const newHistory = [...prev, prevResult].slice(-MAX_HISTORY_SIZE);
+          return newHistory;
+        });
+        setVariables(prevResult.variables);
+        
+        if (prevResult.output !== null) {
+          setOutput(prev => [...prev.slice(-MAX_OUTPUT_SIZE), prevResult.output]);
+        }
+
+        if (prevResult.event) {
+          emitDebuggerEvent({
+            currentLine: nextLine - 1,
+            code: prevResult.code,
+            variables: prevResult.event,
+            executeImmediately: prevResult.event.executeImmediately
+          });
+        }
       }
-    }];
-
-    // Update decorations
-    decorationsRef.current = editor.deltaDecorations(
-      decorationsRef.current,
-      newDecorations
-    );
-  }, [currentLine]);
-
-  const executeCode = () => {
-    setOutput([]);
-    const lines = code.split('\n');
-    const executionLines = lines
-      .map((line, index) => ({
-        line: line.trim(),
-        lineNumber: index + 1,
-        isBreakpoint: breakpoints.has(index + 1)
-      }))
-      .filter(item => item.line && !item.line.startsWith('#'));
-
-    setExecutionQueue(executionLines);
-    setIsDebugging(true);
-    
-    console.log('Starting debug session'); // Debug log
-    emitEvent('debuggerUpdate', { isStarting: true });
-
-    // Execute first line
-    if (executionLines[0]) {
-      setCurrentLine(executionLines[0].lineNumber);
-      executeLine(executionLines[0].line, executionLines[0].lineNumber);
     }
-  };
+  }, [isDebugging, code, historyIndex, executeLine, emitDebuggerEvent]);
 
-  const stepForward = () => {
-    if (!isDebugging || executionQueue.length === 0) return;
+  // Step backward - memoized
+  const stepBackward = useCallback(() => {
+    if (!isDebugging || historyIndex <= 0) return;
 
-    const currentIndex = executionQueue.findIndex(item => item.lineNumber === currentLine);
-    const nextIndex = currentIndex + 1;
+    const prevIndex = historyIndex - 1;
+    setHistoryIndex(prevIndex);
+    setCurrentLine(prevIndex);
 
-    if (nextIndex < executionQueue.length) {
-      const nextLine = executionQueue[nextIndex];
-      setCurrentLine(nextLine.lineNumber);
-      executeLine(nextLine.line, nextLine.lineNumber);
-    } else {
-      // Execution finished
-      setIsDebugging(false);
-      setCurrentLine(null);
-      emitEvent('debuggerUpdate', { isFinished: true });
+    // Get the state at the previous line
+    const prevState = executionHistory[prevIndex];
+    if (prevState) {
+      // Restore the exact state from that line
+      setVariables(new Map(prevState.lineState));
+
+      // Emit event for visualization
+      emitDebuggerEvent({
+        currentLine: prevIndex,
+        code: prevState.code,
+        variables: {
+          operation: 'restore',
+          state: prevState.lineState
+        },
+        isUndo: true
+      });
     }
-  };
+  }, [isDebugging, historyIndex, executionHistory, emitDebuggerEvent]);
 
-  const stopDebugging = () => {
+  // Stop debugging - memoized
+  const stopDebugging = useCallback(() => {
     setIsDebugging(false);
     setCurrentLine(null);
-    setExecutionQueue([]);
-    setOutput([]);
-    emitEvent('debuggerUpdate', { isStopped: true });
-  };
+    setHistoryIndex(-1);
+    setExecutionHistory([]);
+    emitDebuggerEvent({ isStopped: true });
+  }, [emitDebuggerEvent]);
+
+  // Highlight current line - using RAF for performance
+  useEffect(() => {
+    if (!editorRef.current) return;
+
+    let decorations = [];
+    const updateDecorations = () => {
+      decorations = editorRef.current.deltaDecorations(decorations, 
+        currentLine !== null ? [{
+          range: {
+            startLineNumber: currentLine + 1,
+            startColumn: 1,
+            endLineNumber: currentLine + 1,
+            endColumn: 1
+          },
+          options: {
+            isWholeLine: true,
+            className: 'current-line-highlight'
+          }
+        }] : []
+      );
+    };
+
+    requestAnimationFrame(updateDecorations);
+
+    return () => {
+      if (editorRef.current && decorations.length) {
+        editorRef.current.deltaDecorations(decorations, []);
+      }
+    };
+  }, [currentLine]);
 
   return (
-    <div ref={containerRef} data-component="code-playground" className="space-y-4">
+    <div className="bg-gray-900 rounded-lg overflow-hidden">
       <style>{`
-        .currentLine {
-          background-color: rgba(239, 68, 68, 0.1);
-        }
-        .currentLineText {
-          color: rgb(239, 68, 68) !important;
+        .current-line-highlight {
+          background-color: rgba(66, 153, 225, 0.1);
+          border-left: 2px solid #4299e1;
         }
       `}</style>
-      <div className="relative">
-        <Editor
-          height="300px"
-          defaultLanguage="python"
-          theme="vs-dark"
-          value={code}
-          onChange={handleEditorChange}
-          onMount={handleEditorDidMount}
-          options={{
-            minimap: { enabled: false },
-            fontSize: 14,
-            lineNumbers: 'on',
-            glyphMargin: true,
-            folding: false,
-            lineDecorationsWidth: 0,
-            lineNumbersMinChars: 3,
-            renderLineHighlight: 'none'
-          }}
-        />
-      </div>
-      <div className="flex space-x-4">
-        {!isDebugging ? (
-          <button
-            onClick={executeCode}
-            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
-          >
-            Debug
-          </button>
-        ) : (
-          <>
+
+      <div className="border-b border-gray-800 p-4">
+        <div className="flex justify-between items-center">
+          <div className="space-x-2">
+            <button
+              onClick={startDebugging}
+              disabled={isDebugging}
+              className={`px-3 py-1 rounded ${
+                isDebugging
+                  ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                  : 'bg-green-600 text-white hover:bg-green-700'
+              }`}
+            >
+              Debug
+            </button>
+            <button
+              onClick={stepBackward}
+              disabled={!isDebugging || historyIndex <= 0}
+              className={`px-3 py-1 rounded ${
+                !isDebugging || historyIndex <= 0
+                  ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                  : 'bg-blue-600 text-white hover:bg-blue-700'
+              }`}
+            >
+              Previous
+            </button>
             <button
               onClick={stepForward}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+              disabled={!isDebugging}
+              className={`px-3 py-1 rounded ${
+                !isDebugging
+                  ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                  : 'bg-blue-600 text-white hover:bg-blue-700'
+              }`}
             >
-              Step Forward
+              Next
             </button>
             <button
               onClick={stopDebugging}
-              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+              disabled={!isDebugging}
+              className={`px-3 py-1 rounded ${
+                !isDebugging
+                  ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                  : 'bg-red-600 text-white hover:bg-red-700'
+              }`}
             >
               Stop
             </button>
-          </>
-        )}
+          </div>
+        </div>
       </div>
-      {output.length > 0 && (
-        <div className="bg-gray-900 rounded-lg p-4 font-mono text-sm">
-          <h3 className="text-white font-semibold mb-2">Output:</h3>
-          <div className="text-gray-300">
-            {output.map((line, i) => (
-              <div key={i} className="text-white">
+
+      <div className="grid grid-cols-2 gap-4 p-4">
+        <div className="h-[400px]">
+          <Editor
+            height="100%"
+            defaultLanguage="python"
+            theme="vs-dark"
+            value={code}
+            onChange={setCode}
+            onMount={(editor) => { editorRef.current = editor; }}
+            options={{
+              minimap: { enabled: false },
+              lineNumbers: 'on',
+              roundedSelection: false,
+              scrollBeyondLastLine: false,
+              readOnly: isDebugging,
+              glyphMargin: true,
+              lineDecorationsWidth: 5,
+              renderWhitespace: 'none',
+              wordWrap: 'on'
+            }}
+          />
+        </div>
+
+        <div className="bg-gray-800 p-4 rounded h-[400px] overflow-auto">
+          <h3 className="text-white mb-4">Output</h3>
+          <div className="font-mono text-sm">
+            {output.map((line, index) => (
+              <div key={index} className="text-gray-300">
                 {line}
               </div>
             ))}
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
 
-export default CodePlayground;
+export default React.memo(CodePlayground);

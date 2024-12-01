@@ -2,15 +2,22 @@
 import MainLayout from '../../../layouts/MainLayout.astro';
 import CodePlayground from '../../../components/CodePlayground.jsx';
 import CourseSidebar from '../../../components/CourseSidebar.astro';
-import VariableAnimation from '../../../components/VariableAnimation.jsx';
 
-const introCode = `# Try this example:
-name = "Alice"      # Creates a string variable
-age = 25           # Creates an integer variable
-height = 1.75      # Creates a float variable
-is_student = True  # Creates a boolean variable
-name = "Bob"       # Updates existing variable
-del name           # Removes a variable`;
+const introCode = `# Creating variables
+name = "Alice"      # String
+age = 25           # Integer
+height = 1.75      # Float
+is_student = True  # Boolean
+
+# Printing variables
+print("Name:", name)
+print("Age:", age)
+print("Height:", height, "m")
+print("Is student?", is_student)
+
+# Variables can be reassigned
+age = 26
+print("\\nNew age:", age)  # The value has changed!`;
 
 const numbersCode = `# Integer operations
 x = 10
@@ -169,6 +176,46 @@ values = [42, "hello", 3.14, True, [1, 2, 3]]
 print("\\nType checking:")
 for value in values:
     print("Value:", value, "Type:", type(value))`;
+
+const variablesCode = `# Variables as References
+x = 10  # 'x' references an integer object with value 10
+y = x   # 'y' now references the same object as 'x'
+x = 20  # 'x' now references a new integer object with value 20
+        # 'y' still references the original object (10)
+
+# Types of Variables
+name = "Alice"       # Global variable
+def greet(name):     # Local variable
+    print("Hello, " + name)
+
+# Memory Storage
+# Heap Memory
+numbers = [1, 2, 3]  # Stores actual objects (lists, dictionaries, numbers, etc.)
+# Stack Memory
+x = 10               # Stores variable references to objects
+
+# Try it yourself!
+name = "Alice"       # Creates a string variable
+age = 25            # Creates an integer variable
+height = 1.75       # Creates a float variable
+is_student = True   # Creates a boolean variable
+name = "Bob"        # Updates existing variable
+del name           # Removes a variable
+print("check delete")
+
+# Variable Lifecycle
+# Creation
+x = 10  # Creates an object in heap memory
+      # Creates a reference in stack memory
+      # Links the reference to the object
+
+# Usage
+x = 20  # Updates the reference to a new object
+
+# Deletion
+del x  # Removes the reference
+`;
+
 ---
 
 <MainLayout title="Python Variables & Data Types">
@@ -182,18 +229,107 @@ for value in values:
         <section>
           <h2 class="text-2xl font-semibold mb-4">Introduction to Variables</h2>
           <p class="text-gray-600 dark:text-gray-300 mb-4">
-            In Python, variables are containers for storing data values. Python has no command for declaring a variable - a variable is created the moment you first assign a value to it.
-            Click on line numbers to add breakpoints and use the Debug controls to watch how variables work in memory!
+            Variables are names that reference objects in memory. Unlike some other programming languages, Python variables don't store the actual data but instead store references (or pointers) to objects in memory.
           </p>
-          <div class="space-y-4">
-            <CodePlayground 
-              client:load 
-              initialCode={introCode} 
-            />
-            <div class="mt-8">
-              <VariableAnimation client:load />
+          <div class="space-y-6">
+            <div>
+              <h3 class="text-xl font-semibold mb-2">Variables as References</h3>
+              <p class="mb-4">
+                In Python, variables are names that reference objects in memory. Unlike some other programming languages, Python variables don't store the actual data but instead store references (or pointers) to objects in memory.
+              </p>
+              <div class="bg-gray-800 rounded-lg p-4 mb-4">
+                <pre class="text-green-400"><code>{variablesCode}</code></pre>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold mb-2">Types of Variables</h3>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div class="bg-gray-800 rounded-lg p-4">
+                  <h4 class="text-lg font-semibold mb-2 text-blue-400">Global Variables</h4>
+                  <p>Declared at the top level of a script or module. Accessible throughout the entire script.</p>
+                </div>
+                <div class="bg-gray-800 rounded-lg p-4">
+                  <h4 class="text-lg font-semibold mb-2 text-green-400">Local Variables</h4>
+                  <p>Declared inside functions. Only accessible within that specific function.</p>
+                </div>
+                <div class="bg-gray-800 rounded-lg p-4">
+                  <h4 class="text-lg font-semibold mb-2 text-purple-400">Nonlocal Variables</h4>
+                  <p>Used in nested functions to access variables from the enclosing (but not global) scope.</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold mb-2">Memory Storage</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                <div class="bg-gray-800 rounded-lg p-4">
+                  <h4 class="text-lg font-semibold mb-2 text-orange-400">Heap Memory</h4>
+                  <ul class="list-disc list-inside space-y-2">
+                    <li>Stores actual objects (lists, dictionaries, numbers, etc.)</li>
+                    <li>Managed by Python's memory manager</li>
+                    <li>Where garbage collection occurs</li>
+                  </ul>
+                </div>
+                <div class="bg-gray-800 rounded-lg p-4">
+                  <h4 class="text-lg font-semibold mb-2 text-teal-400">Stack Memory</h4>
+                  <ul class="list-disc list-inside space-y-2">
+                    <li>Stores variable references to objects</li>
+                    <li>Manages function call frames</li>
+                    <li>Temporary storage for local variables</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold mb-2">Try it yourself!</h3>
+              <p class="mb-4">
+                Experiment with the code playground below to understand how Python variables work. 
+                Watch how variables are created, referenced, and deleted in memory.
+              </p>
+              <div class="bg-gray-900 rounded-lg p-4">
+                <CodePlayground client:load initialCode={`# Try this example:
+name = "Alice"       # Creates a string variable
+age = 25            # Creates an integer variable
+height = 1.75       # Creates a float variable
+is_student = True   # Creates a boolean variable
+name = "Bob"        # Updates existing variable
+del name           # Removes a variable
+print("check delete")`} />
+              </div>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold mb-2">Variable Lifecycle</h3>
+              <div class="space-y-3">
+                <div class="bg-gray-800 rounded-lg p-4">
+                  <h4 class="text-lg font-semibold mb-2 text-yellow-400">Creation</h4>
+                  <p>When you assign a value, Python:</p>
+                  <ol class="list-decimal list-inside ml-4 space-y-1">
+                    <li>Creates an object in heap memory</li>
+                    <li>Creates a reference in stack memory</li>
+                    <li>Links the reference to the object</li>
+                  </ol>
+                </div>
+                <div class="bg-gray-800 rounded-lg p-4">
+                  <h4 class="text-lg font-semibold mb-2 text-green-400">Usage</h4>
+                  <p>During program execution:</p>
+                  <ol class="list-decimal list-inside ml-4 space-y-1">
+                    <li>Variables can be read from and written to</li>
+                    <li>References can be reassigned to different objects</li>
+                    <li>Multiple variables can reference the same object</li>
+                  </ol>
+                </div>
+                <div class="bg-gray-800 rounded-lg p-4">
+                  <h4 class="text-lg font-semibold mb-2 text-red-400">Deletion</h4>
+                  <p>Variables are removed when:</p>
+                  <ol class="list-decimal list-inside ml-4 space-y-1">
+                    <li>They go out of scope (e.g., function returns)</li>
+                    <li>Are explicitly deleted using 'del'</li>
+                    <li>The program ends</li>
+                  </ol>
+                </div>
+              </div>
             </div>
           </div>
+          <CodePlayground client:load initialCode={variablesCode} />
         </section>
 
         <!-- Numbers -->
@@ -250,25 +386,3 @@ for value in values:
     </div>
   </div>
 </MainLayout>
-
-<script>
-// Connect CodePlayground with VariableAnimation
-document.addEventListener('astro:page-load', () => {
-  const codePlayground = document.querySelector('[data-component="code-playground"]');
-  const variableAnimation = document.querySelector('[data-component="variable-animation"]');
-
-  if (codePlayground && variableAnimation) {
-    codePlayground.addEventListener('codeChange', (event) => {
-      variableAnimation.setAttribute('code', event.detail);
-    });
-
-    codePlayground.addEventListener('debuggerUpdate', (event) => {
-      variableAnimation.setAttribute('debuggerState', JSON.stringify(event.detail));
-    });
-  }
-});
-</script>
-
-<style>
-  /* Add any custom styles here */
-</style>
