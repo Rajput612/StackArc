@@ -1,0 +1,293 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+---
+
+<MainLayout title="Python Input and Output">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" />
+    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8">Input and Output in Python</h1>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Output with print()</h2>
+        <div class="bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">The <code>print()</code> function is used to display output to the console.</p>
+          <CodePlayground 
+            client:load 
+            initialCode={`# Basic Print
+print("Hello, World!")
+
+# Multiple Arguments
+name = "Alice"
+age = 25
+print("Name:", name, "Age:", age)
+
+# Formatting with f-strings
+print(f"My name is {name} and I am {age} years old.")
+
+# Separator and End Parameters
+print("Python", "is", "awesome", sep="-", end="!\n")
+
+# Printing Multiple Types
+print(42, 3.14, True)`} 
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Input with input()</h2>
+        <div class="bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">The <code>input()</code> function is used to get user input from the console.</p>
+          <CodePlayground 
+            client:load 
+            initialCode={`# Basic Input
+name = input("Enter your name: ")
+print(f"Hello, {name}!")
+
+# Input with Type Conversion
+age = int(input("Enter your age: "))
+print(f"Next year, you'll be {age + 1}")
+
+# Multiple Inputs
+x = float(input("Enter first number: "))
+y = float(input("Enter second number: "))
+print(f"Sum: {x + y}, Product: {x * y}")`} 
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Advanced Input/Output</h2>
+        <div class="bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">More advanced techniques for input and output.</p>
+          <CodePlayground 
+            client:load 
+            initialCode={`# Reading Multiple Inputs
+numbers = list(map(int, input("Enter numbers separated by space: ").split()))
+print("Sum of numbers:", sum(numbers))
+
+# Writing to a File
+with open("output.txt", "w") as file:
+    file.write("Hello, File!")
+    print("Wrote to file successfully.")
+
+# Reading from a File
+with open("output.txt", "r") as file:
+    content = file.read()
+    print("File contents:", content)`} 
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Practice Problems</h2>
+        <div class="bg-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-semibold mb-4">Input/Output Challenges</h3>
+          <ol class="list-decimal list-inside space-y-4">
+            <li>
+              <strong>Personal Information Form:</strong> Create a program that asks for name, age, and email, then prints a formatted summary.
+              <div class="mt-4">
+                <CodePlayground 
+                  client:load 
+                  initialCode={`# Personal Information Form Challenge
+# TODO: Collect and display user information
+# Hint: Use input() to get user details
+# Use print() to format and display the information
+def personal_info_form():
+    pass  # Replace with your implementation
+
+# Uncomment to test your function
+# personal_info_form()`} 
+                />
+              </div>
+              <div class="bg-gray-700 rounded-lg p-4 mt-4">
+                <h4 class="text-lg font-semibold mb-2 text-blue-300">Solution Hints</h4>
+                <ul class="list-disc list-inside space-y-2">
+                  <li>Use <code>input()</code> to collect name, age, and email</li>
+                  <li>Convert age to an integer if needed</li>
+                  <li>Use f-strings for formatted output</li>
+                  <li>Consider input validation</li>
+                </ul>
+              </div>
+            </li>
+            
+            <li>
+              <strong>Calculator App:</strong> Build a simple calculator that takes two numbers and an operation as input, then displays the result.
+              <div class="mt-4">
+                <CodePlayground 
+                  client:load 
+                  initialCode={`# Calculator App Challenge
+# TODO: Create a calculator that takes numbers and operation as input
+# Hint: Use input() to get numbers and operation
+# Handle different arithmetic operations
+def simple_calculator():
+    pass  # Replace with your implementation
+
+# Uncomment to test your function
+# simple_calculator()`} 
+                />
+              </div>
+              <div class="bg-gray-700 rounded-lg p-4 mt-4">
+                <h4 class="text-lg font-semibold mb-2 text-blue-300">Solution Hints</h4>
+                <ul class="list-disc list-inside space-y-2">
+                  <li>Use <code>float(input())</code> for number inputs</li>
+                  <li>Handle different operations (+, -, *, /)</li>
+                  <li>Implement error handling for invalid inputs</li>
+                  <li>Use conditional statements to select operation</li>
+                </ul>
+              </div>
+            </li>
+            
+            <li>
+              <strong>Grade Calculator:</strong> Write a program that takes multiple test scores, calculates the average, and outputs a letter grade.
+              <div class="mt-4">
+                <CodePlayground 
+                  client:load 
+                  initialCode={`# Grade Calculator Challenge
+# TODO: Collect test scores, calculate average, and determine letter grade
+# Hint: Use a loop to collect scores
+# Calculate average and assign letter grade
+def grade_calculator():
+    pass  # Replace with your implementation
+
+# Uncomment to test your function
+# grade_calculator()`} 
+                />
+              </div>
+              <div class="bg-gray-700 rounded-lg p-4 mt-4">
+                <h4 class="text-lg font-semibold mb-2 text-blue-300">Solution Hints</h4>
+                <ul class="list-disc list-inside space-y-2">
+                  <li>Use a <code>while</code> loop to collect scores</li>
+                  <li>Use <code>float(input())</code> to get scores</li>
+                  <li>Calculate average using <code>sum()</code> and <code>len()</code></li>
+                  <li>Use conditional statements to assign letter grades</li>
+                </ul>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Practice Problem Solutions</h2>
+        <div class="bg-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-semibold mb-4">Detailed Solutions</h3>
+          
+          <div class="space-y-6">
+            <div>
+              <h4 class="text-lg font-semibold mb-2">1. Personal Information Form Solution</h4>
+              <CodePlayground 
+                client:load 
+                initialCode={`# Solution 1: Personal Information Form
+def personal_info_form():
+    # Collect user information
+    name = input("Enter your full name: ")
+    age = int(input("Enter your age: "))
+    email = input("Enter your email address: ")
+    
+    # Print formatted summary
+    print("\n--- Personal Information Summary ---")
+    print(f"Name: {name}")
+    print(f"Age: {age}")
+    print(f"Email: {email}")
+    print("-----------------------------")
+
+# Uncomment to test
+# personal_info_form()`} 
+              />
+            </div>
+            
+            <div>
+              <h4 class="text-lg font-semibold mb-2">2. Calculator App Solution</h4>
+              <CodePlayground 
+                client:load 
+                initialCode={`# Solution 2: Simple Calculator
+def simple_calculator():
+    try:
+        # Get user inputs
+        num1 = float(input("Enter first number: "))
+        num2 = float(input("Enter second number: "))
+        operation = input("Enter operation (+, -, *, /): ")
+        
+        # Perform calculation
+        if operation == '+':
+            result = num1 + num2
+        elif operation == '-':
+            result = num1 - num2
+        elif operation == '*':
+            result = num1 * num2
+        elif operation == '/':
+            # Handle division by zero
+            result = num1 / num2 if num2 != 0 else "Error: Division by zero"
+        else:
+            result = "Invalid operation"
+        
+        # Display result
+        print(f"Result: {result}")
+    
+    except ValueError:
+        print("Invalid input. Please enter numeric values.")
+
+# Uncomment to test
+# simple_calculator()`} 
+              />
+            </div>
+            
+            <div>
+              <h4 class="text-lg font-semibold mb-2">3. Grade Calculator Solution</h4>
+              <CodePlayground 
+                client:load 
+                initialCode={`# Solution 3: Grade Calculator
+def grade_calculator():
+    # Collect test scores
+    scores = []
+    while True:
+        try:
+            score = input("Enter a test score (or press Enter to finish): ")
+            if score == "":
+                break
+            scores.append(float(score))
+        except ValueError:
+            print("Invalid score. Please enter a numeric value.")
+    
+    # Calculate average and grade
+    if scores:
+        average = sum(scores) / len(scores)
+        
+        # Determine letter grade
+        if average >= 90:
+            grade = 'A'
+        elif average >= 80:
+            grade = 'B'
+        elif average >= 70:
+            grade = 'C'
+        elif average >= 60:
+            grade = 'D'
+        else:
+            grade = 'F'
+        
+        # Print results
+        print(f"\nTest Scores: {scores}")
+        print(f"Average Score: {average:.2f}")
+        print(f"Letter Grade: {grade}")
+    else:
+        print("No scores entered.")
+
+# Uncomment to test
+# grade_calculator()`} 
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  code {
+    @apply bg-gray-700 px-1 rounded text-sm;
+  }
+</style>
