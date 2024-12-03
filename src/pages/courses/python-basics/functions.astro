@@ -1,0 +1,103 @@
+---
+import CoursePageTemplate from '../../../layouts/CoursePageTemplate.astro';
+
+const sections = [
+  {
+    title: "Introduction to Functions",
+    content: `
+      <p>Functions are reusable blocks of code that perform a specific task. They help you organize your code, reduce repetition, and make your programs more modular.</p>
+      <ul class="list-disc list-inside ml-4 space-y-2">
+        <li>Defined using the <code>def</code> keyword</li>
+        <li>Can take parameters (inputs)</li>
+        <li>Can return values</li>
+        <li>Help break down complex problems into smaller, manageable pieces</li>
+      </ul>
+      <p>Functions are a fundamental concept in Python programming and are crucial for writing clean, efficient code.</p>
+    `
+  },
+  {
+    title: "Function Parameters and Return Values",
+    content: `
+      <p>Python functions can have different types of parameters and return values:</p>
+      <ul class="list-disc list-inside ml-4 space-y-2">
+        <li>Positional parameters</li>
+        <li>Keyword parameters</li>
+        <li>Default parameter values</li>
+        <li>Variable-length arguments (<code>*args</code> and <code>**kwargs</code>)</li>
+        <li>Return multiple values using tuples</li>
+      </ul>
+      <p>Understanding these concepts allows you to create more flexible and powerful functions.</p>
+    `
+  },
+  {
+    title: "Functions in Action",
+    content: `
+      <p>Let's explore functions with practical examples. In the code editor below, you'll:</p>
+      <ul class="list-disc list-inside ml-4 space-y-2">
+        <li>Define and call simple functions</li>
+        <li>Use parameters and return values</li>
+        <li>Create functions with default arguments</li>
+        <li>Implement functions that return multiple values</li>
+      </ul>
+      <p>Experiment with the code to understand how functions work!</p>
+    `,
+    code: `# Functions in Python
+
+# Simple function without parameters
+def greet():
+    print("Hello, Python!")
+
+greet()
+
+# Function with parameters
+def welcome(name):
+    print(f"Welcome, {name}!")
+
+welcome("Alice")
+
+# Function with return value
+def add_numbers(a, b):
+    return a + b
+
+result = add_numbers(5, 3)
+print("Sum:", result)
+
+# Function with default parameter
+def power(base, exponent=2):
+    return base ** exponent
+
+print("2 squared:", power(2))
+print("2 cubed:", power(2, 3))
+
+# Function returning multiple values
+def get_person_info():
+    name = "Bob"
+    age = 30
+    is_student = False
+    return name, age, is_student
+
+# Unpacking returned values
+person_name, person_age, is_studying = get_person_info()
+print(f"Name: {person_name}, Age: {person_age}, Student: {is_studying}")
+
+# Function with variable-length arguments
+def sum_all(*args):
+    total = 0
+    for num in args:
+        total += num
+    return total
+
+print("Sum of 1, 2, 3:", sum_all(1, 2, 3))
+print("Sum of 10, 20, 30, 40:", sum_all(10, 20, 30, 40))
+
+# Lambda (anonymous) function
+multiply = lambda x, y: x * y
+print("Multiplication using lambda:", multiply(4, 5))`
+  }
+];
+---
+
+<CoursePageTemplate 
+  title="Python Functions" 
+  sections={sections}
+/>

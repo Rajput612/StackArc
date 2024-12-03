@@ -1,0 +1,111 @@
+---
+import CoursePageTemplate from '../../../layouts/CoursePageTemplate.astro';
+
+const sections = [
+  {
+    title: "Lists in Python",
+    content: `
+      <p>Lists are ordered, mutable collections that can store multiple items of different types.</p>
+      <ul class="list-disc list-inside ml-4 space-y-2">
+        <li>Created using square brackets <code>[]</code></li>
+        <li>Can contain elements of different types</li>
+        <li>Mutable (can be modified after creation)</li>
+        <li>Supports indexing and slicing</li>
+      </ul>
+      <p>Lists are versatile and commonly used for storing and manipulating collections of data.</p>
+    `
+  },
+  {
+    title: "Tuples and Dictionaries",
+    content: `
+      <p>Python provides other powerful data structures:</p>
+      <ul class="list-disc list-inside ml-4 space-y-2">
+        <li><strong>Tuples</strong>: Immutable ordered collections (created with parentheses <code>()</code>)</li>
+        <li><strong>Dictionaries</strong>: Key-value pairs (created with curly braces <code>{}</code>)</li>
+        <li>Sets: Unordered collections of unique elements</li>
+      </ul>
+      <p>Each data structure has unique properties and use cases in Python programming.</p>
+    `
+  },
+  {
+    title: "Data Structures Exploration",
+    content: `
+      <p>Let's dive into Python's data structures with practical examples. In the code editor below, you'll:</p>
+      <ul class="list-disc list-inside ml-4 space-y-2">
+        <li>Create and manipulate lists</li>
+        <li>Work with tuples and their immutability</li>
+        <li>Use dictionaries for key-value storage</li>
+        <li>Explore list comprehensions and dictionary methods</li>
+      </ul>
+      <p>Experiment with the code to understand how these data structures work!</p>
+    `,
+    code: `# Python Data Structures
+
+# Lists
+fruits = ["apple", "banana", "cherry"]
+print("Original list:", fruits)
+
+# List operations
+fruits.append("date")
+fruits.insert(1, "blueberry")
+print("Modified list:", fruits)
+
+# List slicing
+print("First two fruits:", fruits[:2])
+print("Last two fruits:", fruits[-2:])
+
+# List comprehension
+squared_numbers = [x**2 for x in range(5)]
+print("Squared numbers:", squared_numbers)
+
+# Tuples
+coordinates = (10, 20)
+print("Tuple:", coordinates)
+# coordinates[0] = 15  # This would raise an error - tuples are immutable
+
+# Unpacking tuple
+x, y = coordinates
+print(f"x: {x}, y: {y}")
+
+# Dictionaries
+person = {
+    "name": "Alice",
+    "age": 30,
+    "city": "New York"
+}
+print("Person dictionary:", person)
+
+# Dictionary operations
+print("Name:", person["name"])
+person["job"] = "Developer"
+print("Updated dictionary:", person)
+
+# Dictionary methods
+print("Dictionary keys:", person.keys())
+print("Dictionary values:", person.values())
+
+# Sets
+unique_numbers = {1, 2, 3, 4, 5, 2, 3}
+print("Set (duplicates removed):", unique_numbers)
+
+# Set operations
+set1 = {1, 2, 3}
+set2 = {3, 4, 5}
+print("Union:", set1.union(set2))
+print("Intersection:", set1.intersection(set2))
+
+# Nested data structures
+students = [
+    {"name": "Bob", "grades": [85, 90, 92]},
+    {"name": "Charlie", "grades": [78, 88, 95]}
+]
+for student in students:
+    print(f"{student['name']}'s average grade: {sum(student['grades']) / len(student['grades'])}")`
+  }
+];
+---
+
+<CoursePageTemplate 
+  title="Python Data Structures" 
+  sections={sections}
+/>

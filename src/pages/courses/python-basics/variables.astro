@@ -17,7 +17,7 @@ print("Is student?", is_student)
 
 # Variables can be reassigned
 age = 26
-print("\\nNew age:", age)  # The value has changed!`;
+print("\nNew age:", age)  # The value has changed!`;
 
 const numbersCode = `# Integer operations
 x = 10
@@ -36,14 +36,14 @@ print("Power:", x ** y)          # 1000
 price = 19.99
 discount = 0.15
 final_price = price * (1 - discount)
-print("\\nPrice Calculation:")
+print("\nPrice Calculation:")
 print("Original price: $", price)
 print("Discount:", discount*100, "%")
 print("Final price: $", round(final_price, 2))
 
 # Complex numbers
 z = 2 + 3j
-print("\\nComplex number:", z)
+print("\nComplex number:", z)
 print("Real part:", z.real)
 print("Imaginary part:", z.imag)`;
 
@@ -60,7 +60,7 @@ print("Length:", len(full_name), "characters")
 
 # String methods
 text = "   Hello, World!   "
-print("\\nString Methods:")
+print("\nString Methods:")
 print("Original:", text)
 print("Stripped:", text.strip())
 print("Replace:", text.replace("Hello", "Hi"))
@@ -70,7 +70,7 @@ print("Split:", text.split(","))
 name = "Bob"
 age = 30
 height = 1.85
-print("\\nString Formatting:")
+print("\nString Formatting:")
 print("Using concatenation:", name, "is", age, "years old and", height, "m tall")
 print("Using .format():", "{} is {} years old".format(name, age))
 print("Using % operator:", "%s is %d years old" % (name, age))`;
@@ -89,11 +89,11 @@ print("Last fruit:", fruits[-1])
 fruits.append("grape")
 fruits.insert(1, "mango")
 fruits.remove("banana")
-print("\\nModified fruits:", fruits)
+print("\nModified fruits:", fruits)
 
 # List methods
 numbers = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3]
-print("\\nList Methods:")
+print("\nList Methods:")
 print("Original numbers:", numbers)
 numbers.sort()
 print("Sorted numbers:", numbers)
@@ -101,7 +101,7 @@ print("Count of 5:", numbers.count(5))
 print("Index of 9:", numbers.index(9))
 
 # List slicing
-print("\\nList Slicing:")
+print("\nList Slicing:")
 print("First three numbers:", numbers[:3])
 print("Last three numbers:", numbers[-3:])
 print("Every second number:", numbers[::2])`;
@@ -123,26 +123,26 @@ print("First hobby:", person["hobbies"][0])
 # Modifying dictionaries
 person['job'] = 'Engineer'
 person['age'] = 26
-print("\\nModified person:")
+print("\nModified person:")
 print("New job:", person['job'])
 print("Updated age:", person['age'])
 
 # Dictionary methods
-print("\\nDictionary Methods:")
+print("\nDictionary Methods:")
 print("Keys:", list(person.keys()))
 print("Values:", list(person.values()))
 print("Items:", list(person.items()))
 
 # Dictionary operations
 if "name" in person:
-    print("\\nFound name:", person.get('name'))
+    print("\nFound name:", person.get('name'))
 
 # Nested dictionaries
 contacts = {
     "Alice": {"phone": "123-456-7890", "email": "alice@email.com"},
     "Bob": {"phone": "098-765-4321", "email": "bob@email.com"}
 }
-print("\\nNested Dictionaries:")
+print("\nNested Dictionaries:")
 print("Alice's phone:", contacts['Alice']['phone'])
 print("Bob's email:", contacts['Bob']['email'])`;
 
@@ -164,7 +164,7 @@ print("Float to integer:", pi)
 # String to list conversion
 text = "Hello,World,Python"
 text_list = text.split(',')
-print("\\nString to list:", text_list)
+print("\nString to list:", text_list)
 
 # List to string conversion
 words = ['Hello', 'World', 'Python']
@@ -173,7 +173,7 @@ print("List to string:", text)
 
 # Type checking
 values = [42, "hello", 3.14, True, [1, 2, 3]]
-print("\\nType checking:")
+print("\nType checking:")
 for value in values:
     print("Value:", value, "Type:", type(value))`;
 
@@ -213,8 +213,124 @@ x = 10  # Creates an object in heap memory
 x = 20  # Updates the reference to a new object
 
 # Deletion
-del x  # Removes the reference
-`;
+del x  # Removes the reference`;
+
+const sections = [
+  {
+    title: "What are Variables?",
+    content: `
+      <p>Variables are containers for storing data values in Python. They act as named references to memory locations where data is stored.</p>
+      <ul>
+        <li>Created using a name and assigned a value</li>
+        <li>Can store different types of data</li>
+        <li>Names are case-sensitive</li>
+        <li>Follow specific naming conventions</li>
+      </ul>
+    `,
+    code: introCode
+  },
+  {
+    title: "Variable Naming Conventions",
+    content: `
+      <p>Python has specific rules for naming variables:</p>
+      <ul>
+        <li>Start with a letter (a-z, A-Z) or underscore (_)</li>
+        <li>Can contain letters, numbers, and underscores</li>
+        <li>Cannot start with a number</li>
+        <li>Case-sensitive (age and Age are different variables)</li>
+        <li>Avoid using Python keywords</li>
+      </ul>
+    `,
+    code: `# Valid variable names
+name = "Alice"
+age_2 = 25
+_score = 100
+camelCaseVariable = "Allowed but not recommended"
+
+# Invalid variable names
+# 2name = "Invalid"  # Cannot start with a number
+# my-variable = 10   # Hyphens not allowed
+# class = "Reserved" # Cannot use Python keywords`
+  },
+  {
+    title: "Variable Assignment and References",
+    content: `
+      <p>Understanding how variables are assigned and referenced is crucial in Python:</p>
+      <ul>
+        <li>Variables are references to objects in memory</li>
+        <li>Multiple variables can reference the same object</li>
+        <li>Immutable objects behave differently from mutable objects</li>
+      </ul>
+    `,
+    code: `# Object References
+x = 10
+y = x   # 'y' now references the same object as 'x'
+x = 20  # 'x' now references a new integer object with value 20
+        # 'y' still references the original object (10)
+
+# Mutable vs Immutable
+# Integers are immutable
+a = 5
+b = a
+a = 10  # Creates a new object
+print("a:", a, "b:", b)
+
+# Lists are mutable
+list1 = [1, 2, 3]
+list2 = list1  # Both variables reference the same list
+list1.append(4)  # Modifies the original list
+print("list1:", list1)
+print("list2:", list2)  # list2 is also modified`
+  },
+  {
+    title: "Numbers in Python",
+    content: `
+      <p>Python supports several types of numbers:</p>
+      <ul>
+        <li>Integers (int) - Whole numbers, positive or negative</li>
+        <li>Floating point numbers (float) - Decimal numbers</li>
+        <li>Complex numbers (complex) - Numbers with real and imaginary parts</li>
+      </ul>
+    `,
+    code: numbersCode
+  },
+  {
+    title: "Strings",
+    content: `
+      <p>Strings in Python are sequences of characters, surrounded by either single quotes ('...') or double quotes ("..."). 
+      Python provides many built-in methods to manipulate strings.</p>
+    `,
+    code: stringsCode
+  },
+  {
+    title: "Lists",
+    content: `
+      <p>Lists are ordered, changeable collections that can store different types of data. They are created using square brackets []</p>
+    `,
+    code: listsCode
+  },
+  {
+    title: "Dictionaries",
+    content: `
+      <p>Dictionaries are unordered collections of key-value pairs. They are created using curly braces {} with key:value syntax.</p>
+    `,
+    code: dictionariesCode
+  },
+  {
+    title: "Type Conversion",
+    content: `
+      <p>Python provides built-in functions for converting between different data types. This is also known as type casting.</p>
+    `,
+    code: typeConversionCode
+  },
+  {
+    title: "Variables as References",
+    content: `
+      <p>Variables are names that reference objects in memory. Unlike some other programming languages, Python variables don't store the actual data but instead store references (or pointers) to objects in memory.</p>
+    `,
+    code: variablesCode
+  }
+];
 
 ---
 
@@ -225,7 +341,6 @@ del x  # Removes the reference
       <h1 class="text-3xl font-bold mb-8">Python Variables & Data Types</h1>
 
       <div class="space-y-12">
-        <!-- Introduction -->
         <section>
           <h2 class="text-2xl font-semibold mb-4">Introduction to Variables</h2>
           <p class="text-gray-600 dark:text-gray-300 mb-4">
@@ -235,104 +350,16 @@ del x  # Removes the reference
             <div>
               <h3 class="text-xl font-semibold mb-2">Variables as References</h3>
               <p class="mb-4">
-                In Python, variables are names that reference objects in memory. Unlike some other programming languages, Python variables don't store the actual data but instead store references (or pointers) to objects in memory.
+                In Python, variables are names that reference objects in memory. Unlike some other programming languages, Python variables don’t store the actual data but instead store references (or pointers) to objects in memory.
               </p>
               <div class="bg-gray-800 rounded-lg p-4 mb-4">
-                <pre class="text-green-400"><code>{variablesCode}</code></pre>
+                <pre class="text-green-400"><code>{introCode}</code></pre>
               </div>
-            </div>
-            <div>
-              <h3 class="text-xl font-semibold mb-2">Types of Variables</h3>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <div class="bg-gray-800 rounded-lg p-4">
-                  <h4 class="text-lg font-semibold mb-2 text-blue-400">Global Variables</h4>
-                  <p>Declared at the top level of a script or module. Accessible throughout the entire script.</p>
-                </div>
-                <div class="bg-gray-800 rounded-lg p-4">
-                  <h4 class="text-lg font-semibold mb-2 text-green-400">Local Variables</h4>
-                  <p>Declared inside functions. Only accessible within that specific function.</p>
-                </div>
-                <div class="bg-gray-800 rounded-lg p-4">
-                  <h4 class="text-lg font-semibold mb-2 text-purple-400">Nonlocal Variables</h4>
-                  <p>Used in nested functions to access variables from the enclosing (but not global) scope.</p>
-                </div>
-              </div>
-            </div>
-            <div>
-              <h3 class="text-xl font-semibold mb-2">Memory Storage</h3>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-                <div class="bg-gray-800 rounded-lg p-4">
-                  <h4 class="text-lg font-semibold mb-2 text-orange-400">Heap Memory</h4>
-                  <ul class="list-disc list-inside space-y-2">
-                    <li>Stores actual objects (lists, dictionaries, numbers, etc.)</li>
-                    <li>Managed by Python's memory manager</li>
-                    <li>Where garbage collection occurs</li>
-                  </ul>
-                </div>
-                <div class="bg-gray-800 rounded-lg p-4">
-                  <h4 class="text-lg font-semibold mb-2 text-teal-400">Stack Memory</h4>
-                  <ul class="list-disc list-inside space-y-2">
-                    <li>Stores variable references to objects</li>
-                    <li>Manages function call frames</li>
-                    <li>Temporary storage for local variables</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div>
-              <h3 class="text-xl font-semibold mb-2">Try it yourself!</h3>
-              <p class="mb-4">
-                Experiment with the code playground below to understand how Python variables work. 
-                Watch how variables are created, referenced, and deleted in memory.
-              </p>
-              <div class="bg-gray-900 rounded-lg p-4">
-                <CodePlayground client:load initialCode={`# Try this example:
-name = "Alice"       # Creates a string variable
-age = 25            # Creates an integer variable
-height = 1.75       # Creates a float variable
-is_student = True   # Creates a boolean variable
-name = "Bob"        # Updates existing variable
-del name           # Removes a variable
-print("check delete")`} />
-              </div>
-            </div>
-            <div>
-              <h3 class="text-xl font-semibold mb-2">Variable Lifecycle</h3>
-              <div class="space-y-3">
-                <div class="bg-gray-800 rounded-lg p-4">
-                  <h4 class="text-lg font-semibold mb-2 text-yellow-400">Creation</h4>
-                  <p>When you assign a value, Python:</p>
-                  <ol class="list-decimal list-inside ml-4 space-y-1">
-                    <li>Creates an object in heap memory</li>
-                    <li>Creates a reference in stack memory</li>
-                    <li>Links the reference to the object</li>
-                  </ol>
-                </div>
-                <div class="bg-gray-800 rounded-lg p-4">
-                  <h4 class="text-lg font-semibold mb-2 text-green-400">Usage</h4>
-                  <p>During program execution:</p>
-                  <ol class="list-decimal list-inside ml-4 space-y-1">
-                    <li>Variables can be read from and written to</li>
-                    <li>References can be reassigned to different objects</li>
-                    <li>Multiple variables can reference the same object</li>
-                  </ol>
-                </div>
-                <div class="bg-gray-800 rounded-lg p-4">
-                  <h4 class="text-lg font-semibold mb-2 text-red-400">Deletion</h4>
-                  <p>Variables are removed when:</p>
-                  <ol class="list-decimal list-inside ml-4 space-y-1">
-                    <li>They go out of scope (e.g., function returns)</li>
-                    <li>Are explicitly deleted using 'del'</li>
-                    <li>The program ends</li>
-                  </ol>
-                </div>
-              </div>
+              <CodePlayground client:load initialCode={introCode} />
             </div>
           </div>
-          <CodePlayground client:load initialCode={variablesCode} />
         </section>
 
-        <!-- Numbers -->
         <section>
           <h2 class="text-2xl font-semibold mb-4">Numbers in Python</h2>
           <p class="text-gray-600 dark:text-gray-300 mb-4">
@@ -346,7 +373,6 @@ print("check delete")`} />
           <CodePlayground client:load initialCode={numbersCode} />
         </section>
 
-        <!-- Strings -->
         <section>
           <h2 class="text-2xl font-semibold mb-4">Strings</h2>
           <p class="text-gray-600 dark:text-gray-300 mb-4">
@@ -356,7 +382,6 @@ print("check delete")`} />
           <CodePlayground client:load initialCode={stringsCode} />
         </section>
 
-        <!-- Lists -->
         <section>
           <h2 class="text-2xl font-semibold mb-4">Lists</h2>
           <p class="text-gray-600 dark:text-gray-300 mb-4">
@@ -365,7 +390,6 @@ print("check delete")`} />
           <CodePlayground client:load initialCode={listsCode} />
         </section>
 
-        <!-- Dictionaries -->
         <section>
           <h2 class="text-2xl font-semibold mb-4">Dictionaries</h2>
           <p class="text-gray-600 dark:text-gray-300 mb-4">
@@ -374,7 +398,6 @@ print("check delete")`} />
           <CodePlayground client:load initialCode={dictionariesCode} />
         </section>
 
-        <!-- Type Conversion -->
         <section>
           <h2 class="text-2xl font-semibold mb-4">Type Conversion</h2>
           <p class="text-gray-600 dark:text-gray-300 mb-4">
@@ -386,3 +409,21 @@ print("check delete")`} />
     </div>
   </div>
 </MainLayout>
+
+<style>
+  .prose h2 {
+    @apply text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4;
+  }
+  
+  .prose h3 {
+    @apply text-xl font-semibold text-gray-900 dark:text-white mt-6 mb-3;
+  }
+  
+  .prose p {
+    @apply text-gray-700 dark:text-gray-300 mb-4;
+  }
+  
+  .prose ul {
+    @apply list-disc list-inside text-gray-700 dark:text-gray-300 mb-4 ml-4;
+  }
+</style>

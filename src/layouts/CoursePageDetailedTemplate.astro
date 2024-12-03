@@ -1,0 +1,67 @@
+---
+import MainLayout from './MainLayout.astro';
+import CodePlayground from '../components/CodePlayground.jsx';
+import CourseSidebar from '../components/CourseSidebar.astro';
+
+export interface CourseSection {
+  title: string;
+  content: string;
+  code?: string;
+}
+
+export interface CoursePageProps {
+  title: string;
+  sections: CourseSection[];
+}
+
+const { 
+  title = 'Python Course', 
+  sections = [] 
+} = Astro.props;
+---
+
+<MainLayout title={title}>
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" />
+    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8">{title}</h1>
+
+      {sections.map((section, index) => (
+        <div class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">{section.title}</h2>
+          
+          <div class="prose dark:prose-invert prose-lg max-w-none mb-6">
+            <Fragment set:html={section.content} />
+          </div>
+          
+          {section.code && (
+            <div class="rounded-lg overflow-hidden">
+              <CodePlayground 
+                client:load 
+                initialCode={section.code} 
+              />
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  .prose h2 {
+    @apply text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4;
+  }
+  
+  .prose h3 {
+    @apply text-xl font-semibold text-gray-900 dark:text-white mt-6 mb-3;
+  }
+  
+  .prose p {
+    @apply text-gray-700 dark:text-gray-300 mb-4;
+  }
+  
+  .prose ul {
+    @apply list-disc list-inside text-gray-700 dark:text-gray-300 mb-4 ml-4;
+  }
+</style>

@@ -1,0 +1,165 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+---
+
+<MainLayout title="Python IDE Setup Guide">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" />
+    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8">Python IDE Setup Guide</h1>
+
+      <div class="space-y-12">
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">Introduction to IDEs</h2>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">
+            An Integrated Development Environment (IDE) is crucial for efficient Python programming. It provides tools for code writing, debugging, and project management.
+          </p>
+          <div class="bg-gray-800 rounded-lg p-4">
+            <h3 class="text-xl font-semibold mb-2 text-blue-400">Key IDE Features</h3>
+            <ul class="list-disc list-inside space-y-2">
+              <li>Syntax highlighting</li>
+              <li>Code completion</li>
+              <li>Debugging tools</li>
+              <li>Version control integration</li>
+              <li>Project management</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">Visual Studio Code Setup</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="bg-gray-800 rounded-lg p-4">
+              <h3 class="text-lg font-semibold mb-2 text-green-400">Official Installation Guide</h3>
+              <ul class="list-disc list-inside space-y-2">
+                <li>
+                  <a 
+                    href="https://marketplace.visualstudio.com/items?itemName=ms-python.python" 
+                    target="_blank" 
+                    class="text-blue-300 hover:underline"
+                  >
+                    Microsoft Python Extension Marketplace Page
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="bg-gray-800 rounded-lg p-4">
+              <h3 class="text-lg font-semibold mb-2 text-purple-400">Installation Steps</h3>
+              <ol class="list-decimal list-inside space-y-2">
+                <li>Download VS Code from official website</li>
+                <li>Install Python extension by Microsoft</li>
+                <li>Select Python interpreter</li>
+                <li>Configure development environment</li>
+              </ol>
+            </div>
+          </div>
+          <div class="bg-gray-700 rounded-lg p-4">
+            <h3 class="text-lg font-semibold mb-2 text-yellow-400">Key Configuration</h3>
+            <ul class="list-disc list-inside space-y-2">
+              <li>Install Python extension from Visual Studio Marketplace</li>
+              <li>Configure Python interpreter path</li>
+              <li>Install recommended Python linters and formatters</li>
+              <li>Set up virtual environments</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">PyCharm Setup</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="bg-gray-800 rounded-lg p-4">
+              <h3 class="text-lg font-semibold mb-2 text-green-400">Official Installation Guide</h3>
+              <ul class="list-disc list-inside space-y-2">
+                <li>
+                  <a 
+                    href="https://www.jetbrains.com/help/pycharm/installation-guide.html#toolbox" 
+                    target="_blank" 
+                    class="text-blue-300 hover:underline"
+                  >
+                    JetBrains PyCharm Installation Guide
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="bg-gray-800 rounded-lg p-4">
+              <h3 class="text-lg font-semibold mb-2 text-purple-400">Installation Options</h3>
+              <ul class="list-disc list-inside space-y-2">
+                <li>JetBrains Toolbox App</li>
+                <li>Direct download from website</li>
+                <li>Community vs Professional Edition</li>
+              </ul>
+            </div>
+          </div>
+          <div class="bg-gray-700 rounded-lg p-4">
+            <h3 class="text-lg font-semibold mb-2 text-yellow-400">Configuration Recommendations</h3>
+            <ul class="list-disc list-inside space-y-2">
+              <li>Use JetBrains Toolbox for easy updates</li>
+              <li>Select appropriate Python interpreter</li>
+              <li>Install recommended plugins</li>
+              <li>Configure version control integration</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">Jupyter Notebook Setup</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="bg-gray-800 rounded-lg p-4">
+              <h3 class="text-lg font-semibold mb-2 text-green-400">Official Installation Guide</h3>
+              <ul class="list-disc list-inside space-y-2">
+                <li>
+                  <a 
+                    href="https://jupyter.org/install" 
+                    target="_blank" 
+                    class="text-blue-300 hover:underline"
+                  >
+                    Jupyter Official Installation Page
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="bg-gray-800 rounded-lg p-4">
+              <h3 class="text-lg font-semibold mb-2 text-purple-400">Installation Methods</h3>
+              <ul class="list-disc list-inside space-y-2">
+                <li>pip installation</li>
+                <li>Anaconda distribution</li>
+                <li>Conda package manager</li>
+              </ul>
+            </div>
+          </div>
+          <div class="bg-gray-700 rounded-lg p-4">
+            <h3 class="text-lg font-semibold mb-2 text-yellow-400">Setup Recommendations</h3>
+            <ul class="list-disc list-inside space-y-2">
+              <li>Use virtual environments</li>
+              <li>Install additional kernels</li>
+              <li>Configure Jupyter extensions</li>
+              <li>Set up data science libraries</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">Choosing the Right IDE</h2>
+          <div class="bg-gray-800 rounded-lg p-4">
+            <h3 class="text-xl font-semibold mb-2 text-blue-400">Considerations</h3>
+            <ul class="list-disc list-inside space-y-2">
+              <li><strong>Project Type:</strong> Web, Data Science, Desktop Apps</li>
+              <li><strong>Performance:</strong> Resource usage and speed</li>
+              <li><strong>Budget:</strong> Free vs Paid versions</li>
+              <li><strong>Learning Curve:</strong> Ease of use</li>
+              <li><strong>Personal Preference:</strong> UI and workflow</li>
+            </ul>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  a {
+    @apply text-blue-300 hover:underline;
+  }
+</style>

@@ -1,0 +1,101 @@
+---
+import CoursePageTemplate from '../../../layouts/CoursePageTemplate.astro';
+
+const sections = [
+  {
+    title: "Understanding Python Data Types",
+    content: `
+      <p>Python has several built-in data types that help you store and manipulate different kinds of data:</p>
+      <ul class="list-disc list-inside ml-4 space-y-2">
+        <li><strong>Numeric Types</strong>: int, float, complex</li>
+        <li><strong>Sequence Types</strong>: list, tuple, range</li>
+        <li><strong>Text Type</strong>: str</li>
+        <li><strong>Mapping Type</strong>: dict</li>
+        <li><strong>Set Types</strong>: set, frozenset</li>
+        <li><strong>Boolean Type</strong>: bool</li>
+      </ul>
+      <p>Each data type has its own characteristics and use cases, allowing you to choose the most appropriate type for your specific programming needs.</p>
+    `
+  },
+  {
+    title: "Numeric Types in Depth",
+    content: `
+      <p>Python provides three main numeric types:</p>
+      <ul class="list-disc list-inside ml-4 space-y-2">
+        <li><code>int</code>: Whole numbers (positive, negative, or zero)</li>
+        <li><code>float</code>: Decimal numbers with fractional parts</li>
+        <li><code>complex</code>: Numbers with real and imaginary parts</li>
+      </ul>
+      <p>These types support various mathematical operations and can be converted between each other.</p>
+    `
+  },
+  {
+    title: "Exploring Data Types Hands-On",
+    content: `
+      <p>Let's dive into practical examples of Python data types. In the code editor below, you'll:</p>
+      <ul class="list-disc list-inside ml-4 space-y-2">
+        <li>Create variables of different types</li>
+        <li>Use the <code>type()</code> function to check variable types</li>
+        <li>Perform basic operations with different data types</li>
+        <li>Explore type conversion</li>
+      </ul>
+      <p>Experiment with the code and see how different data types behave!</p>
+    `,
+    code: `# Exploring Python Data Types
+
+# Numeric Types
+integer_num = 42        # Integer
+float_num = 3.14        # Float
+complex_num = 2 + 3j    # Complex number
+
+# Sequence Types
+fruits_list = ["apple", "banana", "cherry"]   # List
+coordinates_tuple = (10, 20)                  # Tuple
+number_range = range(5)                       # Range
+
+# Text Type
+greeting = "Hello, Python!"   # String
+
+# Mapping Type
+person_dict = {
+    "name": "Alice", 
+    "age": 25, 
+    "is_student": True
+}   # Dictionary
+
+# Set Type
+unique_numbers = {1, 2, 3, 4, 5}   # Set
+
+# Boolean Type
+is_learning = True   # Boolean
+
+# Printing types and values
+print("Integer:", integer_num, "Type:", type(integer_num))
+print("Float:", float_num, "Type:", type(float_num))
+print("Complex:", complex_num, "Type:", type(complex_num))
+
+print("\nList:", fruits_list, "Type:", type(fruits_list))
+print("Tuple:", coordinates_tuple, "Type:", type(coordinates_tuple))
+print("Range:", list(number_range), "Type:", type(number_range))
+
+print("\nString:", greeting, "Type:", type(greeting))
+print("Dictionary:", person_dict, "Type:", type(person_dict))
+print("Set:", unique_numbers, "Type:", type(unique_numbers))
+print("Boolean:", is_learning, "Type:", type(is_learning))
+
+# Type Conversion Examples
+str_number = "123"
+converted_int = int(str_number)
+converted_float = float(str_number)
+
+print("\nType Conversion:")
+print("String to Integer:", converted_int, "Type:", type(converted_int))
+print("String to Float:", converted_float, "Type:", type(converted_float))`
+  }
+];
+---
+
+<CoursePageTemplate 
+  title="Python Data Types" 
+  sections={sections}
+/>

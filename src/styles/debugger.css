@@ -1,0 +1,97 @@
+.debug-line-highlight {
+  background-color: rgba(66, 153, 225, 0.1);
+  border-left: 2px solid #4299e1;
+}
+
+.breakpoint-glyph {
+  background-color: #e53e3e;
+  border-radius: 50%;
+  margin-left: 5px;
+  width: 10px !important;
+  height: 10px !important;
+}
+
+.debug-breakpoint-glyph {
+  background-color: #4299e1;
+  border-radius: 50%;
+  margin-left: 5px;
+  width: 10px !important;
+  height: 10px !important;
+}
+
+.editor-container {
+  position: relative;
+}
+
+.debug-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.current-line-highlight {
+  background-color: rgba(64, 128, 255, 0.2);
+  border-left: 2px solid #4080ff;
+}
+
+.current-line-glyph {
+  background-color: #4080ff;
+  border-radius: 50%;
+  margin-left: 5px;
+  width: 8px;
+  height: 8px;
+}
+
+/* Editor customizations */
+.monaco-editor .margin {
+  background-color: #1e1e1e !important;
+}
+
+.monaco-editor .line-numbers {
+  color: #666 !important;
+}
+
+/* Output styling */
+.output-container {
+  font-family: 'Fira Code', monospace;
+  background-color: #1e1e1e;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.output-line {
+  color: #d4d4d4;
+  padding: 2px 0;
+}
+
+.output-error {
+  color: #f87171;
+}
+
+.output-success {
+  color: #34d399;
+}
+
+/* Animation effects */
+@keyframes highlight {
+  0% {
+    background-color: rgba(64, 128, 255, 0);
+  }
+  50% {
+    background-color: rgba(64, 128, 255, 0.3);
+  }
+  100% {
+    background-color: rgba(64, 128, 255, 0.2);
+  }
+}
+
+.current-line-highlight {
+  animation: highlight 0.5s ease-out;
+}

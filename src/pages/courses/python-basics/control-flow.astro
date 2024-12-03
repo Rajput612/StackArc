@@ -1,0 +1,92 @@
+---
+import CoursePageTemplate from '../../../layouts/CoursePageTemplate.astro';
+
+const sections = [
+  {
+    title: "Conditional Statements",
+    content: `
+      <p>Conditional statements allow you to make decisions in your code based on certain conditions. Python uses <code>if</code>, <code>elif</code> (else if), and <code>else</code> keywords to create conditional logic.</p>
+      <ul class="list-disc list-inside ml-4 space-y-2">
+        <li><code>if</code>: Executes a block of code if a condition is true</li>
+        <li><code>elif</code>: Adds additional conditions to check</li>
+        <li><code>else</code>: Provides a default action when no conditions are met</li>
+      </ul>
+      <p>Conditional statements are fundamental for creating decision-making logic in your programs.</p>
+    `
+  },
+  {
+    title: "Loops in Python",
+    content: `
+      <p>Loops allow you to repeat a block of code multiple times. Python provides two main types of loops:</p>
+      <ul class="list-disc list-inside ml-4 space-y-2">
+        <li><code>for</code> loops: Iterate over a sequence (list, tuple, string, etc.)</li>
+        <li><code>while</code> loops: Repeat a block of code as long as a condition is true</li>
+      </ul>
+      <p>Loops are essential for performing repetitive tasks and processing collections of data.</p>
+    `
+  },
+  {
+    title: "Control Flow Hands-On",
+    content: `
+      <p>Let's explore control flow with practical examples. In the code editor below, you'll:</p>
+      <ul class="list-disc list-inside ml-4 space-y-2">
+        <li>Use conditional statements with <code>if</code>, <code>elif</code>, and <code>else</code></li>
+        <li>Implement <code>for</code> loops to iterate through collections</li>
+        <li>Create <code>while</code> loops with different conditions</li>
+        <li>Use <code>break</code> and <code>continue</code> to control loop execution</li>
+      </ul>
+      <p>Experiment with the code to understand how control flow works!</p>
+    `,
+    code: `# Control Flow in Python
+
+# Conditional Statements
+age = 18
+if age < 13:
+    print("Child")
+elif age < 18:
+    print("Teenager")
+else:
+    print("Adult")
+
+# For Loop with range()
+print("\nCounting from 0 to 4:")
+for i in range(5):
+    print(i)
+
+# For Loop with a list
+fruits = ["apple", "banana", "cherry"]
+print("\nIterating through fruits:")
+for fruit in fruits:
+    print(fruit)
+
+# While Loop
+count = 0
+print("\nWhile loop example:")
+while count < 5:
+    print(count)
+    count += 1
+
+# Break and Continue
+print("\nUsing break and continue:")
+for num in range(10):
+    if num == 3:
+        print("Skipping 3")
+        continue
+    if num == 7:
+        print("Stopping at 7")
+        break
+    print(num)
+
+# Nested Loops
+print("\nNested loops:")
+for i in range(3):
+    for j in range(2):
+        print(f"i: {i}, j: {j}")`
+  }
+];
+---
+
+<CoursePageTemplate 
+  title="Python Control Flow" 
+  sections={sections}
+/>

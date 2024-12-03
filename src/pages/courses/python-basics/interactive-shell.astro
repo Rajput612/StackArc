@@ -1,0 +1,106 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+const interactiveShellBasicsCode = `# Open Python Interactive Shell
+# Type 'python' or 'python3' in terminal
+
+# Basic Arithmetic
+2 + 3       # Addition
+10 - 5      # Subtraction
+4 * 6       # Multiplication
+15 / 3      # Division
+2 ** 3      # Exponentiation`;
+
+const variablesInShellCode = `# Variables in Interactive Shell
+x = 10
+y = 20
+print(x + y)    # 30
+
+name = "Alice"
+print("Hello, " + name)`;
+
+const functionDefinitionCode = `# Defining Functions
+def greet(name):
+    return f"Hello, {name}!"
+
+# Call function in shell
+result = greet("Python Learner")
+print(result)`;
+
+const importModulesCode = `# Importing Modules
+import math
+print(math.pi)          # Mathematical constant
+print(math.sqrt(16))    # Square root
+
+import random
+print(random.randint(1, 10))  # Random integer`;
+
+const helpAndDocumentationCode = `# Getting Help
+help(print)     # Documentation for print function
+dir(str)        # List methods for strings
+type(42)        # Check type of object
+
+# Exit Interactive Shell
+exit()  # or Ctrl+D (Mac/Linux) or Ctrl+Z (Windows)`;
+
+---
+
+<MainLayout title="Python Interactive Shell Guide">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" />
+    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8">Python Interactive Shell Guide</h1>
+
+      <div class="space-y-12">
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">Introduction</h2>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">
+            The Python Interactive Shell is a powerful tool for quick testing, learning, and experimenting with Python code. It provides an immediate environment to run Python commands.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">Basic Arithmetic</h2>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">
+            Use the interactive shell as a powerful calculator:
+          </p>
+          <CodePlayground client:load initialCode={interactiveShellBasicsCode} />
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">Variables</h2>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">
+            Create and manipulate variables directly in the shell:
+          </p>
+          <CodePlayground client:load initialCode={variablesInShellCode} />
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">Function Definitions</h2>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">
+            Define and call functions interactively:
+          </p>
+          <CodePlayground client:load initialCode={functionDefinitionCode} />
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">Importing Modules</h2>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">
+            Import and use Python modules in the interactive shell:
+          </p>
+          <CodePlayground client:load initialCode={importModulesCode} />
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">Help and Documentation</h2>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">
+            Access built-in help and documentation features:
+          </p>
+          <CodePlayground client:load initialCode={helpAndDocumentationCode} />
+        </section>
+      </div>
+    </div>
+  </div>
+</MainLayout>
