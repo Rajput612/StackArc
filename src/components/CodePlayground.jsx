@@ -5,6 +5,7 @@ const MAX_HISTORY_SIZE = 50; // Limit history size
 const MAX_OUTPUT_SIZE = 100; // Limit output size
 
 const CodePlayground = ({ 
+  id,
   initialCode = '# Write your Python code here\n', 
   solution = null 
 }) => {
@@ -210,6 +211,23 @@ const CodePlayground = ({
     emitDebuggerEvent({ isStopped: true });
   }, [emitDebuggerEvent]);
 
+  // Toggle solution
+  const toggleSolution = () => {
+    if (!solution) return;
+
+    if (!showSolution) {
+      // Store current code before replacing
+      localStorage.setItem(`${id}-original-code`, code);
+      setCode(solution);
+      setShowSolution(true);
+    } else {
+      // Restore original code
+      const originalCode = localStorage.getItem(`${id}-original-code`) || initialCode;
+      setCode(originalCode);
+      setShowSolution(false);
+    }
+  };
+
   // Highlight current line - using RAF for performance
   useEffect(() => {
     if (!editorRef.current) return;
@@ -252,7 +270,7 @@ const CodePlayground = ({
 
       <div className="border-b border-gray-800 p-4">
         <div className="flex justify-between items-center">
-          <div className="space-x-2">
+          <div className="flex space-x-2">
             <button
               onClick={startDebugging}
               disabled={isDebugging}
@@ -296,6 +314,21 @@ const CodePlayground = ({
               }`}
             >
               Stop
+            </button>
+          </div>
+          <div className="ml-auto">
+            <button
+              onClick={toggleSolution}
+              disabled={!solution}
+              className={`px-3 py-1 rounded ${
+                !solution
+                  ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                  : showSolution
+                    ? 'bg-red-600 text-white hover:bg-red-700'
+                    : 'bg-green-600 text-white hover:bg-green-700'
+              }`}
+            >
+              {showSolution ? 'Hide Solution' : 'Show Solution'}
             </button>
           </div>
         </div>
