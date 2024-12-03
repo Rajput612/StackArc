@@ -183,168 +183,162 @@ print("Can get discount:", can_get_discount)  # True`}
         <h2 class="text-2xl font-semibold mb-4">Practice Problems</h2>
         <div class="bg-gray-800 rounded-lg p-6">
           <h3 class="text-xl font-semibold mb-4">Operator Challenges</h3>
-          <ol class="list-decimal list-inside space-y-4">
-            <li>
-              <strong>Calculator Challenge:</strong> Create a program that takes two numbers and an operator (+, -, *, /, %) as input and performs the corresponding operation.
-              <div class="mt-4">
+          
+          <div class="space-y-8">
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">🧮 Challenge 1: Simple Calculator</h4>
+              <p class="text-gray-300 mb-4">Create a basic calculator that performs arithmetic operations on two numbers. Learn how to use arithmetic operators effectively.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">🎯 Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Practice using arithmetic operators</li>
+                    <li>Handle user inputs and conversions</li>
+                    <li>Implement basic error handling</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">🚀 Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use <code>input()</code> to get numbers</li>
+                    <li>Convert inputs using <code>float()</code></li>
+                    <li>Implement +, -, *, / operations</li>
+                    <li>Add input validation</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
                 <CodePlayground 
                   client:load 
-                  initialCode={`# Calculator Challenge
-# TODO: Implement a calculator that takes two numbers and an operator
-# Hint: Use input() to get numbers and operator
-# Use conditional statements to perform the correct operation
-def calculator():
-    pass  # Replace with your implementation
+                  initialCode={`# Simple Calculator Challenge
+# TODO: Implement a basic calculator with arithmetic operations
+# Hint: Handle different arithmetic operations
 
-# Uncomment to test your function
-# calculator()`} 
+# Get user inputs
+num1_str = input("Enter first number: ")
+num2_str = input("Enter second number: ")
+operation = input("Enter operation (+, -, *, /): ")
+
+# TODO: Add code to perform calculations and handle errors`} 
                 />
               </div>
-              <div class="bg-gray-700 rounded-lg p-4 mt-4">
-                <h4 class="text-lg font-semibold mb-2 text-blue-300">Solution Hints</h4>
-                <ul class="list-disc list-inside space-y-2">
-                  <li>Use <code>float(input())</code> to get numeric inputs</li>
-                  <li>Use conditional statements (<code>if</code>/<code>elif</code>) to handle different operators</li>
-                  <li>Handle potential division by zero</li>
-                </ul>
-              </div>
-            </li>
+            </div>
             
-            <li>
-              <strong>Age Verification:</strong> Write a program that checks if a person is eligible to vote (age >= 18) and is a citizen.
-              <div class="mt-4">
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">🔢 Challenge 2: Age Verification System</h4>
+              <p class="text-gray-300 mb-4">Build a program that uses comparison operators to verify age and determine user access levels.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">🎯 Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use comparison operators</li>
+                    <li>Implement logical conditions</li>
+                    <li>Handle different age scenarios</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">🚀 Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use <code>>=</code> and <code><=</code> operators</li>
+                    <li>Combine conditions with <code>and</code>, <code>or</code></li>
+                    <li>Provide different access levels</li>
+                    <li>Add input type conversion</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
                 <CodePlayground 
                   client:load 
                   initialCode={`# Age Verification Challenge
-# TODO: Create a function to check voting eligibility
-# Hint: Use logical operators to combine conditions
-def vote_eligibility():
-    pass  # Replace with your implementation
+# TODO: Create an age verification system with access levels
+# Hint: Use comparison and logical operators
 
-# Uncomment to test your function
-# vote_eligibility()`} 
+# Get user age
+age_str = input("Enter your age: ")
+
+# TODO: Add code to verify age and determine access`} 
                 />
               </div>
-              <div class="bg-gray-700 rounded-lg p-4 mt-4">
-                <h4 class="text-lg font-semibold mb-2 text-blue-300">Solution Hints</h4>
-                <ul class="list-disc list-inside space-y-2">
-                  <li>Use <code>input()</code> to get age and citizenship status</li>
-                  <li>Use the <code>and</code> operator to check multiple conditions</li>
-                  <li>Convert age to an integer for comparison</li>
-                </ul>
-              </div>
-            </li>
-            
-            <li>
-              <strong>Temperature Converter:</strong> Use operators to convert Celsius to Fahrenheit and vice versa.
-              <div class="mt-4">
-                <CodePlayground 
-                  client:load 
-                  initialCode={`# Temperature Conversion Challenge
-# TODO: Create a function to convert temperatures
-# Hint: Use mathematical operators for conversion formulas
-def temperature_converter():
-    pass  # Replace with your implementation
-
-# Uncomment to test your function
-# temperature_converter()`} 
-                />
-              </div>
-              <div class="bg-gray-700 rounded-lg p-4 mt-4">
-                <h4 class="text-lg font-semibold mb-2 text-blue-300">Solution Hints</h4>
-                <ul class="list-disc list-inside space-y-2">
-                  <li>Celsius to Fahrenheit: <code>(C * 9/5) + 32</code></li>
-                  <li>Fahrenheit to Celsius: <code>(F - 32) * 5/9</code></li>
-                  <li>Use <code>input()</code> to get temperature and scale</li>
-                </ul>
-              </div>
-            </li>
-          </ol>
+            </div>
+          </div>
         </div>
       </section>
 
       <section class="mb-12">
-        <h2 class="text-2xl font-semibold mb-4">Practice Problem Solutions</h2>
+        <h2 class="text-2xl font-semibold mb-4">Challenge Solutions</h2>
         <div class="bg-gray-800 rounded-lg p-6">
-          <h3 class="text-xl font-semibold mb-4">Detailed Solutions</h3>
-          
-          <div class="space-y-6">
-            <div>
-              <h4 class="text-lg font-semibold mb-2">1. Calculator Challenge Solution</h4>
+          <div class="space-y-8">
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h3 class="text-lg font-semibold mb-3">🧮 Solution 1: Simple Calculator</h3>
               <CodePlayground 
                 client:load 
-                initialCode={`# Solution 1: Calculator Challenge
-def calculator():
-    # Get user inputs
+                initialCode={`# Simple Calculator Solution
+# Real-world scenario: Basic arithmetic calculator
+
+try:
+    # Get user inputs with type conversion
     num1 = float(input("Enter first number: "))
     num2 = float(input("Enter second number: "))
-    operator = input("Enter operator (+, -, *, /, %): ")
-    
-    # Perform calculation based on operator
-    if operator == '+':
+    operation = input("Enter operation (+, -, *, /): ")
+
+    # Perform calculations with error handling
+    if operation == '+':
         result = num1 + num2
-    elif operator == '-':
+        print(f"Result: {num1} + {num2} = {result}")
+    elif operation == '-':
         result = num1 - num2
-    elif operator == '*':
+        print(f"Result: {num1} - {num2} = {result}")
+    elif operation == '*':
         result = num1 * num2
-    elif operator == '/':
+        print(f"Result: {num1} * {num2} = {result}")
+    elif operation == '/':
         # Handle division by zero
-        result = num1 / num2 if num2 != 0 else "Error: Division by zero"
-    elif operator == '%':
-        result = num1 % num2
+        if num2 != 0:
+            result = num1 / num2
+            print(f"Result: {num1} / {num2} = {result}")
+        else:
+            print("Error: Cannot divide by zero!")
     else:
-        result = "Invalid operator"
-    
-    print(f"Result: {result}")
+        print("Invalid operation. Choose +, -, *, or /")
 
-# Uncomment to test
-# calculator()`} 
+except ValueError:
+    print("Invalid input. Please enter numeric values.")`} 
               />
             </div>
             
-            <div>
-              <h4 class="text-lg font-semibold mb-2">2. Age Verification Solution</h4>
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h3 class="text-lg font-semibold mb-3">🔢 Solution 2: Age Verification System</h3>
               <CodePlayground 
                 client:load 
-                initialCode={`# Solution 2: Age Verification
-def vote_eligibility():
+                initialCode={`# Age Verification Solution
+# Real-world scenario: Access control system
+
+try:
+    # Get user age with type conversion
     age = int(input("Enter your age: "))
-    is_citizen = input("Are you a citizen? (yes/no): ").lower() == 'yes'
-    
-    # Check voting eligibility
-    can_vote = age >= 18 and is_citizen
-    
-    if can_vote:
-        print("You are eligible to vote!")
-    else:
-        print("Sorry, you cannot vote.")
 
-# Uncomment to test
-# vote_eligibility()`} 
-              />
-            </div>
-            
-            <div>
-              <h4 class="text-lg font-semibold mb-2">3. Temperature Converter Solution</h4>
-              <CodePlayground 
-                client:load 
-                initialCode={`# Solution 3: Temperature Converter
-def temperature_converter():
-    choice = input("Convert (C)elsius to Fahrenheit or (F)ahrenheit to Celsius? ").upper()
-    
-    if choice == 'C':
-        celsius = float(input("Enter temperature in Celsius: "))
-        fahrenheit = (celsius * 9/5) + 32
-        print(f"{celsius}°C is equal to {fahrenheit}°F")
-    elif choice == 'F':
-        fahrenheit = float(input("Enter temperature in Fahrenheit: "))
-        celsius = (fahrenheit - 32) * 5/9
-        print(f"{fahrenheit}°F is equal to {celsius}°C")
+    # Implement access levels using comparison operators
+    if age < 0:
+        print("Invalid age! Age cannot be negative.")
+    elif age < 13:
+        print("Access Denied: Too young for this platform.")
+    elif 13 <= age < 18:
+        print("Limited Access: Parental consent required.")
+        print("You can access basic features.")
+    elif 18 <= age < 65:
+        print("Full Access Granted!")
+        print("Welcome to all platform features.")
     else:
-        print("Invalid choice")
+        print("Senior Access: Special features available.")
 
-# Uncomment to test
-# temperature_converter()`} 
+except ValueError:
+    print("Invalid input. Please enter a valid age.")`} 
               />
             </div>
           </div>

@@ -4,7 +4,10 @@ import { Editor } from '@monaco-editor/react';
 const MAX_HISTORY_SIZE = 50; // Limit history size
 const MAX_OUTPUT_SIZE = 100; // Limit output size
 
-const CodePlayground = ({ initialCode = '# Write your Python code here\n' }) => {
+const CodePlayground = ({ 
+  initialCode = '# Write your Python code here\n', 
+  solution = null 
+}) => {
   const editorRef = useRef(null);
   const [code, setCode] = useState(initialCode);
   const [currentLine, setCurrentLine] = useState(null);
@@ -13,6 +16,7 @@ const CodePlayground = ({ initialCode = '# Write your Python code here\n' }) => 
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [output, setOutput] = useState([]);
   const [variables, setVariables] = useState(new Map());
+  const [showSolution, setShowSolution] = useState(false);
 
   // Memoized event emitter
   const emitDebuggerEvent = useCallback((detail) => {

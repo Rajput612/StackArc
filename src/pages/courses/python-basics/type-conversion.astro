@@ -1,7 +1,7 @@
 ---
 import MainLayout from '../../../layouts/MainLayout.astro';
 import CourseSidebar from '../../../components/CourseSidebar.astro';
-import CodePlayground from '../../../components/CodePlayground.jsx';
+import CodePlayground from '../../../components/CodePlayground.astro';
 ---
 
 <MainLayout title="Python Type Conversion">
@@ -112,186 +112,162 @@ except ValueError as e:
         <h2 class="text-2xl font-semibold mb-4">Practice Problems</h2>
         <div class="bg-gray-800 rounded-lg p-6">
           <h3 class="text-xl font-semibold mb-4">Type Conversion Challenges</h3>
-          <ol class="list-decimal list-inside space-y-4">
-            <li>
-              <strong>Age Verification:</strong> Create a program that takes age as a string input, converts it to an integer, and checks if the person is an adult.
-              <div class="mt-4">
+          <div class="space-y-8">
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">🔢 Challenge 1: Age Verification</h4>
+              <p class="text-gray-300 mb-4">Create a program that converts age from string to integer and verifies user access.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">🎯 Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Convert string to integer</li>
+                    <li>Implement access control logic</li>
+                    <li>Use error handling techniques</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">🚀 Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use <code>int()</code> for conversion</li>
+                    <li>Implement <code>try-except</code> block</li>
+                    <li>Add age range validation</li>
+                    <li>Provide meaningful error messages</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
                 <CodePlayground 
                   client:load 
                   initialCode={`# Age Verification Challenge
 # TODO: Convert string age to integer and check adult status
 # Hint: Use int() for type conversion
 # Handle potential conversion errors
-def age_verification():
-    pass  # Replace with your implementation
 
-# Uncomment to test your function
-# age_verification()`} 
+# Get age as string input
+age_str = input("Enter your age: ")
+
+# TODO: Add code to convert age and check adult status`}
+                  solution={`# Age Verification Solution
+# Real-world scenario: User registration access control
+
+try:
+    # Get age as string input
+    age_str = input("Enter your age: ")
+    
+    # Convert and validate age
+    age = int(age_str)
+    
+    # Implement access control with type conversion
+    if age < 0:
+        print("Invalid age! Age cannot be negative.")
+    elif age < 13:
+        print("Access Denied: Too young for this platform.")
+    elif 13 <= age < 18:
+        print("Limited Access: Parental consent required.")
+        print("You can access basic features.")
+    elif 18 <= age < 65:
+        print("Full Access Granted!")
+        print("Welcome to all platform features.")
+    else:
+        print("Senior Access: Special features available.")
+
+except ValueError:
+    print("Invalid input. Please enter a valid numeric age.")
+except Exception as e:
+    print(f"An unexpected error occurred: {e}")`} 
                 />
               </div>
-              <div class="bg-gray-700 rounded-lg p-4 mt-4">
-                <h4 class="text-lg font-semibold mb-2 text-blue-300">Solution Hints</h4>
-                <ul class="list-disc list-inside space-y-2">
-                  <li>Use <code>input()</code> to get age as a string</li>
-                  <li>Convert age to integer using <code>int()</code></li>
-                  <li>Use <code>try-except</code> to handle conversion errors</li>
-                  <li>Check adult status with a conditional statement</li>
-                </ul>
+
+              <div class="mt-6">
+                <div class="solution-toggle">
+                  <button 
+                    class="solution-toggle-btn flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out mb-4"
+                  >
+                    👁️ Show Solution
+                  </button>
+                </div>
               </div>
-            </li>
+            </div>
             
-            <li>
-              <strong>Temperature Converter:</strong> Write a function that converts temperature between Celsius and Fahrenheit, handling string inputs.
-              <div class="mt-4">
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">🌡️ Challenge 2: Temperature Converter</h4>
+              <p class="text-gray-300 mb-4">Develop a program that converts temperature between Celsius and Fahrenheit with type conversion.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">🎯 Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Convert string to float</li>
+                    <li>Perform temperature calculations</li>
+                    <li>Handle different input scales</li>
+                    <li>Implement robust error handling</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">🚀 Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use <code>float()</code> for conversion</li>
+                    <li>Implement conversion formulas</li>
+                    <li>Add scale validation</li>
+                    <li>Handle potential conversion errors</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
                 <CodePlayground 
                   client:load 
-                  initialCode={`# Temperature Conversion Challenge
+                  initialCode={`# Temperature Converter Challenge
 # TODO: Convert temperature between Celsius and Fahrenheit
 # Hint: Use float() to convert string inputs
 # Handle different temperature scales
-def temperature_converter():
-    pass  # Replace with your implementation
 
-# Uncomment to test your function
-# temperature_converter()`} 
+# Get user inputs
+temp_str = input("Enter temperature value: ")
+scale = input("Enter scale (C for Celsius, F for Fahrenheit): ").upper()
+
+# TODO: Add code to convert temperature and print result`}
+                  solution={`# Temperature Converter Solution
+# Real-world scenario: Weather and scientific temperature conversion
+
+try:
+    # Get user inputs with type conversion
+    temp_str = input("Enter temperature value: ")
+    scale = input("Enter scale (C for Celsius, F for Fahrenheit): ").upper()
+    
+    # Convert temperature with validation
+    temp = float(temp_str)
+    
+    # Perform temperature conversion
+    if scale == 'C':
+        fahrenheit = (temp * 9/5) + 32
+        print(f"{temp}°C is equal to {fahrenheit:.2f}°F")
+    elif scale == 'F':
+        celsius = (temp - 32) * 5/9
+        print(f"{temp}°F is equal to {celsius:.2f}°C")
+    else:
+        print("Invalid scale. Please use 'C' or 'F'.")
+
+except ValueError:
+    print("Invalid input. Please enter a valid numeric temperature.")
+except Exception as e:
+    print(f"An unexpected error occurred: {e}")`} 
                 />
               </div>
-              <div class="bg-gray-700 rounded-lg p-4 mt-4">
-                <h4 class="text-lg font-semibold mb-2 text-blue-300">Solution Hints</h4>
-                <ul class="list-disc list-inside space-y-2">
-                  <li>Use <code>input()</code> to get temperature and scale</li>
-                  <li>Convert temperature to float using <code>float()</code></li>
-                  <li>Implement conversion formulas for Celsius and Fahrenheit</li>
-                  <li>Handle different input scales</li>
-                </ul>
+
+              <div class="mt-6">
+                <div class="solution-toggle">
+                  <button 
+                    class="solution-toggle-btn flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out mb-4"
+                  >
+                    👁️ Show Solution
+                  </button>
+                </div>
               </div>
-            </li>
-            
-            <li>
-              <strong>Shopping Cart Calculator:</strong> Build a program that takes item prices as strings, converts them to floats, and calculates the total bill.
-              <div class="mt-4">
-                <CodePlayground 
-                  client:load 
-                  initialCode={`# Shopping Cart Calculator Challenge
-# TODO: Collect item prices, convert to floats, calculate total
-# Hint: Use float() to convert price strings
-# Handle multiple item inputs
-def shopping_cart():
-    pass  # Replace with your implementation
-
-# Uncomment to test your function
-# shopping_cart()`} 
-                />
-              </div>
-              <div class="bg-gray-700 rounded-lg p-4 mt-4">
-                <h4 class="text-lg font-semibold mb-2 text-blue-300">Solution Hints</h4>
-                <ul class="list-disc list-inside space-y-2">
-                  <li>Use a loop to collect multiple item prices</li>
-                  <li>Convert prices to floats using <code>float()</code></li>
-                  <li>Use <code>try-except</code> to handle conversion errors</li>
-                  <li>Accumulate total bill in a variable</li>
-                </ul>
-              </div>
-            </li>
-          </ol>
-        </div>
-      </section>
-
-      <section class="mb-12">
-        <h2 class="text-2xl font-semibold mb-4">Practice Problem Solutions</h2>
-        <div class="bg-gray-800 rounded-lg p-6">
-          <h3 class="text-xl font-semibold mb-4">Detailed Solutions</h3>
-          
-          <div class="space-y-6">
-            <div>
-              <h4 class="text-lg font-semibold mb-2">1. Age Verification Solution</h4>
-              <CodePlayground 
-                client:load 
-                initialCode={`# Solution 1: Age Verification
-def age_verification():
-    try:
-        # Take age as string input and convert to integer
-        age_str = input("Enter your age: ")
-        age = int(age_str)
-        
-        # Check adult status
-        if age >= 18:
-            print(f"You are {age} years old. You are an adult.")
-        else:
-            print(f"You are {age} years old. You are a minor.")
-    
-    except ValueError:
-        print("Invalid age input. Please enter a valid number.")
-
-# Uncomment to test
-# age_verification()`} 
-              />
-            </div>
-            
-            <div>
-              <h4 class="text-lg font-semibold mb-2">2. Temperature Converter Solution</h4>
-              <CodePlayground 
-                client:load 
-                initialCode={`# Solution 2: Temperature Converter
-def temperature_converter():
-    try:
-        # Take temperature as string input
-        temp_str = input("Enter temperature value: ")
-        scale = input("Enter scale (C for Celsius, F for Fahrenheit): ").upper()
-        
-        # Convert input to float
-        temp = float(temp_str)
-        
-        # Convert temperature
-        if scale == 'C':
-            fahrenheit = (temp * 9/5) + 32
-            print(f"{temp}°C is equal to {fahrenheit}°F")
-        elif scale == 'F':
-            celsius = (temp - 32) * 5/9
-            print(f"{temp}°F is equal to {celsius}°C")
-        else:
-            print("Invalid scale. Use 'C' or 'F'.")
-    
-    except ValueError:
-        print("Invalid temperature input. Please enter a valid number.")
-
-# Uncomment to test
-# temperature_converter()`} 
-              />
-            </div>
-            
-            <div>
-              <h4 class="text-lg font-semibold mb-2">3. Shopping Cart Calculator Solution</h4>
-              <CodePlayground 
-                client:load 
-                initialCode={`# Solution 3: Shopping Cart Calculator
-def shopping_cart():
-    # Initialize total bill
-    total_bill = 0.0
-    
-    # Collect item prices
-    while True:
-        try:
-            # Take price as string input
-            price_str = input("Enter item price (or press Enter to finish): ")
-            
-            # Check if user wants to finish
-            if price_str == "":
-                break
-            
-            # Convert price to float and add to total
-            price = float(price_str)
-            total_bill += price
-        
-        except ValueError:
-            print("Invalid price. Please enter a valid number.")
-    
-    # Display total bill
-    print(f"\nTotal Bill: ${total_bill:.2f}")
-
-# Uncomment to test
-# shopping_cart()`} 
-              />
             </div>
           </div>
         </div>
@@ -299,6 +275,53 @@ def shopping_cart():
     </div>
   </div>
 </MainLayout>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleContainers = document.querySelectorAll('.solution-toggle');
+    
+    toggleContainers.forEach(container => {
+      const toggleBtn = container.querySelector('.solution-toggle-btn');
+      const codePlayground = container.closest('.bg-gray-700').querySelector('code-playground');
+      
+      if (!codePlayground) return;
+      
+      toggleBtn.addEventListener('click', () => {
+        // Check if solution attribute exists
+        const solutionCode = codePlayground.getAttribute('solution');
+        const initialCode = codePlayground.getAttribute('initial-code');
+        
+        if (!solutionCode) return;
+        
+        if (toggleBtn.textContent.includes('Show Solution')) {
+          // Store current code before replacing
+          codePlayground.setAttribute('user-code', initialCode);
+          
+          // Replace code with solution
+          codePlayground.setAttribute('initial-code', solutionCode);
+          
+          // Reload the CodePlayground
+          const event = new Event('reload');
+          codePlayground.dispatchEvent(event);
+          
+          toggleBtn.textContent = '👁️ Hide Solution';
+        } else {
+          // Retrieve and restore user's previous code
+          const previousCode = codePlayground.getAttribute('user-code') || initialCode;
+          
+          // Restore initial code
+          codePlayground.setAttribute('initial-code', previousCode);
+          
+          // Reload the CodePlayground
+          const event = new Event('reload');
+          codePlayground.dispatchEvent(event);
+          
+          toggleBtn.textContent = '👁️ Show Solution';
+        }
+      });
+    });
+  });
+</script>
 
 <style>
   code {

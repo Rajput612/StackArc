@@ -85,198 +85,192 @@ with open("output.txt", "r") as file:
         <h2 class="text-2xl font-semibold mb-4">Practice Problems</h2>
         <div class="bg-gray-800 rounded-lg p-6">
           <h3 class="text-xl font-semibold mb-4">Input/Output Challenges</h3>
-          <ol class="list-decimal list-inside space-y-4">
-            <li>
-              <strong>Personal Information Form:</strong> Create a program that asks for name, age, and email, then prints a formatted summary.
-              <div class="mt-4">
+          
+          <div class="space-y-8">
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">📝 Challenge 1: Personal Information Form</h4>
+              <p class="text-gray-300 mb-4">Create an interactive form that collects and displays user information using input and output functions.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">🎯 Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use <code>input()</code> to collect data</li>
+                    <li>Format output using f-strings</li>
+                    <li>Handle different data types</li>
+                    <li>Basic input validation</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">🚀 Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Collect name, age, and email</li>
+                    <li>Use type conversion functions</li>
+                    <li>Create a formatted profile summary</li>
+                    <li>Add basic input checks</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
                 <CodePlayground 
                   client:load 
                   initialCode={`# Personal Information Form Challenge
-# TODO: Collect and display user information
-# Hint: Use input() to get user details
-# Use print() to format and display the information
-def personal_info_form():
-    pass  # Replace with your implementation
+# TODO: Create an interactive user information form
+# Hint: Collect and validate user details
 
-# Uncomment to test your function
-# personal_info_form()`} 
+# TODO: Add code to collect user information
+# Collect name, age, email
+# Create a formatted profile summary`} 
                 />
               </div>
-              <div class="bg-gray-700 rounded-lg p-4 mt-4">
-                <h4 class="text-lg font-semibold mb-2 text-blue-300">Solution Hints</h4>
-                <ul class="list-disc list-inside space-y-2">
-                  <li>Use <code>input()</code> to collect name, age, and email</li>
-                  <li>Convert age to an integer if needed</li>
-                  <li>Use f-strings for formatted output</li>
-                  <li>Consider input validation</li>
-                </ul>
-              </div>
-            </li>
+            </div>
             
-            <li>
-              <strong>Calculator App:</strong> Build a simple calculator that takes two numbers and an operation as input, then displays the result.
-              <div class="mt-4">
-                <CodePlayground 
-                  client:load 
-                  initialCode={`# Calculator App Challenge
-# TODO: Create a calculator that takes numbers and operation as input
-# Hint: Use input() to get numbers and operation
-# Handle different arithmetic operations
-def simple_calculator():
-    pass  # Replace with your implementation
-
-# Uncomment to test your function
-# simple_calculator()`} 
-                />
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">🧮 Challenge 2: Simple Grade Calculator</h4>
+              <p class="text-gray-300 mb-4">Develop a program that calculates student grades based on input scores and displays results.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">🎯 Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use multiple <code>input()</code> calls</li>
+                    <li>Perform numeric calculations</li>
+                    <li>Format output messages</li>
+                    <li>Implement grade determination logic</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">🚀 Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Collect subject scores</li>
+                    <li>Calculate average grade</li>
+                    <li>Determine grade letter</li>
+                    <li>Use f-strings for output</li>
+                  </ul>
+                </div>
               </div>
-              <div class="bg-gray-700 rounded-lg p-4 mt-4">
-                <h4 class="text-lg font-semibold mb-2 text-blue-300">Solution Hints</h4>
-                <ul class="list-disc list-inside space-y-2">
-                  <li>Use <code>float(input())</code> for number inputs</li>
-                  <li>Handle different operations (+, -, *, /)</li>
-                  <li>Implement error handling for invalid inputs</li>
-                  <li>Use conditional statements to select operation</li>
-                </ul>
-              </div>
-            </li>
-            
-            <li>
-              <strong>Grade Calculator:</strong> Write a program that takes multiple test scores, calculates the average, and outputs a letter grade.
-              <div class="mt-4">
+              
+              <div class="mt-6">
                 <CodePlayground 
                   client:load 
                   initialCode={`# Grade Calculator Challenge
-# TODO: Collect test scores, calculate average, and determine letter grade
-# Hint: Use a loop to collect scores
-# Calculate average and assign letter grade
-def grade_calculator():
-    pass  # Replace with your implementation
+# TODO: Create a grade calculation program
+# Hint: Calculate average and determine grade
 
-# Uncomment to test your function
-# grade_calculator()`} 
+# TODO: Add code to collect subject scores
+# Calculate average grade
+# Determine and display grade`} 
                 />
               </div>
-              <div class="bg-gray-700 rounded-lg p-4 mt-4">
-                <h4 class="text-lg font-semibold mb-2 text-blue-300">Solution Hints</h4>
-                <ul class="list-disc list-inside space-y-2">
-                  <li>Use a <code>while</code> loop to collect scores</li>
-                  <li>Use <code>float(input())</code> to get scores</li>
-                  <li>Calculate average using <code>sum()</code> and <code>len()</code></li>
-                  <li>Use conditional statements to assign letter grades</li>
-                </ul>
-              </div>
-            </li>
-          </ol>
+            </div>
+          </div>
         </div>
       </section>
 
       <section class="mb-12">
-        <h2 class="text-2xl font-semibold mb-4">Practice Problem Solutions</h2>
+        <h2 class="text-2xl font-semibold mb-4">Challenge Solutions</h2>
         <div class="bg-gray-800 rounded-lg p-6">
-          <h3 class="text-xl font-semibold mb-4">Detailed Solutions</h3>
-          
-          <div class="space-y-6">
-            <div>
-              <h4 class="text-lg font-semibold mb-2">1. Personal Information Form Solution</h4>
+          <div class="space-y-8">
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h3 class="text-lg font-semibold mb-3">📝 Solution 1: Personal Information Form</h3>
               <CodePlayground 
                 client:load 
-                initialCode={`# Solution 1: Personal Information Form
-def personal_info_form():
-    # Collect user information
-    name = input("Enter your full name: ")
-    age = int(input("Enter your age: "))
-    email = input("Enter your email address: ")
-    
-    # Print formatted summary
-    print("\n--- Personal Information Summary ---")
-    print(f"Name: {name}")
-    print(f"Age: {age}")
-    print(f"Email: {email}")
-    print("-----------------------------")
+                initialCode={`# Personal Information Form Solution
+# Real-world scenario: User registration form
 
-# Uncomment to test
-# personal_info_form()`} 
-              />
-            </div>
-            
-            <div>
-              <h4 class="text-lg font-semibold mb-2">2. Calculator App Solution</h4>
-              <CodePlayground 
-                client:load 
-                initialCode={`# Solution 2: Simple Calculator
-def simple_calculator():
-    try:
-        # Get user inputs
-        num1 = float(input("Enter first number: "))
-        num2 = float(input("Enter second number: "))
-        operation = input("Enter operation (+, -, *, /): ")
-        
-        # Perform calculation
-        if operation == '+':
-            result = num1 + num2
-        elif operation == '-':
-            result = num1 - num2
-        elif operation == '*':
-            result = num1 * num2
-        elif operation == '/':
-            # Handle division by zero
-            result = num1 / num2 if num2 != 0 else "Error: Division by zero"
-        else:
-            result = "Invalid operation"
-        
-        # Display result
-        print(f"Result: {result}")
+try:
+    # Collect user information with input validation
+    name = input("Enter your full name: ").strip()
     
-    except ValueError:
-        print("Invalid input. Please enter numeric values.")
-
-# Uncomment to test
-# simple_calculator()`} 
-              />
-            </div>
-            
-            <div>
-              <h4 class="text-lg font-semibold mb-2">3. Grade Calculator Solution</h4>
-              <CodePlayground 
-                client:load 
-                initialCode={`# Solution 3: Grade Calculator
-def grade_calculator():
-    # Collect test scores
-    scores = []
+    # Age validation
     while True:
-        try:
-            score = input("Enter a test score (or press Enter to finish): ")
-            if score == "":
-                break
-            scores.append(float(score))
-        except ValueError:
-            print("Invalid score. Please enter a numeric value.")
+        age_str = input("Enter your age: ")
+        if age_str.isdigit() and 0 < int(age_str) < 120:
+            age = int(age_str)
+            break
+        print("Invalid age. Please enter a valid number.")
     
-    # Calculate average and grade
-    if scores:
-        average = sum(scores) / len(scores)
-        
-        # Determine letter grade
-        if average >= 90:
-            grade = 'A'
-        elif average >= 80:
-            grade = 'B'
-        elif average >= 70:
-            grade = 'C'
-        elif average >= 60:
-            grade = 'D'
-        else:
-            grade = 'F'
-        
-        # Print results
-        print(f"\nTest Scores: {scores}")
-        print(f"Average Score: {average:.2f}")
-        print(f"Letter Grade: {grade}")
-    else:
-        print("No scores entered.")
+    # Email validation (basic)
+    while True:
+        email = input("Enter your email address: ").strip()
+        if '@' in email and '.' in email:
+            break
+        print("Invalid email. Please enter a valid email address.")
+    
+    # Create and display user profile
+    print("\n--- User Profile ---")
+    print(f"Name: {name}")
+    print(f"Age: {age} years old")
+    print(f"Email: {email}")
+    
+    # Optional: Additional profile insights
+    if age < 18:
+        print("Note: You are a minor.")
+    elif age >= 65:
+        print("Senior user profile detected.")
 
-# Uncomment to test
-# grade_calculator()`} 
+except Exception as e:
+    print(f"An error occurred: {e}")`} 
+              />
+            </div>
+            
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h3 class="text-lg font-semibold mb-3">🧮 Solution 2: Simple Grade Calculator</h3>
+              <CodePlayground 
+                client:load 
+                initialCode={`# Grade Calculator Solution
+# Real-world scenario: Academic performance tracking
+
+try:
+    # Collect subject scores with validation
+    subjects = ['Math', 'Science', 'English']
+    scores = []
+    
+    for subject in subjects:
+        while True:
+            score_str = input(f"Enter {subject} score (0-100): ")
+            try:
+                score = float(score_str)
+                if 0 <= score <= 100:
+                    scores.append(score)
+                    break
+                else:
+                    print("Score must be between 0 and 100.")
+            except ValueError:
+                print("Invalid input. Please enter a numeric score.")
+    
+    # Calculate average grade
+    average_score = sum(scores) / len(scores)
+    
+    # Determine grade letter
+    if average_score >= 90:
+        grade = 'A'
+    elif average_score >= 80:
+        grade = 'B'
+    elif average_score >= 70:
+        grade = 'C'
+    elif average_score >= 60:
+        grade = 'D'
+    else:
+        grade = 'F'
+    
+    # Display results
+    print("\n--- Grade Report ---")
+    print(f"Subjects: {', '.join(subjects)}")
+    print(f"Individual Scores: {scores}")
+    print(f"Average Score: {average_score:.2f}")
+    print(f"Grade: {grade}")
+    
+    # Performance feedback
+    if grade in ['A', 'B']:
+        print("Excellent performance! Keep up the great work.")
+    elif grade == 'C':
+        print("Good job. There's room for improvement.")
+    else:
+        print("Consider seeking additional support to improve your grades.")`} 
               />
             </div>
           </div>
