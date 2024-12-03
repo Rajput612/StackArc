@@ -60,11 +60,48 @@ const sanitizedCode = initialCode.replace(/[^\x20-\x7E\n\t]/g, '');
 </div>
 
 <script define:vars={{ id, sanitizedCode }}>
+  // Debug logging function
+  const debugLog = (message) => {
+    const debugOutput = document.getElementById(`output-${id}`);
+    if (debugOutput) {
+      debugOutput.textContent += `\n[DEBUG] ${message}`;
+    }
+    console.log(`[CodePlayground:${id}] ${message}`);
+  };
+
   // Dynamically import Monaco Editor
   const loadMonaco = async () => {
-    const monaco = await import('monaco-editor');
+    try {
+      debugLog('Starting Monaco Editor load');
+      
+      // Check if monaco is already imported
+      if (window.monaco) {
+        debugLog('Monaco already imported');
+        return initializeEditor(window.monaco);
+      }
+
+      // Dynamic import with error handling
+      const monaco = await import('monaco-editor').catch((error) => {
+        debugLog(`Monaco import error: ${error.message}`);
+        throw error;
+      });
+
+      debugLog('Monaco imported successfully');
+      return initializeEditor(monaco);
+    } catch (error) {
+      debugLog(`Full load error: ${error.message}`);
+      console.error('Monaco Editor Load Error:', error);
+    }
+  };
+
+  const initializeEditor = (monaco) => {
     const editorContainer = document.getElementById(id);
-    if (!editorContainer) return;
+    if (!editorContainer) {
+      debugLog('Editor container not found');
+      return;
+    }
+
+    debugLog('Initializing editor');
 
     // Set initial theme based on dark mode
     const isDark = document.documentElement.classList.contains('dark');
@@ -174,12 +211,26 @@ const sanitizedCode = initialCode.replace(/[^\x20-\x7E\n\t]/g, '');
     };
   };
 
-  // Load Monaco when the component is mounted
-  if (document.readyState === 'complete') {
-    loadMonaco();
-  } else {
-    window.addEventListener('load', loadMonaco);
-  }
+  // Ensure Monaco is loaded before initializing
+  const initializeOnLoad = () => {
+    debugLog('Checking Monaco initialization');
+    
+    // Check if Monaco is already loaded
+    if (window.monaco) {
+      debugLog('Monaco already loaded');
+      loadMonaco();
+      return;
+    }
+
+    // If not loaded, wait for window load
+    window.addEventListener('load', () => {
+      debugLog('Window loaded, attempting Monaco initialization');
+      loadMonaco();
+    });
+  };
+
+  // Immediate initialization attempt
+  initializeOnLoad();
 </script>
 
 <style>
