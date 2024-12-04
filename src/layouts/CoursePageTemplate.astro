@@ -1,6 +1,7 @@
 ---
 import MainLayout from './MainLayout.astro';
 import CourseSidebar from '../components/CourseSidebar.astro';
+import CodePlayground from '../components/CodePlayground.jsx';
 
 export interface CoursePageProps {
   title: string;
@@ -38,7 +39,7 @@ const {
               <Fragment set:html={section.content} />
             </div>
             {section.code && (
-              <CodePlayground client:load initialCode={section.code} />
+              <CodePlayground client:only="react" initialCode={section.code} />
             )}
           </section>
         ))}

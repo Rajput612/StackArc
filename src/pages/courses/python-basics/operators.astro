@@ -12,7 +12,7 @@ import CodePlayground from '../../../components/CodePlayground.jsx';
 
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Arithmetic Operators</h2>
-        <div class="bg-gray-800 rounded-lg p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
           <table class="w-full text-left">
             <thead>
               <tr class="border-b border-gray-700">
@@ -72,7 +72,7 @@ print("Exponentiation:", a ** b) # 1000`}
 
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Comparison Operators</h2>
-        <div class="bg-gray-800 rounded-lg p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
           <table class="w-full text-left">
             <thead>
               <tr class="border-b border-gray-700">
@@ -132,7 +132,7 @@ print("Less or equal:", a <= b)      # False`}
 
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Logical Operators</h2>
-        <div class="bg-gray-800 rounded-lg p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
           <table class="w-full text-left">
             <thead>
               <tr class="border-b border-gray-700">
@@ -180,8 +180,198 @@ print("Can get discount:", can_get_discount)  # True`}
       </section>
 
       <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Arithmetic Operators Practice</h2>
+        <CodePlayground 
+          client:only="react"
+          initialCode={`# Practice Arithmetic Operators
+# Try performing different arithmetic operations
+
+# Addition
+a = 10
+b = 5
+print("Addition:", a + b)
+
+# Subtraction
+print("Subtraction:", a - b)
+
+# Multiplication
+print("Multiplication:", a * b)
+
+# Division
+print("Division:", a / b)
+
+# Modulus
+print("Modulus:", a % b)
+
+# Exponentiation
+print("Exponentiation:", a ** 2)`}
+          solution={`# Solution for Arithmetic Operators
+a = 10
+b = 5
+
+# Addition
+print("Addition:", a + b)        # Output: 15
+
+# Subtraction
+print("Subtraction:", a - b)     # Output: 5
+
+# Multiplication
+print("Multiplication:", a * b)  # Output: 50
+
+# Division
+print("Division:", a / b)        # Output: 2.0
+
+# Modulus
+print("Modulus:", a % b)         # Output: 0
+
+# Exponentiation
+print("Exponentiation:", a ** 2) # Output: 100`}
+        />
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Comparison Operators Practice</h2>
+        <CodePlayground 
+          client:only="react"
+          initialCode={`# Practice Comparison Operators
+# Try comparing different values
+
+a = 10
+b = 5
+
+# Equal to
+print("Equal to:", a == b)
+
+# Not equal to
+print("Not equal to:", a != b)
+
+# Greater than
+print("Greater than:", a > b)
+
+# Less than
+print("Less than:", a < b)
+
+# Greater than or equal to
+print("Greater or equal:", a >= b)
+
+# Less than or equal to
+print("Less or equal:", a <= b)`}
+          solution={`# Solution for Comparison Operators
+a = 10
+b = 5
+
+# Equal to
+print("Equal to:", a == b)        # Output: False
+
+# Not equal to
+print("Not equal to:", a != b)    # Output: True
+
+# Greater than
+print("Greater than:", a > b)     # Output: True
+
+# Less than
+print("Less than:", a < b)        # Output: False
+
+# Greater than or equal to
+print("Greater or equal:", a >= b)  # Output: True
+
+# Less than or equal to
+print("Less or equal:", a <= b)   # Output: False`}
+        />
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Logical Operators Practice</h2>
+        <CodePlayground 
+          client:only="react"
+          initialCode={`# Practice Logical Operators
+# Try combining different boolean conditions
+
+x = True
+y = False
+
+# AND operator
+print("AND:", x and y)
+
+# OR operator
+print("OR:", x or y)
+
+# NOT operator
+print("NOT x:", not x)
+print("NOT y:", not y)`}
+          solution={`# Solution for Logical Operators
+x = True
+y = False
+
+# AND operator
+print("AND:", x and y)   # Output: False
+# Returns True only if both conditions are True
+
+# OR operator
+print("OR:", x or y)     # Output: True
+# Returns True if at least one condition is True
+
+# NOT operator
+print("NOT x:", not x)   # Output: False
+print("NOT y:", not y)   # Output: True
+# Inverts the boolean value`}
+        />
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Bitwise Operators Practice</h2>
+        <CodePlayground 
+          client:only="react"
+          initialCode={`# Practice Bitwise Operators
+# Try bitwise operations on integers
+
+a = 10  # Binary: 1010
+b = 4   # Binary: 0100
+
+# Bitwise AND
+print("Bitwise AND:", a & b)
+
+# Bitwise OR
+print("Bitwise OR:", a | b)
+
+# Bitwise XOR
+print("Bitwise XOR:", a ^ b)
+
+# Bitwise NOT
+print("Bitwise NOT a:", ~a)
+
+# Left shift
+print("Left shift:", a << 2)
+
+# Right shift
+print("Right shift:", a >> 2)`}
+          solution={`# Solution for Bitwise Operators
+a = 10  # Binary: 1010
+b = 4   # Binary: 0100
+
+# Bitwise AND (returns 1 if both bits are 1)
+print("Bitwise AND:", a & b)      # Output: 0 (0000)
+
+# Bitwise OR (returns 1 if at least one bit is 1)
+print("Bitwise OR:", a | b)       # Output: 14 (1110)
+
+# Bitwise XOR (returns 1 if bits are different)
+print("Bitwise XOR:", a ^ b)      # Output: 14 (1110)
+
+# Bitwise NOT (inverts all bits)
+print("Bitwise NOT a:", ~a)       # Output: -11
+
+# Left shift (shifts bits to left, equivalent to multiplying by 2^n)
+print("Left shift:", a << 2)      # Output: 40
+
+# Right shift (shifts bits to right, equivalent to dividing by 2^n)
+print("Right shift:", a >> 2)     # Output: 2`}
+        />
+      </section>
+
+      <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Practice Problems</h2>
-        <div class="bg-gray-800 rounded-lg p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
           <h3 class="text-xl font-semibold mb-4">Operator Challenges</h3>
           
           <div class="space-y-8">
@@ -272,7 +462,7 @@ age_str = input("Enter your age: ")
 
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Challenge Solutions</h2>
-        <div class="bg-gray-800 rounded-lg p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
           <div class="space-y-8">
             <div class="bg-gray-700 rounded-lg p-6">
               <h3 class="text-lg font-semibold mb-3">🧮 Solution 1: Simple Calculator</h3>

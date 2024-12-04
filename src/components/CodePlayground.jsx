@@ -1,8 +1,46 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Editor } from '@monaco-editor/react';
 
-const MAX_HISTORY_SIZE = 50; // Limit history size
-const MAX_OUTPUT_SIZE = 100; // Limit output size
+// Utility function to safely execute Python code
+const executePythonCode = async (code) => {
+  try {
+    // Use Pyodide for Python execution in browser
+    if (window.loadPyodide) {
+      const pyodide = await window.loadPyodide();
+      
+      // Redirect Python print to our console
+      pyodide.runPython(`
+import sys
+import io
+
+class CaptureOutput:
+    def __init__(self):
+        self.output = []
+    def write(self, text):
+        self.output.append(text.strip())
+    def flush(self):
+        pass
+
+capture = CaptureOutput()
+sys.stdout = capture
+sys.stderr = capture
+`);
+
+      // Execute the code
+      pyodide.runPython(code);
+
+      // Retrieve captured output
+      const capturedOutput = pyodide.runPython('capture.output');
+      const pythonOutput = capturedOutput.toJs();
+
+      return pythonOutput;
+    }
+
+    return ['Pyodide not loaded'];
+  } catch (error) {
+    return [`Error: ${error.message}`];
+  }
+};
 
 const CodePlayground = ({ 
   id,
@@ -18,6 +56,51 @@ const CodePlayground = ({
   const [output, setOutput] = useState([]);
   const [variables, setVariables] = useState(new Map());
   const [showSolution, setShowSolution] = useState(false);
+  const [originalCode, setOriginalCode] = useState(initialCode);
+
+  // Load Pyodide script dynamically
+  useEffect(() => {
+    if (!window.loadPyodide) {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/pyodide/v0.22.1/full/pyodide.js';
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  }, []);
+
+  // Toggle solution visibility
+  const toggleSolution = () => {
+    if (solution) {
+      if (showSolution) {
+        // Revert to original code
+        setCode(originalCode);
+        setShowSolution(false);
+      } else {
+        // Store current code before showing solution
+        setOriginalCode(code);
+        // Show solution
+        setCode(solution);
+        setShowSolution(true);
+      }
+    }
+  };
+
+  // Execute code 
+  const executeCode = async () => {
+    try {
+      // Clear previous output
+      setOutput([]);
+
+      // Execute code and get output
+      const executionOutput = await executePythonCode(code);
+      
+      // Update output
+      setOutput(executionOutput || ['No output']);
+    } catch (error) {
+      // Handle any execution errors
+      setOutput([`Error: ${error.message}`]);
+    }
+  };
 
   // Memoized event emitter
   const emitDebuggerEvent = useCallback((detail) => {
@@ -154,13 +237,13 @@ const CodePlayground = ({
       const prevResult = executeLine(lines[nextLine - 1], nextLine - 1);
       if (prevResult) {
         setExecutionHistory(prev => {
-          const newHistory = [...prev, prevResult].slice(-MAX_HISTORY_SIZE);
+          const newHistory = [...prev, prevResult].slice(-50);
           return newHistory;
         });
         setVariables(prevResult.variables);
         
         if (prevResult.output !== null) {
-          setOutput(prev => [...prev.slice(-MAX_OUTPUT_SIZE), prevResult.output]);
+          setOutput(prev => [...prev.slice(-100), prevResult.output]);
         }
 
         if (prevResult.event) {
@@ -211,21 +294,51 @@ const CodePlayground = ({
     emitDebuggerEvent({ isStopped: true });
   }, [emitDebuggerEvent]);
 
-  // Toggle solution
-  const toggleSolution = () => {
-    if (!solution) return;
+  // Monaco Editor options with light/dark theme support
+  const editorOptions = {
+    theme: 'vs-light', // Default to light theme
+    minimap: { enabled: false },
+    fontSize: 14,
+    lineHeight: 24,
+    padding: { top: 15, bottom: 15 },
+    automaticLayout: true,
+    scrollbar: {
+      vertical: 'auto',
+      horizontal: 'auto',
+      verticalScrollbarSize: 10,
+      horizontalScrollbarSize: 10,
+    },
+    // Light theme specific styling
+    colorDecorators: true,
+    renderLineHighlight: 'all',
+    renderWhitespace: 'all',
+    renderControlCharacters: true,
+    guides: {
+      indentation: true,
+      highlightActiveIndentation: true,
+    },
+    // Accessibility and readability
+    accessibilitySupport: 'on',
+    ariaLabel: 'Python Code Editor',
+    smoothScrolling: true,
+  };
 
-    const storedCode = localStorage.getItem(`${id}-original-code`);
-    if (!showSolution) {
-      if (!storedCode) {
-        localStorage.setItem(`${id}-original-code`, code);
-      }
-      setCode(solution);
-      setShowSolution(true);
-    } else {
-      setCode(storedCode || initialCode);
-      setShowSolution(false);
-    }
+  // Handle editor mount
+  const handleEditorMount = (editor, monaco) => {
+    editorRef.current = editor;
+
+    // Detect system theme and adjust accordingly
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    editor.updateOptions({
+      theme: prefersDarkScheme.matches ? 'vs-dark' : 'vs-light'
+    });
+
+    // Listen for theme changes
+    prefersDarkScheme.addEventListener('change', (e) => {
+      editor.updateOptions({
+        theme: e.matches ? 'vs-dark' : 'vs-light'
+      });
+    });
   };
 
   // Highlight current line - using RAF for performance
@@ -260,112 +373,71 @@ const CodePlayground = ({
   }, [currentLine]);
 
   return (
-    <div className="bg-gray-900 rounded-lg overflow-hidden">
-      <style>{`
-        .current-line-highlight {
-          background-color: rgba(66, 153, 225, 0.1);
-          border-left: 2px solid #4299e1;
-        }
-      `}</style>
-
-      <div className="border-b border-gray-800 p-4">
-        <div className="flex justify-between items-center">
-          <div className="flex space-x-2">
-            <button
-              onClick={startDebugging}
-              disabled={isDebugging}
-              className={`px-3 py-1 rounded ${
-                isDebugging
-                  ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                  : 'bg-green-600 text-white hover:bg-green-700'
-              }`}
-            >
-              Debug
-            </button>
-            <button
-              onClick={stepBackward}
-              disabled={!isDebugging || historyIndex <= 0}
-              className={`px-3 py-1 rounded ${
-                !isDebugging || historyIndex <= 0
-                  ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                  : 'bg-blue-600 text-white hover:bg-blue-700'
-              }`}
-            >
-              Previous
-            </button>
-            <button
-              onClick={stepForward}
-              disabled={!isDebugging}
-              className={`px-3 py-1 rounded ${
-                !isDebugging
-                  ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                  : 'bg-blue-600 text-white hover:bg-blue-700'
-              }`}
-            >
-              Next
-            </button>
-            <button
-              onClick={stopDebugging}
-              disabled={!isDebugging}
-              className={`px-3 py-1 rounded ${
-                !isDebugging
-                  ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                  : 'bg-red-600 text-white hover:bg-red-700'
-              }`}
-            >
-              Stop
-            </button>
-          </div>
-          <div className="ml-auto">
-            <button
-              onClick={toggleSolution}
-              disabled={!solution}
-              className={`px-3 py-1 rounded ${
-                !solution
-                  ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                  : showSolution
-                    ? 'bg-red-600 text-white hover:bg-red-700'
-                    : 'bg-green-600 text-white hover:bg-green-700'
-              }`}
+    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-md">
+      <div className="w-full h-[400px] border-b border-gray-200 dark:border-gray-700">
+        <Editor
+          height="100%"
+          defaultLanguage="python"
+          value={code}
+          onChange={(value) => setCode(value || '')}
+          options={editorOptions}
+          onMount={handleEditorMount}
+          className="rounded-t-lg"
+        />
+      </div>
+      {output.length > 0 && (
+        <div className="p-4 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-mono text-sm">
+          <strong>Output:</strong>
+          {output.map((line, index) => (
+            <div key={index} className="py-1">{line}</div>
+          ))}
+        </div>
+      )}
+      <div className="flex justify-between p-3 bg-gray-100 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
+        <div className="flex space-x-3">
+          <button 
+            onClick={executeCode} 
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Run
+          </button>
+          {solution && (
+            <button 
+              onClick={toggleSolution} 
+              className={`px-4 py-2 ${showSolution ? 'bg-red-600' : 'bg-green-600'} text-white rounded-lg hover:${showSolution ? 'bg-red-700' : 'bg-green-700'} transition-colors`}
             >
               {showSolution ? 'Hide Solution' : 'Show Solution'}
             </button>
-          </div>
+          )}
         </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4 p-4">
-        <div className="h-[400px]">
-          <Editor
-            height="100%"
-            defaultLanguage="python"
-            theme="vs-dark"
-            value={code}
-            onChange={setCode}
-            onMount={(editor) => { editorRef.current = editor; }}
-            options={{
-              minimap: { enabled: false },
-              lineNumbers: 'on',
-              roundedSelection: false,
-              scrollBeyondLastLine: false,
-              readOnly: isDebugging,
-              glyphMargin: true,
-              lineDecorationsWidth: 5,
-              renderWhitespace: 'none',
-              wordWrap: 'on'
-            }}
-          />
-        </div>
-
-        <div className="bg-gray-800 p-4 rounded h-[400px] overflow-auto">
-          <h3 className="text-white mb-4">Output</h3>
-          <div className="font-mono text-sm">
-            {output.map((line, index) => (
-              <div key={index} className="text-gray-300">
-                {line}
-              </div>
-            ))}
-          </div>
+        <div className="flex space-x-3">
+          <button 
+            onClick={startDebugging} 
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Debug
+          </button>
+          <button 
+            onClick={stepBackward} 
+            disabled={!isDebugging || historyIndex <= 0}
+            className="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors disabled:opacity-50"
+          >
+            ← Back
+          </button>
+          <button 
+            onClick={stepForward} 
+            disabled={!isDebugging}
+            className="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors disabled:opacity-50"
+          >
+            Next →
+          </button>
+          <button 
+            onClick={stopDebugging} 
+            disabled={!isDebugging}
+            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
+          >
+            Stop
+          </button>
         </div>
       </div>
     </div>
