@@ -215,15 +215,15 @@ const CodePlayground = ({
   const toggleSolution = () => {
     if (!solution) return;
 
+    const storedCode = localStorage.getItem(`${id}-original-code`);
     if (!showSolution) {
-      // Store current code before replacing
-      localStorage.setItem(`${id}-original-code`, code);
+      if (!storedCode) {
+        localStorage.setItem(`${id}-original-code`, code);
+      }
       setCode(solution);
       setShowSolution(true);
     } else {
-      // Restore original code
-      const originalCode = localStorage.getItem(`${id}-original-code`) || initialCode;
-      setCode(originalCode);
+      setCode(storedCode || initialCode);
       setShowSolution(false);
     }
   };

@@ -66,182 +66,46 @@ except ValueError as e:
     print("Float Conversion Error:", e)`;
 
 const ageVerificationCode = `# Age Verification Challenge
-# Challenge: Create a user registration system 
-# that validates age and provides appropriate access
-
-def verify_user_access(age_str):
-    try:
-        # Convert string to integer
-        age = int(age_str)
-        
-        # Validate age range
-        if age < 0:
-            return "Invalid age! Age cannot be negative."
-        elif age < 13:
-            return "Access Denied: Too young for this platform."
-        elif 13 <= age < 18:
-            return "Limited Access: Parental consent required."
-        elif 18 <= age < 65:
-            return "Full Access Granted!"
-        else:
-            return "Senior Access: Special features available."
-    
-    except ValueError:
-        return "Invalid input. Please enter a valid numeric age."
-
-# Interactive User Input
-def main():
-    print("🔒 User Registration System")
-    age_input = input("Enter your age: ")
-    result = verify_user_access(age_input)
-    print(result)
-
-# Uncomment to run
-# main()`;
+# Write your code here to verify user's age`;
 
 const ageVerificationSolution = `# Age Verification Solution
-# Comprehensive user registration system with type conversion
-
-def verify_user_access(age_str):
-    try:
-        # Convert string to integer with error handling
-        age = int(age_str)
-        
-        # Detailed age-based access control
-        if age < 0:
-            return "❌ Invalid age! Age cannot be negative."
-        elif age < 13:
-            return "🚫 Access Denied: Too young for this platform."
-        elif 13 <= age < 18:
-            return "🔒 Limited Access: Parental consent required."
-        elif 18 <= age < 65:
-            return "✅ Full Access Granted! Welcome to the platform."
-        else:
-            return "🌟 Senior Access: Special features available."
-    
-    except ValueError:
-        return "❗ Invalid input. Please enter a valid numeric age."
-
-# Interactive User Registration
-def main():
-    print("🔐 Secure User Registration System")
-    while True:
-        age_input = input("Enter your age (or 'q' to quit): ")
-        
-        # Option to quit
-        if age_input.lower() == 'q':
-            print("Thank you for using our registration system!")
-            break
-        
-        result = verify_user_access(age_input)
-        print(result)
-        print()  # Add a blank line for readability
-
-# Uncomment to run
-# main()`;
+age = input("Enter your age: ")
+try:
+    age = int(age)
+    if age >= 18:
+        print("Access granted")
+    else:
+        print("Access denied")
+except ValueError:
+    print("Invalid age input")`;
 
 const temperatureConverterCode = `# Temperature Converter Challenge
-# Challenge: Create a temperature conversion tool
-# that supports Celsius and Fahrenheit conversions
-
-def convert_temperature(temp_str, scale):
-    try:
-        # Convert string to float
-        temp = float(temp_str)
-        
-        # Normalize scale input
-        scale = scale.upper()
-        
-        # Temperature conversion logic
-        if scale == 'C':
-            # Celsius to Fahrenheit
-            fahrenheit = (temp * 9/5) + 32
-            return f"{temp}°C is equal to {fahrenheit:.2f}°F"
-        elif scale == 'F':
-            # Fahrenheit to Celsius
-            celsius = (temp - 32) * 5/9
-            return f"{temp}°F is equal to {celsius:.2f}°C"
-        else:
-            return "Invalid scale. Use 'C' for Celsius or 'F' for Fahrenheit."
-    
-    except ValueError:
-        return "Invalid temperature input. Please enter a numeric value."
-
-# Interactive Temperature Converter
-def main():
-    print("🌡️ Temperature Converter")
-    temp_input = input("Enter temperature value: ")
-    scale_input = input("Enter scale (C/F): ")
-    
-    result = convert_temperature(temp_input, scale_input)
-    print(result)
-
-# Uncomment to run
-# main()`;
+# Write your code here to convert temperatures`;
 
 const temperatureConverterSolution = `# Temperature Converter Solution
-# Comprehensive temperature conversion tool with robust error handling
+def celsius_to_fahrenheit(celsius):
+    return (celsius * 9/5) + 32
 
-def convert_temperature(temp_str, scale):
-    try:
-        # Robust type conversion with float
-        temp = float(temp_str)
-        
-        # Normalize scale input
-        scale = scale.upper()
-        
-        # Comprehensive temperature conversion
-        if scale == 'C':
-            # Celsius to Fahrenheit with range validation
-            if temp < -273.15:
-                return "❄️ Error: Temperature below absolute zero for Celsius!"
-            
-            fahrenheit = (temp * 9/5) + 32
-            return f"🌡️ {temp}°C is equal to {fahrenheit:.2f}°F"
-        
-        elif scale == 'F':
-            # Fahrenheit to Celsius with range validation
-            if temp < -459.67:
-                return "❄️ Error: Temperature below absolute zero for Fahrenheit!"
-            
-            celsius = (temp - 32) * 5/9
-            return f"🌡️ {temp}°F is equal to {celsius:.2f}°C"
-        
-        else:
-            return "❗ Invalid scale. Use 'C' for Celsius or 'F' for Fahrenheit."
-    
-    except ValueError:
-        return "❗ Invalid temperature input. Please enter a numeric value."
+def fahrenheit_to_celsius(fahrenheit):
+    return (fahrenheit - 32) * 5/9
 
-# Interactive Temperature Conversion Tool
-def main():
-    print("🌡️ Advanced Temperature Converter")
-    while True:
-        print("\nConversion Options:")
-        print("1. Celsius to Fahrenheit")
-        print("2. Fahrenheit to Celsius")
-        print("3. Quit")
-        
-        choice = input("Enter your choice (1/2/3): ")
-        
-        if choice == '3':
-            print("Thank you for using the Temperature Converter!")
-            break
-        
-        if choice in ['1', '2']:
-            temp_input = input("Enter temperature value: ")
-            
-            if choice == '1':
-                result = convert_temperature(temp_input, 'C')
-            else:
-                result = convert_temperature(temp_input, 'F')
-            
-            print(result)
-        else:
-            print("Invalid choice. Please select 1, 2, or 3.")
+temperature = input("Enter temperature value: ")
+scale = input("Enter scale (C/F): ").upper()
 
-# Uncomment to run
-# main()`;
+try:
+    temp = float(temperature)
+    if scale == 'C':
+        fahrenheit = celsius_to_fahrenheit(temp)
+        print(f"{temp}°C is {fahrenheit}°F")
+    elif scale == 'F':
+        celsius = fahrenheit_to_celsius(temp)
+        print(f"{temp}°F is {celsius}°C")
+    else:
+        print("Invalid scale. Use 'C' or 'F'")
+except ValueError:
+    print("Invalid temperature input")`;
+
+const { Content } = Astro.props;
 ---
 
 <MainLayout title="Python Type Conversion">
