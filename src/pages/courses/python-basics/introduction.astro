@@ -38,7 +38,7 @@ const sections = [
   {
     title: "Your First Python Program",
     content: `
-      <p>Let's write your first Python program! In Python, printing is done using the <code>print()</code> function. It's a simple way to output text or values to the console.</p>
+      <p>Let's write your first Python program! In Python, printing is done using the <code class="bg-transparent px-1 rounded text-sm">print()</code> function. It's a simple way to output text or values to the console.</p>
       <p>Here are some basic examples you can try in the code editor below:</p>
       <ul class="list-disc list-inside ml-4 space-y-2">
         <li>Print a simple greeting</li>
@@ -72,6 +72,12 @@ print("Am I a student?", is_student)`
   }
 ];
 ---
+
+<style>
+  code {
+    @apply bg-transparent px-1 rounded text-sm;
+  }
+</style>
 
 <CoursePageTemplate 
   title="Introduction to Python" 

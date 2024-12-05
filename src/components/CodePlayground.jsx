@@ -57,15 +57,19 @@ const CodePlayground = ({
   const [variables, setVariables] = useState(new Map());
   const [showSolution, setShowSolution] = useState(false);
   const [originalCode, setOriginalCode] = useState(initialCode);
+  const [theme, setTheme] = useState('vs-light'); // Default to light theme
 
-  // Load Pyodide script dynamically
   useEffect(() => {
-    if (!window.loadPyodide) {
-      const script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/pyodide/v0.22.1/full/pyodide.js';
-      script.async = true;
-      document.body.appendChild(script);
-    }
+    const loadPyodideScript = async () => {
+      if (!window.loadPyodide) {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/pyodide/v0.22.1/full/pyodide.js';
+        script.async = true;
+        script.onload = () => console.log('Pyodide loaded');
+        document.body.appendChild(script);
+      }
+    };
+    loadPyodideScript();
   }, []);
 
   // Toggle solution visibility
@@ -87,6 +91,10 @@ const CodePlayground = ({
 
   // Execute code 
   const executeCode = async () => {
+    if (!window.loadPyodide) {
+      setOutput(['Pyodide not loaded']);
+      return;
+    }
     try {
       // Clear previous output
       setOutput([]);
@@ -207,6 +215,10 @@ const CodePlayground = ({
 
   // Start debugging - memoized
   const startDebugging = useCallback(() => {
+    if (!window.loadPyodide) {
+      setOutput(['Pyodide not loaded']);
+      return;
+    }
     setIsDebugging(true);
     setCurrentLine(null);
     setOutput([]);
@@ -294,9 +306,28 @@ const CodePlayground = ({
     emitDebuggerEvent({ isStopped: true });
   }, [emitDebuggerEvent]);
 
-  // Monaco Editor options with light/dark theme support
+  // Effect to update theme based on user preference
+  useEffect(() => {
+    const updateTheme = () => {
+      const currentTheme = document.body.classList.contains('dark') ? 'vs-dark' : 'vs-light';
+      setTheme(currentTheme);
+    };
+
+    // Initial theme setting
+    updateTheme();
+
+    // Listen for changes to the theme
+    document.body.addEventListener('classChange', updateTheme);
+
+    // Cleanup listener on unmount
+    return () => {
+      document.body.removeEventListener('classChange', updateTheme);
+    };
+  }, []);
+
+  // Monaco Editor options with dynamic theme support
   const editorOptions = {
-    theme: 'vs-light', // Default to light theme
+    theme: theme,
     minimap: { enabled: false },
     fontSize: 14,
     lineHeight: 24,
