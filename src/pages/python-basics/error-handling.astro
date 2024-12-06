@@ -1,0 +1,121 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import CodeBlock from '../../components/CodeBlock';
+
+const basicTryExceptCode = `# Basic try-except structure
+try:
+    # Code that might raise an exception
+    result = 10 / 0  # This will raise a ZeroDivisionError
+except ZeroDivisionError:
+    print("Error: Division by zero!")
+except Exception as e:
+    print(f"An error occurred: {e}")`;
+
+const multipleExceptionsCode = `# Handling multiple exceptions
+try:
+    number = int(input("Enter a number: "))
+    result = 10 / number
+except ValueError:
+    print("Please enter a valid number!")
+except ZeroDivisionError:
+    print("Cannot divide by zero!")
+except Exception as e:
+    print(f"An unexpected error occurred: {e}")
+else:
+    print(f"Result: {result}")  # Only runs if no exception occurs
+finally:
+    print("This code always runs")`;
+
+const customExceptionCode = `# Creating and using custom exceptions
+class InvalidAgeError(Exception):
+    """Exception raised for invalid age values."""
+    def __init__(self, age, message="Age must be between 0 and 120"):
+        self.age = age
+        self.message = message
+        super().__init__(self.message)
+
+def verify_age(age):
+    if not 0 <= age <= 120:
+        raise InvalidAgeError(age)
+    return "Age is valid"
+
+# Using the custom exception
+try:
+    result = verify_age(150)
+except InvalidAgeError as e:
+    print(f"Error: {e}")`;
+---
+
+<MainLayout title="Python Error Handling">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold text-gray-900 mb-6">Basic Error Handling in Python</h1>
+    
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Try-Except Basics</h2>
+      <p class="text-gray-600 mb-6">
+        Error handling is crucial in Python programming. The try-except block is the fundamental construct for handling exceptions and preventing program crashes.
+      </p>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Basic Try-Except Structure</h3>
+        <CodeBlock code={basicTryExceptCode} />
+        <div class="mt-4 text-gray-600">
+          <p>Key points about basic try-except:</p>
+          <ul class="list-disc ml-6 mt-2">
+            <li>The try block contains code that might raise an exception</li>
+            <li>The except block handles specific exceptions</li>
+            <li>You can catch specific exceptions or use a general Exception catch-all</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Multiple Exception Handling</h3>
+        <CodeBlock code={multipleExceptionsCode} />
+        <div class="mt-4 text-gray-600">
+          <p>Advanced features of exception handling:</p>
+          <ul class="list-disc ml-6 mt-2">
+            <li>Multiple except blocks for different exceptions</li>
+            <li>The else block runs when no exception occurs</li>
+            <li>The finally block always runs, regardless of exceptions</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Custom Exceptions</h3>
+        <CodeBlock code={customExceptionCode} />
+        <div class="mt-4 text-gray-600">
+          <p>Creating custom exceptions:</p>
+          <ul class="list-disc ml-6 mt-2">
+            <li>Define a custom exception class inheriting from Exception</li>
+            <li>Add custom attributes and messages</li>
+            <li>Raise the custom exception when needed</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Best Practices</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li>Always catch specific exceptions first</li>
+            <li>Use Exception as a last resort</li>
+            <li>Keep try blocks as small as possible</li>
+            <li>Provide meaningful error messages</li>
+          </ul>
+        </div>
+        
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Common Pitfalls</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li>Catching all exceptions blindly</li>
+            <li>Using bare except clauses</li>
+            <li>Ignoring exception information</li>
+            <li>Not cleaning up resources properly</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>

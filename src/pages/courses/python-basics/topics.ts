@@ -125,6 +125,26 @@ export const pythonBasicsTopics = [
     ]
   },
   {
+    title: "Error Handling",
+    topics: [
+      {
+        id: "exceptions-intro",
+        title: "Introduction to Exceptions",
+        content: "Understanding Python exceptions and their importance in error handling."
+      },
+      {
+        id: "try-except-basic",
+        title: "Try-Except Basics",
+        content: "Learning the fundamentals of try-except blocks and exception handling."
+      },
+      {
+        id: "common-errors",
+        title: "Common Python Errors",
+        content: "Understanding and fixing common Python errors and exceptions."
+      }
+    ]
+  },
+  {
     title: "Basic Error Handling",
     topics: [
       { 
@@ -147,25 +167,25 @@ export const pythonBasicsTopics = [
   {
     title: "Simple Projects",
     topics: [
-      { 
-        id: "calculator", 
-        title: "Simple Calculator",
-        content: "Building a basic calculator application."
+      {
+        id: "calculator",
+        title: "Calculator Project",
+        path: "/courses/python-basics/calculator"
       },
-      { 
-        id: "todo-list", 
-        title: "Todo List App",
-        content: "Creating a command-line todo list application."
+      {
+        id: "todo-list",
+        title: "Todo List Project",
+        path: "/courses/python-basics/todo-list"
       },
-      { 
-        id: "number-game", 
+      {
+        id: "number-game",
         title: "Number Guessing Game",
-        content: "Implementing a number guessing game."
+        path: "/courses/python-basics/number-game"
       },
-      { 
-        id: "file-organizer", 
-        title: "Basic File Organizer",
-        content: "Building a simple file organization script."
+      {
+        id: "file-organizer",
+        title: "File Organizer Project",
+        path: "/courses/python-basics/file-organizer"
       }
     ]
   }

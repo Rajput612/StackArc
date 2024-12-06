@@ -1,0 +1,189 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodeBlock from '../../../components/CodeBlock';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+const syntaxErrorsCode = `# Common Syntax Errors
+# 1. Missing parentheses
+print "Hello World"  # SyntaxError in Python 3
+
+# 2. Missing colon
+if x > 0
+    print(x)
+
+# 3. Incorrect indentation
+def my_function():
+print("Wrong indentation")
+
+# 4. Mismatched quotes
+message = "Hello' # Mismatched quotes`;
+
+const runtimeErrorsCode = `# Common Runtime Errors
+# 1. TypeError
+text = "123"
+number = text + 456  # TypeError: can't concat str and int
+
+# 2. NameError
+print(undefined_variable)  # NameError: name 'undefined_variable' is not defined
+
+# 3. IndexError
+list = [1, 2, 3]
+print(list[5])  # IndexError: list index out of range
+
+# 4. KeyError
+dict = {"name": "John"}
+print(dict["age"])  # KeyError: 'age'
+
+# 5. AttributeError
+text = "hello"
+text.append("world")  # AttributeError: 'str' object has no attribute 'append'`;
+
+const logicErrorsCode = `# Common Logic Errors
+# 1. Incorrect operator
+def is_adult(age):
+    return age = 18  # Wrong! Should be age >= 18
+
+# 2. Off-by-one error
+def print_numbers(n):
+    for i in range(n):  # Prints 0 to n-1, not 1 to n
+        print(i + 1)
+
+# 3. Infinite loop
+def countdown():
+    count = 10
+    while count > 0:
+        print(count)
+        # Forgot to decrement count!
+
+# 4. Wrong logic in conditions
+def check_number(num):
+    if num > 0:
+        print("Positive")
+    elif num > 10:  # This will never execute!
+        print("Greater than 10")`;
+
+const fixingErrorsCode = `# How to Fix Common Errors
+# 1. Using proper exception handling
+def safe_divide(a, b):
+    try:
+        result = a / b
+        return result
+    except ZeroDivisionError:
+        print("Error: Division by zero!")
+        return None
+    except TypeError:
+        print("Error: Please provide numbers!")
+        return None
+
+# 2. Input validation
+def get_positive_number():
+    while True:
+        try:
+            num = float(input("Enter a positive number: "))
+            if num > 0:
+                return num
+            else:
+                print("Please enter a positive number!")
+        except ValueError:
+            print("Please enter a valid number!")
+
+# 3. Defensive programming
+def get_user_data(user_dict, key):
+    return user_dict.get(key, None)  # Safe dictionary access`;
+---
+
+<MainLayout title="Common Python Errors">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" currentTopicId="common-errors" />
+    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8">Common Python Errors and How to Fix Them</h1>
+      
+      <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Types of Errors</h2>
+        <p class="text-gray-600 mb-6">
+          Understanding common Python errors and how to fix them is essential for becoming a proficient programmer.
+          Let's explore the three main types of errors: syntax errors, runtime errors, and logic errors.
+        </p>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-800 mb-4">Syntax Errors</h3>
+          <CodeBlock code={syntaxErrorsCode} />
+          <div class="mt-4 text-gray-600">
+            <p>Common syntax errors:</p>
+            <ul class="list-disc ml-6 mt-2">
+              <li>Missing parentheses, colons, or quotes</li>
+              <li>Incorrect indentation</li>
+              <li>Invalid variable names</li>
+              <li>Mismatched brackets or parentheses</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-800 mb-4">Runtime Errors</h3>
+          <CodeBlock code={runtimeErrorsCode} />
+          <div class="mt-4 text-gray-600">
+            <p>Common runtime errors:</p>
+            <ul class="list-disc ml-6 mt-2">
+              <li>TypeError: Operating on incompatible types</li>
+              <li>NameError: Using undefined variables</li>
+              <li>IndexError: Invalid list/tuple access</li>
+              <li>KeyError: Invalid dictionary access</li>
+              <li>AttributeError: Using non-existent methods</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-800 mb-4">Logic Errors</h3>
+          <CodeBlock code={logicErrorsCode} />
+          <div class="mt-4 text-gray-600">
+            <p>Common logic errors:</p>
+            <ul class="list-disc ml-6 mt-2">
+              <li>Incorrect operators or comparisons</li>
+              <li>Off-by-one errors in loops</li>
+              <li>Infinite loops</li>
+              <li>Incorrect condition order</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-800 mb-4">Fixing Common Errors</h3>
+          <CodeBlock code={fixingErrorsCode} />
+          <div class="mt-4 text-gray-600">
+            <p>Best practices for error prevention:</p>
+            <ul class="list-disc ml-6 mt-2">
+              <li>Use proper exception handling</li>
+              <li>Validate input data</li>
+              <li>Implement defensive programming</li>
+              <li>Test edge cases</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <h3 class="text-lg font-semibold text-gray-800 mb-3">Debugging Tips</h3>
+            <ul class="space-y-2 text-gray-600">
+              <li>Read error messages carefully</li>
+              <li>Use print statements for debugging</li>
+              <li>Check variable types and values</li>
+              <li>Test with simple cases first</li>
+            </ul>
+          </div>
+          
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <h3 class="text-lg font-semibold text-gray-800 mb-3">Prevention Strategies</h3>
+            <ul class="space-y-2 text-gray-600">
+              <li>Write clean, readable code</li>
+              <li>Follow Python conventions</li>
+              <li>Use a code linter</li>
+              <li>Review code regularly</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>

@@ -1,0 +1,237 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodeBlock from '../../../components/CodeBlock';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+const basicTodoCode = `# Simple Todo List Application
+class TodoList:
+    def __init__(self):
+        self.tasks = []
+    
+    def add_task(self, task):
+        """Add a new task to the list"""
+        self.tasks.append({"task": task, "completed": False})
+        print(f"Task added: {task}")
+    
+    def view_tasks(self):
+        """Display all tasks with their status"""
+        if not self.tasks:
+            print("No tasks in the list!")
+            return
+        
+        print("\nYour Todo List:")
+        for i, task in enumerate(self.tasks, 1):
+            status = "✓" if task["completed"] else " "
+            print(f"{i}. [{status}] {task['task']}")
+    
+    def mark_completed(self, task_index):
+        """Mark a task as completed"""
+        if 1 <= task_index <= len(self.tasks):
+            self.tasks[task_index-1]["completed"] = True
+            print(f"Task {task_index} marked as completed!")
+        else:
+            print("Invalid task number!")
+    
+    def remove_task(self, task_index):
+        """Remove a task from the list"""
+        if 1 <= task_index <= len(self.tasks):
+            removed_task = self.tasks.pop(task_index-1)
+            print(f"Removed task: {removed_task['task']}")
+        else:
+            print("Invalid task number!")
+
+def main():
+    todo = TodoList()
+    
+    while True:
+        print("\n=== Todo List Menu ===")
+        print("1. Add Task")
+        print("2. View Tasks")
+        print("3. Mark Task as Completed")
+        print("4. Remove Task")
+        print("5. Exit")
+        
+        choice = input("\nEnter your choice (1-5): ")
+        
+        if choice == "1":
+            task = input("Enter task description: ")
+            todo.add_task(task)
+        
+        elif choice == "2":
+            todo.view_tasks()
+        
+        elif choice == "3":
+            todo.view_tasks()
+            task_num = input("Enter task number to mark as completed: ")
+            try:
+                todo.mark_completed(int(task_num))
+            except ValueError:
+                print("Please enter a valid number!")
+        
+        elif choice == "4":
+            todo.view_tasks()
+            task_num = input("Enter task number to remove: ")
+            try:
+                todo.remove_task(int(task_num))
+            except ValueError:
+                print("Please enter a valid number!")
+        
+        elif choice == "5":
+            print("Goodbye!")
+            break
+        
+        else:
+            print("Invalid choice! Please try again.")
+
+if __name__ == "__main__":
+    main()`;
+
+const enhancedTodoCode = `# Enhanced Todo List with File Storage and Due Dates
+import json
+from datetime import datetime, timedelta
+
+class EnhancedTodoList:
+    def __init__(self, filename="todos.json"):
+        self.filename = filename
+        self.tasks = self.load_tasks()
+    
+    def load_tasks(self):
+        """Load tasks from file"""
+        try:
+            with open(self.filename, 'r') as f:
+                return json.load(f)
+        except FileNotFoundError:
+            return []
+    
+    def save_tasks(self):
+        """Save tasks to file"""
+        with open(self.filename, 'w') as f:
+            json.dump(self.tasks, f, indent=2)
+    
+    def add_task(self, task, due_days=None):
+        """Add a new task with optional due date"""
+        due_date = None
+        if due_days:
+            due_date = (datetime.now() + timedelta(days=due_days)).strftime("%Y-%m-%d")
+        
+        self.tasks.append({
+            "task": task,
+            "completed": False,
+            "created_date": datetime.now().strftime("%Y-%m-%d"),
+            "due_date": due_date,
+            "priority": "normal"
+        })
+        self.save_tasks()
+    
+    def view_tasks(self, show_completed=True):
+        """Display tasks with due dates and priority"""
+        if not self.tasks:
+            print("No tasks in the list!")
+            return
+        
+        print("\nYour Todo List:")
+        for i, task in enumerate(self.tasks, 1):
+            if not show_completed and task["completed"]:
+                continue
+                
+            status = "✓" if task["completed"] else " "
+            due = f"(Due: {task['due_date']})" if task['due_date'] else ""
+            priority = f"[{task['priority'].upper()}]"
+            
+            print(f"{i}. [{status}] {priority} {task['task']} {due}")
+    
+    def set_priority(self, task_index, priority):
+        """Set task priority (low, normal, high)"""
+        if 1 <= task_index <= len(self.tasks):
+            if priority in ["low", "normal", "high"]:
+                self.tasks[task_index-1]["priority"] = priority
+                self.save_tasks()
+                print(f"Priority set for task {task_index}")
+            else:
+                print("Invalid priority level!")
+        else:
+            print("Invalid task number!")
+
+# Example usage:
+todo = EnhancedTodoList()
+todo.add_task("Complete project", due_days=7)
+todo.add_task("Review code")
+todo.set_priority(1, "high")
+todo.view_tasks()`;
+---
+
+<MainLayout title="Todo List Project">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" currentTopicId="todo-list" />
+    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8">Building a Todo List Application</h1>
+      
+      <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Basic Todo List Implementation</h2>
+        <p class="text-gray-600 mb-6">
+          Let's create a command-line todo list application that helps users manage their tasks. This project will teach you:
+        </p>
+        <ul class="list-disc ml-6 mb-6 text-gray-600">
+          <li>Object-oriented programming basics</li>
+          <li>List manipulation</li>
+          <li>User input handling</li>
+          <li>Basic data structures</li>
+          <li>Command-line interface design</li>
+        </ul>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-800 mb-4">Basic Todo List Code</h3>
+          <CodeBlock code={basicTodoCode} />
+          <div class="mt-4 text-gray-600">
+            <p>Key features of the basic todo list:</p>
+            <ul class="list-disc ml-6 mt-2">
+              <li>Add and remove tasks</li>
+              <li>View all tasks</li>
+              <li>Mark tasks as completed</li>
+              <li>Simple command-line interface</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-800 mb-4">Enhanced Todo List Implementation</h3>
+          <p class="text-gray-600 mb-4">
+            Let's extend our todo list with more advanced features like file storage and due dates.
+          </p>
+          <CodeBlock code={enhancedTodoCode} />
+          <div class="mt-4 text-gray-600">
+            <p>Additional features in the enhanced version:</p>
+            <ul class="list-disc ml-6 mt-2">
+              <li>Persistent storage using JSON</li>
+              <li>Due dates for tasks</li>
+              <li>Task priorities</li>
+              <li>Created date tracking</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <h3 class="text-lg font-semibold text-gray-800 mb-3">Learning Outcomes</h3>
+            <ul class="space-y-2 text-gray-600">
+              <li>Class and object usage</li>
+              <li>File I/O operations</li>
+              <li>JSON data handling</li>
+              <li>Date and time operations</li>
+            </ul>
+          </div>
+          
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <h3 class="text-lg font-semibold text-gray-800 mb-3">Project Extensions</h3>
+            <ul class="space-y-2 text-gray-600">
+              <li>Add categories/tags</li>
+              <li>Create a GUI interface</li>
+              <li>Add task notifications</li>
+              <li>Implement task sharing</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>

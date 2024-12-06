@@ -1,0 +1,208 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodeBlock from '../../../components/CodeBlock';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+const calculatorCode = `# Simple Calculator Application
+def add(x, y):
+    return x + y
+
+def subtract(x, y):
+    return x - y
+
+def multiply(x, y):
+    return x * y
+
+def divide(x, y):
+    if y == 0:
+        raise ValueError("Cannot divide by zero!")
+    return x / y
+
+def calculator():
+    print("Simple Calculator")
+    print("1. Add")
+    print("2. Subtract")
+    print("3. Multiply")
+    print("4. Divide")
+    
+    while True:
+        try:
+            # Get operation choice
+            choice = input("Enter choice (1-4): ")
+            if choice not in ['1', '2', '3', '4']:
+                print("Invalid choice! Please try again.")
+                continue
+            
+            # Get numbers
+            num1 = float(input("Enter first number: "))
+            num2 = float(input("Enter second number: "))
+            
+            if choice == '1':
+                result = add(num1, num2)
+                print(f"{num1} + {num2} = {result}")
+            elif choice == '2':
+                result = subtract(num1, num2)
+                print(f"{num1} - {num2} = {result}")
+            elif choice == '3':
+                result = multiply(num1, num2)
+                print(f"{num1} * {num2} = {result}")
+            else:
+                try:
+                    result = divide(num1, num2)
+                    print(f"{num1} / {num2} = {result}")
+                except ValueError as e:
+                    print(f"Error: {e}")
+            
+            # Ask if user wants to continue
+            again = input("Calculate again? (yes/no): ")
+            if again.lower() != 'yes':
+                break
+                
+        except ValueError:
+            print("Invalid input! Please enter numeric values.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+if __name__ == "__main__":
+    calculator()`;
+
+const enhancedCalculatorCode = `# Enhanced Calculator with Memory and Scientific Operations
+import math
+
+class Calculator:
+    def __init__(self):
+        self.memory = 0
+        self.history = []
+    
+    def add(self, x, y):
+        result = x + y
+        self.history.append(f"{x} + {y} = {result}")
+        return result
+    
+    def subtract(self, x, y):
+        result = x - y
+        self.history.append(f"{x} - {y} = {result}")
+        return result
+    
+    def multiply(self, x, y):
+        result = x * y
+        self.history.append(f"{x} * {y} = {result}")
+        return result
+    
+    def divide(self, x, y):
+        if y == 0:
+            raise ValueError("Cannot divide by zero!")
+        result = x / y
+        self.history.append(f"{x} / {y} = {result}")
+        return result
+    
+    def square_root(self, x):
+        if x < 0:
+            raise ValueError("Cannot calculate square root of negative number!")
+        result = math.sqrt(x)
+        self.history.append(f"√{x} = {result}")
+        return result
+    
+    def power(self, x, y):
+        result = math.pow(x, y)
+        self.history.append(f"{x}^{y} = {result}")
+        return result
+    
+    def store_in_memory(self, value):
+        self.memory = value
+        self.history.append(f"Stored {value} in memory")
+    
+    def recall_memory(self):
+        return self.memory
+    
+    def clear_memory(self):
+        self.memory = 0
+        self.history.append("Memory cleared")
+    
+    def get_history(self):
+        return self.history
+
+# Example usage:
+calc = Calculator()
+result = calc.add(10, 5)
+calc.store_in_memory(result)
+sqrt_result = calc.square_root(16)
+power_result = calc.power(2, 3)
+print("History:", calc.get_history())`;
+---
+
+<MainLayout title="Simple Calculator Project">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" currentTopicId="calculator" />
+    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8">Building a Simple Calculator</h1>
+      
+      <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Basic Calculator Implementation</h2>
+        <p class="text-gray-600 mb-6">
+          Let's create a simple calculator that can perform basic arithmetic operations. This project will help you understand:
+        </p>
+        <ul class="list-disc ml-6 mb-6 text-gray-600">
+          <li>Function definitions and calls</li>
+          <li>User input handling</li>
+          <li>Control flow with if-elif-else</li>
+          <li>Basic error handling</li>
+          <li>Loop control for program flow</li>
+        </ul>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-800 mb-4">Basic Calculator Code</h3>
+          <CodeBlock code={calculatorCode} />
+          <div class="mt-4 text-gray-600">
+            <p>Key features of the basic calculator:</p>
+            <ul class="list-disc ml-6 mt-2">
+              <li>Supports addition, subtraction, multiplication, and division</li>
+              <li>Handles invalid inputs gracefully</li>
+              <li>Includes error handling for division by zero</li>
+              <li>Allows continuous calculations</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-800 mb-4">Enhanced Calculator Implementation</h3>
+          <p class="text-gray-600 mb-4">
+            Let's extend our calculator with more advanced features like memory operations and scientific calculations.
+          </p>
+          <CodeBlock code={enhancedCalculatorCode} />
+          <div class="mt-4 text-gray-600">
+            <p>Additional features in the enhanced version:</p>
+            <ul class="list-disc ml-6 mt-2">
+              <li>Memory storage and recall</li>
+              <li>Scientific operations (square root, power)</li>
+              <li>Calculation history tracking</li>
+              <li>Object-oriented implementation</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <h3 class="text-lg font-semibold text-gray-800 mb-3">Learning Outcomes</h3>
+            <ul class="space-y-2 text-gray-600">
+              <li>Function organization</li>
+              <li>Class-based design</li>
+              <li>Error handling patterns</li>
+              <li>User input validation</li>
+            </ul>
+          </div>
+          
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <h3 class="text-lg font-semibold text-gray-800 mb-3">Project Extensions</h3>
+            <ul class="space-y-2 text-gray-600">
+              <li>Add trigonometric functions</li>
+              <li>Implement unit conversions</li>
+              <li>Create a GUI interface</li>
+              <li>Add expression parsing</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>

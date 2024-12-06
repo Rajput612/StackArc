@@ -1,0 +1,172 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import CodeBlock from '../../components/CodeBlock';
+
+const debuggingBasicsCode = `# Using print statements for debugging
+def calculate_average(numbers):
+    print(f"Input numbers: {numbers}")  # Debug print
+    
+    if not numbers:
+        print("Empty list detected")  # Debug print
+        return 0
+        
+    total = sum(numbers)
+    print(f"Sum calculated: {total}")  # Debug print
+    
+    average = total / len(numbers)
+    print(f"Average calculated: {average}")  # Debug print
+    
+    return average`;
+
+const assertionsCode = `# Using assertions for debugging
+def process_age(age):
+    assert isinstance(age, (int, float)), f"Age must be a number, got {type(age)}"
+    assert 0 <= age <= 120, f"Age must be between 0 and 120, got {age}"
+    
+    if age < 18:
+        return "Minor"
+    elif age < 65:
+        return "Adult"
+    else:
+        return "Senior"
+
+# Example usage with assertions
+try:
+    result = process_age("invalid")  # This will raise an AssertionError
+except AssertionError as e:
+    print(f"Assertion failed: {e}")`;
+
+const loggingCode = `import logging
+
+# Configure logging
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+
+logger = logging.getLogger(__name__)
+
+def divide_numbers(a, b):
+    logger.debug(f"Dividing {a} by {b}")
+    
+    try:
+        result = a / b
+        logger.info(f"Successfully calculated {a}/{b} = {result}")
+        return result
+    except ZeroDivisionError:
+        logger.error(f"Attempted to divide {a} by zero")
+        raise
+    except Exception as e:
+        logger.exception("Unexpected error occurred")
+        raise`;
+
+const debuggerCode = `# Using pdb for debugging
+def complex_calculation(x, y):
+    import pdb; pdb.set_trace()  # Start debugger
+    
+    result = x * y
+    if result < 0:
+        result = abs(result)
+    
+    final = result ** 2
+    return final
+
+# Common pdb commands:
+# n (next line)
+# s (step into function)
+# c (continue execution)
+# p variable (print variable)
+# l (list source code)
+# q (quit debugger)`;
+---
+
+<MainLayout title="Python Debugging">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold text-gray-900 mb-6">Debugging and Best Practices</h1>
+    
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Debugging Techniques</h2>
+      <p class="text-gray-600 mb-6">
+        Effective debugging is crucial for developing reliable Python applications. Let's explore various debugging techniques and best practices.
+      </p>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Print Statement Debugging</h3>
+        <CodeBlock code={debuggingBasicsCode} />
+        <div class="mt-4 text-gray-600">
+          <p>Advantages of print debugging:</p>
+          <ul class="list-disc ml-6 mt-2">
+            <li>Simple and straightforward</li>
+            <li>No additional tools required</li>
+            <li>Good for quick debugging</li>
+            <li>Helps understand program flow</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Using Assertions</h3>
+        <CodeBlock code={assertionsCode} />
+        <div class="mt-4 text-gray-600">
+          <p>Benefits of assertions:</p>
+          <ul class="list-disc ml-6 mt-2">
+            <li>Catch programming errors early</li>
+            <li>Document assumptions and preconditions</li>
+            <li>Can be disabled in production</li>
+            <li>Help maintain code invariants</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Logging</h3>
+        <CodeBlock code={loggingCode} />
+        <div class="mt-4 text-gray-600">
+          <p>Advantages of logging:</p>
+          <ul class="list-disc ml-6 mt-2">
+            <li>Different logging levels (DEBUG, INFO, WARNING, ERROR)</li>
+            <li>Timestamps and context information</li>
+            <li>Can write to files or other outputs</li>
+            <li>Configurable formatting</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Using the Python Debugger (pdb)</h3>
+        <CodeBlock code={debuggerCode} />
+        <div class="mt-4 text-gray-600">
+          <p>pdb features:</p>
+          <ul class="list-disc ml-6 mt-2">
+            <li>Interactive debugging</li>
+            <li>Step through code execution</li>
+            <li>Inspect variables at runtime</li>
+            <li>Set breakpoints</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Debugging Best Practices</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li>Use descriptive variable names</li>
+            <li>Add meaningful comments</li>
+            <li>Keep functions small and focused</li>
+            <li>Test edge cases</li>
+          </ul>
+        </div>
+        
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Common Debugging Mistakes</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li>Assuming without verifying</li>
+            <li>Not checking edge cases</li>
+            <li>Ignoring warning messages</li>
+            <li>Not removing debug code</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>
