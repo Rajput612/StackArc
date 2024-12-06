@@ -4,12 +4,11 @@ import { Editor } from '@monaco-editor/react';
 // Utility function to safely execute Python code
 const executePythonCode = async (code) => {
   try {
-    // Use Pyodide for Python execution in browser
-    if (window.loadPyodide) {
-      const pyodide = await window.loadPyodide();
-      
-      // Redirect Python print to our console
-      pyodide.runPython(`
+    // Wait for Pyodide to be ready
+    const pyodide = await window.pyodideReadyPromise;
+    
+    // Redirect Python print to our console
+    pyodide.runPython(`
 import sys
 import io
 
@@ -26,17 +25,12 @@ sys.stdout = capture
 sys.stderr = capture
 `);
 
-      // Execute the code
-      pyodide.runPython(code);
-
-      // Retrieve captured output
-      const capturedOutput = pyodide.runPython('capture.output');
-      const pythonOutput = capturedOutput.toJs();
-
-      return pythonOutput;
-    }
-
-    return ['Pyodide not loaded'];
+    // Execute the code
+    pyodide.runPython(code);
+    
+    // Get captured output
+    const capturedOutput = pyodide.runPython('capture.output');
+    return capturedOutput.toJs();
   } catch (error) {
     return [`Error: ${error.message}`];
   }
@@ -61,7 +55,7 @@ const CodePlayground = ({
 
   useEffect(() => {
     const loadPyodideScript = async () => {
-      if (!window.loadPyodide) {
+      if (!window.pyodideReadyPromise) {
         const script = document.createElement('script');
         script.src = 'https://cdn.jsdelivr.net/pyodide/v0.22.1/full/pyodide.js';
         script.async = true;
@@ -91,7 +85,7 @@ const CodePlayground = ({
 
   // Execute code 
   const executeCode = async () => {
-    if (!window.loadPyodide) {
+    if (!window.pyodideReadyPromise) {
       setOutput(['Pyodide not loaded']);
       return;
     }
@@ -215,7 +209,7 @@ const CodePlayground = ({
 
   // Start debugging - memoized
   const startDebugging = useCallback(() => {
-    if (!window.loadPyodide) {
+    if (!window.pyodideReadyPromise) {
       setOutput(['Pyodide not loaded']);
       return;
     }

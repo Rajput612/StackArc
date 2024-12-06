@@ -1,0 +1,346 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+const basicReading = `# Basic file reading
+# Reading entire file
+with open("sample.txt", "r") as file:
+    content = file.read()
+    print("Entire file content:")
+    print(content)
+
+# Reading line by line
+with open("sample.txt", "r") as file:
+    print("\\nReading line by line:")
+    for line in file:
+        print(line.strip())`;
+
+const readingMethods = `# Different reading methods
+filename = "sample.txt"
+
+# read() - Read entire file
+with open(filename, "r") as file:
+    content = file.read()
+    print("Using read():", content)
+
+# readline() - Read single line
+with open(filename, "r") as file:
+    line = file.readline()
+    print("\\nUsing readline():", line)
+
+# readlines() - Read all lines into list
+with open(filename, "r") as file:
+    lines = file.readlines()
+    print("\\nUsing readlines():", lines)`;
+
+const fileProperties = `# File object properties
+with open("sample.txt", "r") as file:
+    # Check if file is readable
+    print("Is readable:", file.readable())
+    
+    # Get current position
+    print("Current position:", file.tell())
+    
+    # Read some content
+    content = file.read(10)
+    print("First 10 characters:", content)
+    
+    # New position
+    print("New position:", file.tell())
+    
+    # Move to beginning
+    file.seek(0)
+    print("After seek(0):", file.tell())`;
+
+const errorHandling = `# Error handling in file operations
+filename = "nonexistent.txt"
+
+try:
+    with open(filename, "r") as file:
+        content = file.read()
+        print(content)
+except FileNotFoundError:
+    print(f"Error: File '{filename}' not found")
+except PermissionError:
+    print(f"Error: No permission to read '{filename}'")
+except Exception as e:
+    print(f"An error occurred: {e}")`;
+
+const wordCounterChallenge = `# Challenge: Word Counter
+# Create a program that reads a text file and:
+# 1. Counts total words
+# 2. Counts unique words
+# 3. Finds most common words
+# 4. Calculates average word length
+
+def analyze_text_file(filename):
+    # Your code here
+    pass
+
+# Test your function
+filename = "sample.txt"
+analyze_text_file(filename)`;
+
+const wordCounterSolution = `# Solution: Word Counter
+from collections import Counter
+
+def analyze_text_file(filename):
+    try:
+        with open(filename, "r") as file:
+            text = file.read().lower()
+            
+            # Split into words and remove punctuation
+            words = [word.strip('.,!?()[]{}":;') 
+                    for word in text.split()]
+            
+            # Calculate statistics
+            total_words = len(words)
+            unique_words = len(set(words))
+            word_freq = Counter(words)
+            avg_length = sum(len(word) for word in words) / total_words
+            
+            # Print results
+            print(f"Total words: {total_words}")
+            print(f"Unique words: {unique_words}")
+            print("\\nMost common words:")
+            for word, count in word_freq.most_common(5):
+                print(f"  {word}: {count}")
+            print(f"\\nAverage word length: {avg_length:.2f}")
+            
+    except FileNotFoundError:
+        print(f"Error: File '{filename}' not found")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+# Test with sample text
+sample_text = """
+Python is a versatile programming language.
+Python is easy to learn and use.
+Programming in Python is fun!
+"""
+
+# Create sample file
+with open("sample.txt", "w") as file:
+    file.write(sample_text)
+
+# Analyze the file
+analyze_text_file("sample.txt")`;
+
+const logAnalyzerChallenge = `# Challenge: Log File Analyzer
+# Create a program that analyzes a log file and:
+# 1. Counts total log entries
+# 2. Groups entries by log level (ERROR, WARNING, INFO)
+# 3. Finds most common error messages
+# 4. Creates a summary report
+
+def analyze_log_file(filename):
+    # Your code here
+    pass
+
+# Sample log format:
+# [2023-12-06 10:30:15] ERROR: Database connection failed
+# [2023-12-06 10:30:20] INFO: Application started
+# [2023-12-06 10:31:00] WARNING: High memory usage`;
+
+const logAnalyzerSolution = `# Solution: Log File Analyzer
+from datetime import datetime
+from collections import defaultdict, Counter
+import re
+
+def analyze_log_file(filename):
+    try:
+        # Initialize counters
+        total_entries = 0
+        entries_by_level = defaultdict(list)
+        error_messages = []
+        
+        # Read and analyze log file
+        with open(filename, "r") as file:
+            for line in file:
+                total_entries += 1
+                
+                # Parse log entry
+                match = re.match(r'\\[(.*?)\\] (\\w+): (.*)', line.strip())
+                if match:
+                    timestamp, level, message = match.groups()
+                    entries_by_level[level].append({
+                        'timestamp': timestamp,
+                        'message': message
+                    })
+                    
+                    if level == 'ERROR':
+                        error_messages.append(message)
+        
+        # Generate report
+        print("Log Analysis Report")
+        print("-" * 50)
+        print(f"Total log entries: {total_entries}")
+        
+        print("\\nEntries by level:")
+        for level, entries in entries_by_level.items():
+            print(f"  {level}: {len(entries)}")
+        
+        if error_messages:
+            print("\\nMost common errors:")
+            for error, count in Counter(error_messages).most_common(3):
+                print(f"  {count}x: {error}")
+        
+    except FileNotFoundError:
+        print(f"Error: File '{filename}' not found")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+# Create sample log file
+sample_logs = """
+[2023-12-06 10:30:15] ERROR: Database connection failed
+[2023-12-06 10:30:20] INFO: Application started
+[2023-12-06 10:31:00] WARNING: High memory usage
+[2023-12-06 10:31:15] ERROR: Database connection failed
+[2023-12-06 10:32:00] INFO: User login successful
+[2023-12-06 10:32:30] ERROR: Invalid input received
+"""
+
+# Create and analyze sample file
+with open("sample.log", "w") as file:
+    file.write(sample_logs)
+
+analyze_log_file("sample.log")`;
+
+const { Content } = Astro.props;
+---
+
+<MainLayout title="Reading Files in Python">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" />
+    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8">Reading Files in Python</h1>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Basic File Reading</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Learn how to read text files in Python using the basic file operations:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={basicReading}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Different Reading Methods</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Explore different methods to read file content:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={readingMethods}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">File Properties and Navigation</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Understanding file object properties and navigation:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={fileProperties}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Error Handling</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Handling common file operation errors:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={errorHandling}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Practice Problems</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-semibold mb-4">File Reading Challenges</h3>
+          <div class="space-y-8">
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">Challenge 1: Word Counter</h4>
+              <p class="text-gray-300 mb-4">Create a program that analyzes text file content.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>File reading</li>
+                    <li>Text processing</li>
+                    <li>Data analysis</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use with statement</li>
+                    <li>Split text into words</li>
+                    <li>Use Counter class</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="word-counter-challenge"
+                  initialCode={wordCounterChallenge}
+                  language="python"
+                  solution={wordCounterSolution}
+                />
+              </div>
+            </div>
+            
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">Challenge 2: Log Analyzer</h4>
+              <p class="text-gray-300 mb-4">Create a program that analyzes log files.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Pattern matching</li>
+                    <li>Data grouping</li>
+                    <li>Report generation</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use regular expressions</li>
+                    <li>Group by log level</li>
+                    <li>Track error frequency</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="log-analyzer-challenge"
+                  initialCode={logAnalyzerChallenge}
+                  language="python"
+                  solution={logAnalyzerSolution}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</MainLayout>

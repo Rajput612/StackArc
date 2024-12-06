@@ -1,0 +1,220 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+const forLoopBasics = `# Basic for loop with range
+for i in range(5):
+    print(f"Count: {i}")
+
+# Output:
+# Count: 0
+# Count: 1
+# Count: 2
+# Count: 3
+# Count: 4`;
+
+const forLoopList = `# For loop with a list
+fruits = ["apple", "banana", "orange"]
+for fruit in fruits:
+    print(f"I like {fruit}s")
+
+# Output:
+# I like apples
+# I like bananas
+# I like oranges`;
+
+const whileLoopBasics = `# Basic while loop
+count = 0
+while count < 5:
+    print(f"Count is: {count}")
+    count += 1
+
+# Output:
+# Count is: 0
+# Count is: 1
+# Count is: 2
+# Count is: 3
+# Count is: 4`;
+
+const rangeExamples = `# Different ways to use range
+print("range(5):")
+for i in range(5):
+    print(i, end=" ")  # 0 1 2 3 4
+
+print("\\n\\nrange(2, 5):")
+for i in range(2, 5):
+    print(i, end=" ")  # 2 3 4
+
+print("\\n\\nrange(0, 10, 2):")
+for i in range(0, 10, 2):
+    print(i, end=" ")  # 0 2 4 6 8`;
+
+const sumNumbersChallenge = `# Challenge: Sum Numbers
+# Write a program to calculate the sum of numbers from 1 to n
+# Example: if n = 5, sum should be 15 (1+2+3+4+5)
+
+n = int(input("Enter a number: "))
+# Your code here`;
+
+const sumNumbersSolution = `# Solution: Sum Numbers
+n = int(input("Enter a number: "))
+total = 0
+
+for i in range(1, n + 1):
+    total += i
+
+print(f"The sum of numbers from 1 to {n} is: {total}")`;
+
+const multiplicationTableChallenge = `# Challenge: Multiplication Table
+# Create a program that prints the multiplication table
+# for a given number up to 10
+# Example: if number = 5, print 5 x 1 = 5, 5 x 2 = 10, etc.
+
+number = int(input("Enter a number: "))
+# Your code here`;
+
+const multiplicationTableSolution = `# Solution: Multiplication Table
+number = int(input("Enter a number: "))
+
+for i in range(1, 11):
+    result = number * i
+    print(f"{number} x {i} = {result}")`;
+
+const { Content } = Astro.props;
+---
+
+<MainLayout title="Python Loops Introduction">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" />
+    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8">Introduction to Python Loops</h1>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">For Loop Basics</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">The for loop in Python is used to iterate over a sequence (like a list, tuple, or string) or other iterable objects. Here's a simple example using range():</p>
+          <CodePlayground 
+            client:load 
+            initialCode={forLoopBasics}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Looping Through Lists</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">You can use a for loop to iterate through any sequence, like a list:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={forLoopList}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">While Loop Basics</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">While loops repeat as long as a condition is true:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={whileLoopBasics}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Using Range Function</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">The range() function is commonly used with for loops. It can take up to three arguments: start, stop, and step:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={rangeExamples}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Practice Problems</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-semibold mb-4">Loop Practice Challenges</h3>
+          <div class="space-y-8">
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">🔢 Challenge 1: Sum Numbers</h4>
+              <p class="text-gray-300 mb-4">Create a program that calculates the sum of numbers from 1 to n.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">🎯 Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use for loop with range</li>
+                    <li>Accumulate values</li>
+                    <li>Handle user input</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">🚀 Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use range(1, n + 1)</li>
+                    <li>Initialize a sum variable</li>
+                    <li>Add each number in the loop</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="sum-numbers-challenge"
+                  initialCode={sumNumbersChallenge}
+                  language="python"
+                  solution={sumNumbersSolution}
+                />
+              </div>
+            </div>
+            
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">✖️ Challenge 2: Multiplication Table</h4>
+              <p class="text-gray-300 mb-4">Create a program that prints the multiplication table for a given number.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">🎯 Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use for loop with range</li>
+                    <li>Format output strings</li>
+                    <li>Perform calculations in loops</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">🚀 Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use range(1, 11)</li>
+                    <li>Multiply number by iterator</li>
+                    <li>Use f-strings for output</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="multiplication-table-challenge"
+                  initialCode={multiplicationTableChallenge}
+                  language="python"
+                  solution={multiplicationTableSolution}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</MainLayout>

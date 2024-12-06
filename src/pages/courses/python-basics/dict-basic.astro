@@ -1,0 +1,410 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+const dictCreation = `# Creating dictionaries
+# Empty dictionary
+empty_dict = {}
+print("Empty dictionary:", empty_dict)
+
+# Dictionary with key-value pairs
+person = {
+    "name": "Alice",
+    "age": 25,
+    "city": "New York"
+}
+print("Person dictionary:", person)
+
+# Using dict() constructor
+colors = dict(red="#FF0000", green="#00FF00", blue="#0000FF")
+print("Colors dictionary:", colors)
+
+# Dictionary with mixed data types
+mixed = {
+    1: "integer key",
+    "pi": 3.14,
+    (1, 2): "tuple key",
+    "list": [1, 2, 3]
+}
+print("Mixed dictionary:", mixed)`;
+
+const dictAccess = `# Accessing dictionary elements
+person = {
+    "name": "Alice",
+    "age": 25,
+    "city": "New York",
+    "hobbies": ["reading", "hiking", "photography"]
+}
+
+# Accessing values using keys
+print("Name:", person["name"])
+print("Age:", person["age"])
+
+# Using get() method (safer)
+print("City:", person.get("city"))
+print("Country:", person.get("country", "Not specified"))
+
+# Accessing nested data
+print("First hobby:", person["hobbies"][0])
+
+# Getting all keys and values
+print("Keys:", list(person.keys()))
+print("Values:", list(person.values()))
+print("Items:", list(person.items()))`;
+
+const dictModification = `# Modifying dictionaries
+person = {"name": "Alice", "age": 25}
+print("Original:", person)
+
+# Adding new key-value pairs
+person["city"] = "New York"
+person.update({"email": "alice@example.com", "phone": "123-456-7890"})
+print("After adding:", person)
+
+# Modifying values
+person["age"] = 26
+print("After modifying:", person)
+
+# Removing items
+removed_value = person.pop("phone")
+print("Removed value:", removed_value)
+print("After removing phone:", person)
+
+# Remove and return last item
+last_item = person.popitem()
+print("Last item removed:", last_item)
+print("After popitem:", person)
+
+# Clear dictionary
+person.clear()
+print("After clear:", person)`;
+
+const dictMethods = `# Dictionary methods
+student = {
+    "name": "Alice",
+    "grades": {"math": 90, "science": 85, "history": 88}
+}
+
+# Copy dictionary
+student_copy = student.copy()
+print("Copy:", student_copy)
+
+# Nested dictionary operations
+print("Math grade:", student["grades"]["math"])
+student["grades"]["physics"] = 92
+print("Updated grades:", student["grades"])
+
+# Dictionary comprehension
+squares = {x: x**2 for x in range(5)}
+print("Squares:", squares)
+
+# Merging dictionaries
+dict1 = {"a": 1, "b": 2}
+dict2 = {"c": 3, "d": 4}
+merged = {**dict1, **dict2}  # Python 3.5+
+print("Merged:", merged)`;
+
+const contactManagerChallenge = `# Challenge: Contact Manager
+# Create a contact management system with these features:
+# 1. Add/update contacts
+# 2. Search contacts
+# 3. Delete contacts
+# 4. Display all contacts sorted by name
+
+def add_contact(contacts, name, info):
+    # Your code here
+    pass
+
+def search_contact(contacts, term):
+    # Your code here
+    pass
+
+def delete_contact(contacts, name):
+    # Your code here
+    pass
+
+def display_contacts(contacts):
+    # Your code here
+    pass
+
+# Test your functions
+contacts = {}
+add_contact(contacts, "Alice", {"phone": "123-456", "email": "alice@example.com"})
+add_contact(contacts, "Bob", {"phone": "789-012", "email": "bob@example.com"})
+display_contacts(contacts)`;
+
+const contactManagerSolution = `# Solution: Contact Manager
+def add_contact(contacts, name, info):
+    contacts[name] = info
+    print(f"Contact {name} added/updated successfully")
+
+def search_contact(contacts, term):
+    term = term.lower()
+    results = {}
+    for name, info in contacts.items():
+        if (term in name.lower() or 
+            any(term in str(v).lower() for v in info.values())):
+            results[name] = info
+    return results
+
+def delete_contact(contacts, name):
+    if name in contacts:
+        del contacts[name]
+        print(f"Contact {name} deleted successfully")
+    else:
+        print(f"Contact {name} not found")
+
+def display_contacts(contacts):
+    if not contacts:
+        print("No contacts found")
+        return
+    
+    print("\\nContact List:")
+    for name in sorted(contacts.keys()):
+        print(f"\\n{name}:")
+        for key, value in contacts[name].items():
+            print(f"  {key}: {value}")
+
+# Test the functions
+contacts = {}
+
+# Add contacts
+add_contact(contacts, "Alice", {"phone": "123-456", "email": "alice@example.com"})
+add_contact(contacts, "Bob", {"phone": "789-012", "email": "bob@example.com"})
+
+# Display all contacts
+print("\\nAll contacts:")
+display_contacts(contacts)
+
+# Search contacts
+print("\\nSearch results for 'alice':")
+results = search_contact(contacts, "alice")
+display_contacts(results)
+
+# Delete contact
+delete_contact(contacts, "Bob")
+print("\\nAfter deleting Bob:")
+display_contacts(contacts)`;
+
+const inventorySystemChallenge = `# Challenge: Inventory System
+# Create an inventory management system with:
+# 1. Add/update items with quantity and price
+# 2. Calculate total inventory value
+# 3. List low stock items (quantity < 5)
+# 4. Generate inventory report
+
+def add_item(inventory, item, quantity, price):
+    # Your code here
+    pass
+
+def get_total_value(inventory):
+    # Your code here
+    pass
+
+def get_low_stock_items(inventory):
+    # Your code here
+    pass
+
+def generate_report(inventory):
+    # Your code here
+    pass
+
+# Test your functions
+inventory = {}
+add_item(inventory, "Apple", 10, 0.5)
+add_item(inventory, "Banana", 3, 0.3)
+add_item(inventory, "Orange", 7, 0.6)
+generate_report(inventory)`;
+
+const inventorySystemSolution = `# Solution: Inventory System
+def add_item(inventory, item, quantity, price):
+    inventory[item] = {
+        "quantity": quantity,
+        "price": price,
+        "value": quantity * price
+    }
+    print(f"{item} added/updated in inventory")
+
+def get_total_value(inventory):
+    return sum(item["value"] for item in inventory.values())
+
+def get_low_stock_items(inventory):
+    return {
+        item: details for item, details in inventory.items()
+        if details["quantity"] < 5
+    }
+
+def generate_report(inventory):
+    print("\\nInventory Report")
+    print("-" * 40)
+    
+    for item, details in sorted(inventory.items()):
+        print(f"\\n{item}:")
+        print(f"  Quantity: {details['quantity']}")
+        print(f"  Price: ${details['price']:.2f}")
+        print(f"  Total Value: ${details['value']:.2f}")
+    
+    print("\\nSummary:")
+    print(f"Total Items: {len(inventory)}")
+    print(f"Total Value: ${get_total_value(inventory):.2f}")
+    
+    low_stock = get_low_stock_items(inventory)
+    if low_stock:
+        print("\\nLow Stock Alert:")
+        for item, details in low_stock.items():
+            print(f"  {item}: {details['quantity']} remaining")
+
+# Test the system
+inventory = {}
+
+# Add items
+add_item(inventory, "Apple", 10, 0.5)
+add_item(inventory, "Banana", 3, 0.3)
+add_item(inventory, "Orange", 7, 0.6)
+
+# Generate report
+generate_report(inventory)
+
+# Update item
+add_item(inventory, "Apple", 8, 0.55)
+print("\\nAfter updating Apple:")
+generate_report(inventory)`;
+
+const { Content } = Astro.props;
+---
+
+<MainLayout title="Dictionaries in Python">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" />
+    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8">Working with Dictionaries in Python</h1>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Creating Dictionaries</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Learn different ways to create dictionaries in Python:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={dictCreation}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Accessing Dictionary Elements</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Explore ways to access and retrieve dictionary data:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={dictAccess}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Modifying Dictionaries</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Learn how to add, update, and remove dictionary items:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={dictModification}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Dictionary Methods</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Explore useful dictionary methods and operations:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={dictMethods}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Practice Problems</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-semibold mb-4">Dictionary Manipulation Challenges</h3>
+          <div class="space-y-8">
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">Challenge 1: Contact Manager</h4>
+              <p class="text-gray-300 mb-4">Create a simple contact management system using dictionaries.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Dictionary operations</li>
+                    <li>Nested dictionaries</li>
+                    <li>Data organization</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use nested dictionaries</li>
+                    <li>Implement CRUD operations</li>
+                    <li>Handle search functionality</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="contact-manager-challenge"
+                  initialCode={contactManagerChallenge}
+                  language="python"
+                  solution={contactManagerSolution}
+                />
+              </div>
+            </div>
+            
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">Challenge 2: Inventory System</h4>
+              <p class="text-gray-300 mb-4">Create an inventory management system using dictionaries.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Complex dictionaries</li>
+                    <li>Calculations with dictionaries</li>
+                    <li>Report generation</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Track multiple values</li>
+                    <li>Calculate totals</li>
+                    <li>Format output nicely</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="inventory-system-challenge"
+                  initialCode={inventorySystemChallenge}
+                  language="python"
+                  solution={inventorySystemSolution}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</MainLayout>

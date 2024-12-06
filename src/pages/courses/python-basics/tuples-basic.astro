@@ -1,0 +1,333 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+const tupleCreation = `# Creating tuples
+# Empty tuple
+empty_tuple = ()
+print("Empty tuple:", empty_tuple)
+
+# Tuple with values
+numbers = (1, 2, 3, 4, 5)
+mixed = (1, "hello", 3.14, True)
+single_item = (42,)  # Note the comma
+
+print("Numbers tuple:", numbers)
+print("Mixed tuple:", mixed)
+print("Single item tuple:", single_item)
+
+# Tuple packing
+coordinates = 3, 4  # Parentheses are optional
+print("Coordinates:", coordinates)`;
+
+const tupleAccess = `# Accessing tuple elements
+fruits = ("apple", "banana", "orange", "grape", "mango")
+
+# Indexing
+print("First fruit:", fruits[0])
+print("Last fruit:", fruits[-1])
+
+# Slicing
+print("First two fruits:", fruits[0:2])
+print("Last two fruits:", fruits[-2:])
+
+# Length
+print("Number of fruits:", len(fruits))
+
+# Tuple unpacking
+first, second, *rest = fruits
+print("First:", first)
+print("Second:", second)
+print("Rest:", rest)`;
+
+const tupleOperations = `# Tuple operations
+tuple1 = (1, 2, 3)
+tuple2 = (4, 5, 6)
+
+# Concatenation
+combined = tuple1 + tuple2
+print("Combined:", combined)
+
+# Repetition
+repeated = tuple1 * 3
+print("Repeated:", repeated)
+
+# Membership testing
+print("Is 3 in tuple1?", 3 in tuple1)
+print("Is 7 in tuple1?", 7 in tuple1)
+
+# Count and index methods
+numbers = (1, 2, 2, 3, 2, 4)
+print("Count of 2:", numbers.count(2))
+print("Index of 3:", numbers.index(3))`;
+
+const tupleVsList = `# Comparing tuples and lists
+# Lists are mutable
+my_list = [1, 2, 3]
+my_list[0] = 10  # This works
+print("Modified list:", my_list)
+
+# Tuples are immutable
+my_tuple = (1, 2, 3)
+try:
+    my_tuple[0] = 10  # This raises an error
+except TypeError as e:
+    print("Error:", e)
+
+# Memory usage comparison
+import sys
+list_size = sys.getsizeof([1, 2, 3])
+tuple_size = sys.getsizeof((1, 2, 3))
+print("List size:", list_size, "bytes")
+print("Tuple size:", tuple_size, "bytes")`;
+
+const coordinateSystemChallenge = `# Challenge: Coordinate System
+# Create functions to:
+# 1. Calculate distance between two points
+# 2. Find midpoint of two points
+# 3. Check if three points form a triangle
+
+def calculate_distance(point1, point2):
+    # Your code here
+    pass
+
+def find_midpoint(point1, point2):
+    # Your code here
+    pass
+
+def is_triangle(point1, point2, point3):
+    # Your code here
+    pass
+
+# Test points
+p1 = (0, 0)
+p2 = (3, 4)
+p3 = (6, 0)
+
+# Test your functions
+print("Distance:", calculate_distance(p1, p2))
+print("Midpoint:", find_midpoint(p1, p2))
+print("Is triangle?", is_triangle(p1, p2, p3))`;
+
+const coordinateSystemSolution = `# Solution: Coordinate System
+import math
+
+def calculate_distance(point1, point2):
+    x1, y1 = point1
+    x2, y2 = point2
+    return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+
+def find_midpoint(point1, point2):
+    x1, y1 = point1
+    x2, y2 = point2
+    return ((x1 + x2)/2, (y1 + y2)/2)
+
+def is_triangle(point1, point2, point3):
+    # Calculate distances between all points
+    a = calculate_distance(point1, point2)
+    b = calculate_distance(point2, point3)
+    c = calculate_distance(point3, point1)
+    
+    # Check triangle inequality theorem
+    return (a + b > c) and (b + c > a) and (c + a > b)
+
+# Test points
+p1 = (0, 0)
+p2 = (3, 4)
+p3 = (6, 0)
+
+# Test results
+print("Distance between p1 and p2:", calculate_distance(p1, p2))
+print("Midpoint of p1 and p2:", find_midpoint(p1, p2))
+print("Do points form a triangle?", is_triangle(p1, p2, p3))`;
+
+const namedTupleChallenge = `# Challenge: Student Records
+# Use namedtuple to create a Student record system
+# Include: id, name, grades (as tuple)
+# Create functions to:
+# 1. Calculate average grade
+# 2. Find highest/lowest grade
+# 3. Format student info as string
+
+from collections import namedtuple
+
+# Your code here
+
+# Test cases
+students = [
+    Student(1, "Alice", (85, 90, 88)),
+    Student(2, "Bob", (78, 92, 85)),
+    Student(3, "Charlie", (90, 95, 89))
+]
+
+# Test your functions`;
+
+const namedTupleSolution = `# Solution: Student Records
+from collections import namedtuple
+
+# Create Student namedtuple
+Student = namedtuple('Student', ['id', 'name', 'grades'])
+
+def calculate_average(student):
+    return sum(student.grades) / len(student.grades)
+
+def find_grade_range(student):
+    return (min(student.grades), max(student.grades))
+
+def format_student(student):
+    avg = calculate_average(student)
+    low, high = find_grade_range(student)
+    return f"Student {student.name} (ID: {student.id}):\\n" + \\
+           f"Average: {avg:.1f}\\n" + \\
+           f"Grade Range: {low}-{high}"
+
+# Test cases
+students = [
+    Student(1, "Alice", (85, 90, 88)),
+    Student(2, "Bob", (78, 92, 85)),
+    Student(3, "Charlie", (90, 95, 89))
+]
+
+# Display results
+for student in students:
+    print(format_student(student))
+    print()`;
+
+const { Content } = Astro.props;
+---
+
+<MainLayout title="Tuples in Python">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" />
+    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8">Working with Tuples in Python</h1>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Creating Tuples</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Learn how to create and initialize tuples in Python:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={tupleCreation}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Accessing Tuple Elements</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Explore ways to access and unpack tuple elements:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={tupleAccess}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Tuple Operations</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Common operations you can perform with tuples:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={tupleOperations}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Tuples vs Lists</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Understanding the differences between tuples and lists:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={tupleVsList}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Practice Problems</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-semibold mb-4">Tuple Manipulation Challenges</h3>
+          <div class="space-y-8">
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">Challenge 1: Coordinate System</h4>
+              <p class="text-gray-300 mb-4">Create functions to work with 2D coordinates using tuples.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Tuple unpacking</li>
+                    <li>Mathematical operations</li>
+                    <li>Function creation</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use tuple unpacking</li>
+                    <li>Import math module</li>
+                    <li>Consider edge cases</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="coordinate-system-challenge"
+                  initialCode={coordinateSystemChallenge}
+                  language="python"
+                  solution={coordinateSystemSolution}
+                />
+              </div>
+            </div>
+            
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">Challenge 2: Named Tuples</h4>
+              <p class="text-gray-300 mb-4">Create a student record system using named tuples.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Named tuples</li>
+                    <li>Data organization</li>
+                    <li>Record processing</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Import namedtuple</li>
+                    <li>Define fields</li>
+                    <li>Create helper functions</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="named-tuple-challenge"
+                  initialCode={namedTupleChallenge}
+                  language="python"
+                  solution={namedTupleSolution}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</MainLayout>

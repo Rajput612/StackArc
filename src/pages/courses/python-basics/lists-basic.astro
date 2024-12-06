@@ -1,0 +1,296 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+const listCreation = `# Creating lists
+numbers = [1, 2, 3, 4, 5]
+fruits = ["apple", "banana", "orange"]
+mixed = [1, "hello", 3.14, True]
+
+print("Numbers:", numbers)
+print("Fruits:", fruits)
+print("Mixed:", mixed)
+
+# Empty list
+empty_list = []
+# List from range
+range_list = list(range(5))  # [0, 1, 2, 3, 4]
+print("Range list:", range_list)`;
+
+const listAccess = `# Accessing list elements
+fruits = ["apple", "banana", "orange", "grape", "mango"]
+
+# Indexing
+print(f"First fruit: {fruits[0]}")
+print(f"Last fruit: {fruits[-1]}")
+
+# Slicing
+print(f"First two fruits: {fruits[0:2]}")
+print(f"Last two fruits: {fruits[-2:]}")
+print(f"Every second fruit: {fruits[::2]}")`;
+
+const listMethods = `# Common list methods
+numbers = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3]
+
+# Adding elements
+numbers.append(7)      # Add to end
+numbers.insert(0, 0)   # Add at index
+
+# Removing elements
+numbers.remove(9)      # Remove by value
+popped = numbers.pop() # Remove and return last item
+
+# Sorting
+numbers.sort()         # Sort in place
+print("Sorted:", numbers)
+numbers.reverse()      # Reverse in place
+print("Reversed:", numbers)
+
+# Other operations
+print(f"Count of 5: {numbers.count(5)}")
+print(f"Index of 4: {numbers.index(4)}")`;
+
+const listOperations = `# List operations
+list1 = [1, 2, 3]
+list2 = [4, 5, 6]
+
+# Concatenation
+combined = list1 + list2
+print("Combined:", combined)
+
+# Repetition
+repeated = list1 * 3
+print("Repeated:", repeated)
+
+# Membership testing
+print("Is 3 in list1?", 3 in list1)
+print("Is 7 in list1?", 7 in list1)
+
+# List comprehension
+squares = [x**2 for x in range(5)]
+print("Squares:", squares)`;
+
+const listFilterChallenge = `# Challenge: List Filter
+# Create a function that filters a list to return:
+# 1. Only even numbers
+# 2. Only positive numbers
+# 3. Numbers greater than the average
+
+numbers = [1, -2, 3, -4, 5, 6, -7, 8, 9, -10]
+
+def analyze_numbers(numbers):
+    # Your code here
+    pass
+
+# Test the function
+print(analyze_numbers(numbers))`;
+
+const listFilterSolution = `# Solution: List Filter
+def analyze_numbers(numbers):
+    # Calculate average
+    average = sum(numbers) / len(numbers)
+    
+    result = {
+        "even_numbers": [x for x in numbers if x % 2 == 0],
+        "positive_numbers": [x for x in numbers if x > 0],
+        "above_average": [x for x in numbers if x > average]
+    }
+    
+    return result
+
+numbers = [1, -2, 3, -4, 5, 6, -7, 8, 9, -10]
+analysis = analyze_numbers(numbers)
+
+print("Analysis results:")
+print(f"Even numbers: {analysis['even_numbers']}")
+print(f"Positive numbers: {analysis['positive_numbers']}")
+print(f"Numbers above average: {analysis['above_average']}")`;
+
+const listProcessingChallenge = `# Challenge: List Processing
+# Create functions to:
+# 1. Find the second largest number
+# 2. Remove duplicates while preserving order
+# 3. Find pairs that sum to a target value
+
+numbers = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3]
+target_sum = 7
+
+def process_list(numbers, target):
+    # Your code here
+    pass
+
+# Test the functions
+print(process_list(numbers, target_sum))`;
+
+const listProcessingSolution = `# Solution: List Processing
+def process_list(numbers, target):
+    # Find second largest
+    unique_sorted = sorted(set(numbers), reverse=True)
+    second_largest = unique_sorted[1] if len(unique_sorted) > 1 else None
+    
+    # Remove duplicates preserving order
+    seen = set()
+    unique_ordered = [x for x in numbers if not (x in seen or seen.add(x))]
+    
+    # Find pairs summing to target
+    pairs = []
+    seen_numbers = set()
+    for num in numbers:
+        complement = target - num
+        if complement in seen_numbers:
+            pairs.append((complement, num))
+        seen_numbers.add(num)
+    
+    return {
+        "second_largest": second_largest,
+        "unique_ordered": unique_ordered,
+        "target_pairs": pairs
+    }
+
+numbers = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3]
+target_sum = 7
+result = process_list(numbers, target_sum)
+
+print("Processing results:")
+print(f"Second largest number: {result['second_largest']}")
+print(f"List without duplicates: {result['unique_ordered']}")
+print(f"Pairs summing to {target_sum}: {result['target_pairs']}")`;
+
+const { Content } = Astro.props;
+---
+
+<MainLayout title="Lists in Python">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" />
+    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8">Working with Lists in Python</h1>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Creating Lists</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Lists are ordered collections that can store different types of data:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={listCreation}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Accessing List Elements</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Learn about list indexing and slicing:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={listAccess}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">List Methods</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Python provides many built-in methods for list manipulation:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={listMethods}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">List Operations</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Common operations you can perform with lists:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={listOperations}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Practice Problems</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-semibold mb-4">List Manipulation Challenges</h3>
+          <div class="space-y-8">
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">🔍 Challenge 1: List Filter</h4>
+              <p class="text-gray-300 mb-4">Create functions to filter lists based on different conditions.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">🎯 Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>List comprehension</li>
+                    <li>Conditional filtering</li>
+                    <li>Basic statistics</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">🚀 Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use modulo for even numbers</li>
+                    <li>Compare with zero</li>
+                    <li>Calculate average first</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="list-filter-challenge"
+                  initialCode={listFilterChallenge}
+                  language="python"
+                  solution={listFilterSolution}
+                />
+              </div>
+            </div>
+            
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">🔄 Challenge 2: List Processing</h4>
+              <p class="text-gray-300 mb-4">Create functions to process lists in various ways.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">🎯 Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Advanced list operations</li>
+                    <li>Set operations</li>
+                    <li>Algorithm implementation</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">🚀 Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use sorted() and set()</li>
+                    <li>Track seen elements</li>
+                    <li>Consider edge cases</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="list-processing-challenge"
+                  initialCode={listProcessingChallenge}
+                  language="python"
+                  solution={listProcessingSolution}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</MainLayout>

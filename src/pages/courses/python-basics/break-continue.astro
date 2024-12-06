@@ -1,0 +1,239 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+const breakExample = `# Using break to exit a loop
+print("Looking for the number 5...")
+for i in range(1, 11):
+    print(f"Checking number: {i}")
+    if i == 5:
+        print("Found it! Exiting loop.")
+        break
+    
+# Output:
+# Looking for the number 5...
+# Checking number: 1
+# Checking number: 2
+# Checking number: 3
+# Checking number: 4
+# Checking number: 5
+# Found it! Exiting loop.`;
+
+const continueExample = `# Using continue to skip iterations
+print("Printing only odd numbers:")
+for i in range(1, 6):
+    if i % 2 == 0:  # If number is even
+        continue    # Skip this iteration
+    print(f"Number: {i}")
+    
+# Output:
+# Printing only odd numbers:
+# Number: 1
+# Number: 3
+# Number: 5`;
+
+const nestedLoopBreak = `# Break in nested loops
+for i in range(3):
+    print(f"Outer loop: {i}")
+    for j in range(3):
+        if j == 2:
+            print("  Breaking inner loop")
+            break
+        print(f"  Inner loop: {j}")
+        
+# Output:
+# Outer loop: 0
+#   Inner loop: 0
+#   Inner loop: 1
+#   Breaking inner loop
+# Outer loop: 1
+#   Inner loop: 0
+#   Inner loop: 1
+#   Breaking inner loop
+# Outer loop: 2
+#   Inner loop: 0
+#   Inner loop: 1
+#   Breaking inner loop`;
+
+const whileBreakExample = `# Break with while loop
+count = 0
+while True:  # Infinite loop
+    print(f"Count: {count}")
+    count += 1
+    if count >= 5:
+        print("Reached 5! Breaking loop.")
+        break
+        
+# Output:
+# Count: 0
+# Count: 1
+# Count: 2
+# Count: 3
+# Count: 4
+# Reached 5! Breaking loop.`;
+
+const findNumberChallenge = `# Challenge: Find First Multiple
+# Write a program that finds the first multiple of 7
+# between 1 and 100 that's also a multiple of 3
+# Use break when you find it
+
+# Your code here`;
+
+const findNumberSolution = `# Solution: Find First Multiple
+for num in range(1, 101):
+    if num % 7 == 0 and num % 3 == 0:
+        print(f"Found it! {num} is a multiple of both 3 and 7")
+        break
+    print(f"Checking number: {num}")`;
+
+const skipMultiplesChallenge = `# Challenge: Skip Multiples
+# Write a program that prints numbers from 1 to 20
+# but skips any multiples of 4
+# Use continue to skip numbers
+
+# Your code here`;
+
+const skipMultiplesSolution = `# Solution: Skip Multiples
+for num in range(1, 21):
+    if num % 4 == 0:
+        continue
+    print(f"Number: {num}")`;
+
+const { Content } = Astro.props;
+---
+
+<MainLayout title="Break and Continue in Python">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" />
+    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8">Break and Continue Statements</h1>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Break Statement</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">The break statement is used to exit a loop prematurely when a certain condition is met:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={breakExample}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Continue Statement</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">The continue statement skips the rest of the current iteration and moves to the next one:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={continueExample}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Break in Nested Loops</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">When using break in nested loops, it only breaks out of the innermost loop:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={nestedLoopBreak}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Break with While Loops</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Break is often used with while True to create controlled infinite loops:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={whileBreakExample}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Practice Problems</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-semibold mb-4">Loop Control Challenges</h3>
+          <div class="space-y-8">
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">🔍 Challenge 1: Find First Multiple</h4>
+              <p class="text-gray-300 mb-4">Write a program that finds the first number that's a multiple of both 3 and 7.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">🎯 Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use break statement</li>
+                    <li>Check multiple conditions</li>
+                    <li>Implement efficient search</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">🚀 Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use modulo operator (%)</li>
+                    <li>Check both conditions</li>
+                    <li>Break when found</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="find-number-challenge"
+                  initialCode={findNumberChallenge}
+                  language="python"
+                  solution={findNumberSolution}
+                />
+              </div>
+            </div>
+            
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">⏭️ Challenge 2: Skip Multiples</h4>
+              <p class="text-gray-300 mb-4">Create a program that prints numbers but skips multiples of 4.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">🎯 Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use continue statement</li>
+                    <li>Check conditions</li>
+                    <li>Control output flow</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">🚀 Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use range(1, 21)</li>
+                    <li>Check divisibility by 4</li>
+                    <li>Skip using continue</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="skip-multiples-challenge"
+                  initialCode={skipMultiplesChallenge}
+                  language="python"
+                  solution={skipMultiplesSolution}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</MainLayout>

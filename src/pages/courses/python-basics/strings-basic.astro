@@ -1,0 +1,283 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+const stringCreation = `# Creating strings
+single_quotes = 'Hello'
+double_quotes = "World"
+triple_quotes = """This is a
+multi-line string"""
+
+print(single_quotes)
+print(double_quotes)
+print(triple_quotes)`;
+
+const stringOperations = `# Basic string operations
+text = "Python"
+
+# Length
+print(f"Length: {{len(text)}}")
+
+# Indexing
+print(f"First character: {{text[0]}}")
+print(f"Last character: {{text[-1]}}")
+
+# Slicing
+print(f"First two characters: {{text[0:2]}}")
+print(f"Last two characters: {{text[-2:]}}")
+
+# Concatenation
+greeting = "Hello" + " " + "World"
+print(greeting)`;
+
+const stringMethods = `# Common string methods
+text = "  Python Programming  "
+
+# Case methods
+print(f"Uppercase: {{text.upper()}}")
+print(f"Lowercase: {{text.lower()}}")
+print(f"Title case: {{text.title()}}")
+
+# Removing whitespace
+print(f"Strip: '{{text.strip()}}'")
+print(f"Left strip: '{{text.lstrip()}}'")
+print(f"Right strip: '{{text.rstrip()}}'")
+
+# Finding and replacing
+message = "Hello, Hello, World!"
+print(f"Count 'Hello': {{message.count('Hello')}}")
+print(f"Find 'World': {{message.find('World')}}")
+print(f"Replace: {{message.replace('Hello', 'Hi')}}") `;
+
+const stringFormatting = `# String formatting methods
+name = "Alice"
+age = 25
+
+# Basic string formatting
+print("Hello, " + name + "! You are " + str(age) + " years old.")
+
+# Using format() method
+print("Hello, {}! You are {} years old.".format(name, age))
+
+# Using % operator (older style)
+print("Hello, %s! You are %d years old." % (name, age))
+
+# Number formatting examples
+numbers = [3.14159, 123.456789, 2.0]
+
+# Using format() method
+for num in numbers:
+    print("Formatted number: {:.2f}".format(num))
+
+# Using % operator
+for num in numbers:
+    print("Formatted number: %.2f" % num)
+
+# Using string method
+for num in numbers:
+    formatted = format(num, ".2f")
+    print("Formatted number:", formatted)`;
+
+const palindromeChallenge = `# Challenge: Palindrome Checker
+# Create a function that checks if a string is a palindrome
+# (reads the same forwards and backwards)
+# Example: "radar" is a palindrome
+
+def is_palindrome(text):
+    # Your code here
+    pass
+
+# Test cases
+test_words = ["radar", "python", "level", "hello"]
+for word in test_words:
+    print(f"Is '{word}' a palindrome?")`;
+
+const palindromeSolution = `# Solution: Palindrome Checker
+def is_palindrome(text):
+    # Remove spaces and convert to lowercase
+    cleaned_text = text.lower().replace(" ", "")
+    # Compare with reversed version
+    return cleaned_text == cleaned_text[::-1]
+
+# Test cases
+test_words = ["radar", "python", "level", "hello"]
+for word in test_words:
+    result = is_palindrome(word)
+    print(f"Is '{word}' a palindrome? {result}")`;
+
+const wordCounterChallenge = `# Challenge: Word Counter
+# Create a function that counts the number of words in a sentence
+# and returns a dictionary with:
+# - total_words: total number of words
+# - word_lengths: dictionary with word lengths
+# Example: "Hello world" -> 
+# {"total_words": 2, "word_lengths": {"Hello": 5, "world": 5}}
+
+def analyze_text(sentence):
+    # Your code here
+    pass
+
+# Test case
+test_sentence = "Python is a great programming language"
+print(analyze_text(test_sentence))`;
+
+const wordCounterSolution = `# Solution: Word Counter
+def analyze_text(sentence):
+    # Split sentence into words
+    words = sentence.split()
+    
+    # Create result dictionary
+    result = {
+        "total_words": len(words),
+        "word_lengths": {word: len(word) for word in words}
+    }
+    
+    return result
+
+# Test case
+test_sentence = "Python is a great programming language"
+analysis = analyze_text(test_sentence)
+print("Analysis results:")
+print(f"Total words: {analysis['total_words']}")
+print("Word lengths:")
+for word, length in analysis['word_lengths'].items():
+    print(f"  {word}: {length}")`;
+
+const { Content } = Astro.props;
+---
+
+<MainLayout title="String Operations in Python">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" />
+    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8">Working with Strings in Python</h1>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Creating Strings</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">In Python, strings can be created using single quotes, double quotes, or triple quotes:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={stringCreation}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Basic String Operations</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Learn about string indexing, slicing, and concatenation:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={stringOperations}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">String Methods</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Python provides many built-in methods for string manipulation:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={stringMethods}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">String Formatting</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Different ways to format strings in Python:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={stringFormatting}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Practice Problems</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-semibold mb-4">String Manipulation Challenges</h3>
+          <div class="space-y-8">
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3"> Challenge 1: Palindrome Checker</h4>
+              <p class="text-gray-300 mb-4">Create a function that checks if a string is a palindrome.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2"> Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>String manipulation</li>
+                    <li>String comparison</li>
+                    <li>String methods</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2"> Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Convert to lowercase</li>
+                    <li>Remove spaces</li>
+                    <li>Compare forward and backward</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="palindrome-challenge"
+                  initialCode={palindromeChallenge}
+                  language="python"
+                  solution={palindromeSolution}
+                />
+              </div>
+            </div>
+            
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3"> Challenge 2: Word Counter</h4>
+              <p class="text-gray-300 mb-4">Create a function that analyzes text and counts words.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2"> Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>String splitting</li>
+                    <li>Dictionary creation</li>
+                    <li>Word analysis</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2"> Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use split() method</li>
+                    <li>Count words</li>
+                    <li>Create dictionary</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="word-counter-challenge"
+                  initialCode={wordCounterChallenge}
+                  language="python"
+                  solution={wordCounterSolution}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</MainLayout>

@@ -1,0 +1,509 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+const basicAppend = `# Basic file appending
+# Create a file with initial content
+with open("notes.txt", "w") as file:
+    file.write("Initial note\\n")
+
+# Append more content
+with open("notes.txt", "a") as file:
+    file.write("Second note\\n")
+    file.write("Third note\\n")
+
+# Read the file to verify
+with open("notes.txt", "r") as file:
+    print("File contents:")
+    print(file.read())`;
+
+const appendMethods = `# Different append methods
+filename = "log.txt"
+
+# Using write()
+with open(filename, "a") as file:
+    file.write("Log entry 1\\n")
+
+# Using writelines()
+entries = [
+    "Log entry 2\\n",
+    "Log entry 3\\n"
+]
+with open(filename, "a") as file:
+    file.writelines(entries)
+
+# Using print() with file parameter
+with open(filename, "a") as file:
+    print("Log entry 4", file=file)
+    print("Log entry 5", file=file)
+
+# Read the file
+with open(filename, "r") as file:
+    print("Log contents:")
+    print(file.read())`;
+
+const timestampedLogs = `# Adding timestamps to logs
+from datetime import datetime
+
+def log_message(filename, message):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(filename, "a") as file:
+        file.write(f"[{timestamp}] {message}\\n")
+
+# Example usage
+log_message("app.log", "Application started")
+log_message("app.log", "User logged in")
+log_message("app.log", "Processing data")
+
+# Read the log file
+with open("app.log", "r") as file:
+    print("Log contents:")
+    print(file.read())`;
+
+const errorHandling = `# Error handling in file appending
+def safe_append(filename, content):
+    try:
+        with open(filename, "a") as file:
+            file.write(content + "\\n")
+        return True
+    except PermissionError:
+        print(f"Error: No permission to write to '{filename}'")
+    except IOError as e:
+        print(f"IO Error: {e}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+    return False
+
+# Test with different scenarios
+safe_append("test.txt", "Normal append")
+safe_append("/root/protected.txt", "Should fail")  # Permission error
+safe_append("", "Should fail")  # Invalid filename`;
+
+const journalAppChallenge = `# Challenge: Personal Journal App
+# Create a journal application that:
+# 1. Adds dated entries
+# 2. Supports multiple users
+# 3. Includes tags for entries
+# 4. Allows entry searching
+# 5. Maintains an index
+
+class JournalApp:
+    def __init__(self, base_dir):
+        # Your code here
+        pass
+    
+    def add_entry(self, username, content, tags=None):
+        # Your code here
+        pass
+    
+    def search_entries(self, username, keyword=None, tag=None):
+        # Your code here
+        pass
+    
+    def list_entries(self, username):
+        # Your code here
+        pass
+
+# Test your implementation
+journal = JournalApp("journal_data")
+journal.add_entry("alice", "Started learning Python", ["study", "coding"])
+journal.add_entry("alice", "Made my first program", ["coding", "achievement"])
+print(journal.list_entries("alice"))`;
+
+const journalAppSolution = `# Solution: Personal Journal App
+import os
+from datetime import datetime
+import json
+
+class JournalApp:
+    def __init__(self, base_dir):
+        self.base_dir = base_dir
+        os.makedirs(base_dir, exist_ok=True)
+        self.index_file = os.path.join(base_dir, "index.json")
+        self._load_index()
+    
+    def _load_index(self):
+        if os.path.exists(self.index_file):
+            with open(self.index_file, "r") as f:
+                self.index = json.load(f)
+        else:
+            self.index = {}
+    
+    def _save_index(self):
+        with open(self.index_file, "w") as f:
+            json.dump(self.index, f, indent=2)
+    
+    def _get_user_dir(self, username):
+        user_dir = os.path.join(self.base_dir, username)
+        os.makedirs(user_dir, exist_ok=True)
+        return user_dir
+    
+    def add_entry(self, username, content, tags=None):
+        timestamp = datetime.now()
+        entry_id = timestamp.strftime("%Y%m%d_%H%M%S")
+        
+        # Prepare entry data
+        entry = {
+            "timestamp": timestamp.strftime("%Y-%m-%d %H:%M:%S"),
+            "content": content,
+            "tags": tags or []
+        }
+        
+        # Save entry to file
+        user_dir = self._get_user_dir(username)
+        entry_file = os.path.join(user_dir, f"{entry_id}.json")
+        with open(entry_file, "w") as f:
+            json.dump(entry, f, indent=2)
+        
+        # Update index
+        if username not in self.index:
+            self.index[username] = []
+        self.index[username].append({
+            "id": entry_id,
+            "timestamp": entry["timestamp"],
+            "tags": entry["tags"]
+        })
+        self._save_index()
+        
+        return entry_id
+    
+    def search_entries(self, username, keyword=None, tag=None):
+        results = []
+        user_dir = self._get_user_dir(username)
+        
+        for entry_info in self.index.get(username, []):
+            entry_file = os.path.join(user_dir, f"{entry_info['id']}.json")
+            
+            try:
+                with open(entry_file, "r") as f:
+                    entry = json.load(f)
+                
+                # Check if entry matches search criteria
+                if tag and tag not in entry["tags"]:
+                    continue
+                if keyword and keyword.lower() not in entry["content"].lower():
+                    continue
+                
+                results.append({
+                    "id": entry_info["id"],
+                    "timestamp": entry["timestamp"],
+                    "content": entry["content"],
+                    "tags": entry["tags"]
+                })
+            except Exception as e:
+                print(f"Error reading entry {entry_info['id']}: {e}")
+        
+        return sorted(results, key=lambda x: x["timestamp"], reverse=True)
+    
+    def list_entries(self, username):
+        return self.search_entries(username)
+
+# Test the implementation
+journal = JournalApp("journal_data")
+
+# Add some entries
+print("Adding entries...")
+journal.add_entry("alice", "Started learning Python", ["study", "coding"])
+journal.add_entry("alice", "Made my first program", ["coding", "achievement"])
+journal.add_entry("bob", "Planning new project", ["planning", "work"])
+
+# List all entries for Alice
+print("\\nAll entries for Alice:")
+for entry in journal.list_entries("alice"):
+    print(f"[{entry['timestamp']}] {entry['content']}")
+    print(f"Tags: {', '.join(entry['tags'])}\\n")
+
+# Search entries with tag 'coding'
+print("Entries tagged 'coding':")
+for entry in journal.search_entries("alice", tag="coding"):
+    print(f"[{entry['timestamp']}] {entry['content']}")`;
+
+const logRotatorChallenge = `# Challenge: Log Rotator
+# Create a log rotation system that:
+# 1. Maintains a maximum file size
+# 2. Creates backup files with timestamps
+# 3. Compresses old log files
+# 4. Maintains a specified number of backups
+# 5. Provides log statistics
+
+class LogRotator:
+    def __init__(self, filename, max_size_kb=1024, max_backups=5):
+        # Your code here
+        pass
+    
+    def write_log(self, message):
+        # Your code here
+        pass
+    
+    def rotate_if_needed(self):
+        # Your code here
+        pass
+    
+    def cleanup_old_logs(self):
+        # Your code here
+        pass
+    
+    def get_stats(self):
+        # Your code here
+        pass
+
+# Test your implementation
+logger = LogRotator("app.log", max_size_kb=1, max_backups=3)
+for i in range(1000):
+    logger.write_log(f"Log entry {i}")
+print(logger.get_stats())`;
+
+const logRotatorSolution = `# Solution: Log Rotator
+import os
+import gzip
+from datetime import datetime
+import shutil
+
+class LogRotator:
+    def __init__(self, filename, max_size_kb=1024, max_backups=5):
+        self.filename = filename
+        self.max_size = max_size_kb * 1024  # Convert to bytes
+        self.max_backups = max_backups
+        self.stats = {
+            "writes": 0,
+            "rotations": 0,
+            "total_bytes": 0
+        }
+    
+    def write_log(self, message):
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        log_line = f"[{timestamp}] {message}\\n"
+        
+        self.rotate_if_needed()
+        
+        with open(self.filename, "a") as f:
+            f.write(log_line)
+        
+        self.stats["writes"] += 1
+        self.stats["total_bytes"] += len(log_line)
+    
+    def rotate_if_needed(self):
+        if not os.path.exists(self.filename):
+            return
+        
+        if os.path.getsize(self.filename) >= self.max_size:
+            self._rotate_log()
+            self.cleanup_old_logs()
+    
+    def _rotate_log(self):
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        backup_name = f"{self.filename}.{timestamp}"
+        
+        # Rename current log file
+        shutil.move(self.filename, backup_name)
+        
+        # Compress the backup
+        with open(backup_name, 'rb') as f_in:
+            with gzip.open(f"{backup_name}.gz", 'wb') as f_out:
+                shutil.copyfileobj(f_in, f_out)
+        
+        # Remove uncompressed backup
+        os.remove(backup_name)
+        
+        self.stats["rotations"] += 1
+    
+    def cleanup_old_logs(self):
+        # Get list of backup files
+        directory = os.path.dirname(self.filename) or "."
+        base_name = os.path.basename(self.filename)
+        backups = []
+        
+        for filename in os.listdir(directory):
+            if filename.startswith(base_name + ".") and filename.endswith(".gz"):
+                backup_path = os.path.join(directory, filename)
+                backups.append((
+                    backup_path,
+                    os.path.getmtime(backup_path)
+                ))
+        
+        # Sort by modification time (newest first)
+        backups.sort(key=lambda x: x[1], reverse=True)
+        
+        # Remove excess backups
+        for backup_path, _ in backups[self.max_backups:]:
+            os.remove(backup_path)
+    
+    def get_stats(self):
+        current_size = os.path.exists(self.filename) and os.path.getsize(self.filename) or 0
+        
+        stats = {
+            **self.stats,
+            "current_log_size": current_size,
+            "backup_count": 0,
+            "total_size": current_size
+        }
+        
+        # Count and measure backups
+        directory = os.path.dirname(self.filename) or "."
+        base_name = os.path.basename(self.filename)
+        
+        for filename in os.listdir(directory):
+            if filename.startswith(base_name + ".") and filename.endswith(".gz"):
+                stats["backup_count"] += 1
+                stats["total_size"] += os.path.getsize(
+                    os.path.join(directory, filename)
+                )
+        
+        return stats
+
+# Test the implementation
+print("Testing Log Rotator...")
+logger = LogRotator("app.log", max_size_kb=1, max_backups=3)
+
+# Write some logs
+print("Writing logs...")
+for i in range(1000):
+    logger.write_log(f"Log entry {i}: " + "x" * 50)  # Make entries bigger
+
+# Print statistics
+print("\\nLog Statistics:")
+stats = logger.get_stats()
+print(f"Total writes: {stats['writes']}")
+print(f"Total rotations: {stats['rotations']}")
+print(f"Current log size: {stats['current_log_size']} bytes")
+print(f"Backup count: {stats['backup_count']}")
+print(f"Total size: {stats['total_size']} bytes")`;
+
+const { Content } = Astro.props;
+---
+
+<MainLayout title="Appending to Files in Python">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" />
+    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8">Appending to Files in Python</h1>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Basic File Appending</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Learn how to append content to existing files:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={basicAppend}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Different Append Methods</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Explore different methods to append file content:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={appendMethods}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Timestamped Logs</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Creating timestamped log entries:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={timestampedLogs}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Error Handling</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Handling common file appending errors:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={errorHandling}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Practice Problems</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-semibold mb-4">File Appending Challenges</h3>
+          <div class="space-y-8">
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">Challenge 1: Personal Journal</h4>
+              <p class="text-gray-300 mb-4">Create a personal journal application with file appending.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>File appending</li>
+                    <li>Data organization</li>
+                    <li>Search functionality</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use JSON format</li>
+                    <li>Maintain an index</li>
+                    <li>Implement search</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="journal-app-challenge"
+                  initialCode={journalAppChallenge}
+                  language="python"
+                  solution={journalAppSolution}
+                />
+              </div>
+            </div>
+            
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">Challenge 2: Log Rotator</h4>
+              <p class="text-gray-300 mb-4">Create a log rotation system.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>File management</li>
+                    <li>Size monitoring</li>
+                    <li>Backup handling</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Check file sizes</li>
+                    <li>Use timestamps</li>
+                    <li>Implement rotation</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="log-rotator-challenge"
+                  initialCode={logRotatorChallenge}
+                  language="python"
+                  solution={logRotatorSolution}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</MainLayout>

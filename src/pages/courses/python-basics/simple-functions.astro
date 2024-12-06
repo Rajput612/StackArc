@@ -1,0 +1,263 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+const basicFunction = `# Basic function definition
+def greet():
+    print("Hello, World!")
+
+# Calling the function
+greet()  # Output: Hello, World!
+
+# Function with parameters
+def greet_person(name):
+    print(f"Hello, {name}!")
+
+greet_person("Alice")  # Output: Hello, Alice!`;
+
+const returnValues = `# Function with return value
+def add_numbers(a, b):
+    return a + b
+
+result = add_numbers(5, 3)
+print(f"5 + 3 = {result}")  # Output: 5 + 3 = 8
+
+# Function with multiple returns
+def get_min_max(numbers):
+    return min(numbers), max(numbers)
+
+numbers = [1, 5, 2, 8, 3]
+minimum, maximum = get_min_max(numbers)
+print(f"Min: {minimum}, Max: {maximum}")  # Output: Min: 1, Max: 8`;
+
+const defaultParams = `# Functions with default parameters
+def greet_with_title(name, title="Mr."):
+    print(f"Hello, {title} {name}!")
+
+# Using default parameter
+greet_with_title("Smith")  # Output: Hello, Mr. Smith!
+
+# Overriding default parameter
+greet_with_title("Johnson", "Dr.")  # Output: Hello, Dr. Johnson!`;
+
+const docstrings = `# Function with documentation
+def calculate_area(length, width):
+    """
+    Calculate the area of a rectangle.
+    
+    Args:
+        length (float): The length of the rectangle
+        width (float): The width of the rectangle
+    
+    Returns:
+        float: The area of the rectangle
+    """
+    return length * width
+
+# Using the function
+area = calculate_area(5, 3)
+print(f"Area: {area}")  # Output: Area: 15
+
+# View the documentation
+help(calculate_area)`;
+
+const temperatureConverterChallenge = `# Challenge: Temperature Converter
+# Create two functions:
+# 1. celsius_to_fahrenheit(celsius)
+# 2. fahrenheit_to_celsius(fahrenheit)
+# Formula: °F = (°C × 9/5) + 32
+
+# Your code here`;
+
+const temperatureConverterSolution = `# Solution: Temperature Converter
+def celsius_to_fahrenheit(celsius):
+    """Convert Celsius to Fahrenheit."""
+    return (celsius * 9/5) + 32
+
+def fahrenheit_to_celsius(fahrenheit):
+    """Convert Fahrenheit to Celsius."""
+    return (fahrenheit - 32) * 5/9
+
+# Test the functions
+celsius = 25
+fahrenheit = celsius_to_fahrenheit(celsius)
+print(f"{celsius}°C = {fahrenheit}°F")
+
+fahrenheit = 98.6
+celsius = fahrenheit_to_celsius(fahrenheit)
+print(f"{fahrenheit}°F = {celsius}°C")`;
+
+const calculatorChallenge = `# Challenge: Simple Calculator
+# Create a calculator with these functions:
+# 1. add(a, b)
+# 2. subtract(a, b)
+# 3. multiply(a, b)
+# 4. divide(a, b)
+# Include error handling for division by zero
+
+# Your code here`;
+
+const calculatorSolution = `# Solution: Simple Calculator
+def add(a, b):
+    """Add two numbers."""
+    return a + b
+
+def subtract(a, b):
+    """Subtract b from a."""
+    return a - b
+
+def multiply(a, b):
+    """Multiply two numbers."""
+    return a * b
+
+def divide(a, b):
+    """Divide a by b."""
+    if b == 0:
+        return "Error: Division by zero"
+    return a / b
+
+# Test the calculator
+print(f"10 + 5 = {add(10, 5)}")
+print(f"10 - 5 = {subtract(10, 5)}")
+print(f"10 * 5 = {multiply(10, 5)}")
+print(f"10 / 5 = {divide(10, 5)}")
+print(f"10 / 0 = {divide(10, 0)}")`;
+
+const { Content } = Astro.props;
+---
+
+<MainLayout title="Basic Functions in Python">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" />
+    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8">Introduction to Python Functions</h1>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Basic Function Definition</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Functions are reusable blocks of code that perform specific tasks. Here's how to define and use basic functions:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={basicFunction}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Return Values</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Functions can return values using the return statement:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={returnValues}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Default Parameters</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Functions can have parameters with default values:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={defaultParams}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Function Documentation</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Use docstrings to document your functions:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={docstrings}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Practice Problems</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-semibold mb-4">Function Challenges</h3>
+          <div class="space-y-8">
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">🌡️ Challenge 1: Temperature Converter</h4>
+              <p class="text-gray-300 mb-4">Create functions to convert between Celsius and Fahrenheit.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">🎯 Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Define multiple functions</li>
+                    <li>Use mathematical formulas</li>
+                    <li>Return calculated values</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">🚀 Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>°F = (°C × 9/5) + 32</li>
+                    <li>°C = (°F - 32) × 5/9</li>
+                    <li>Test both conversions</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="temperature-converter-challenge"
+                  initialCode={temperatureConverterChallenge}
+                  language="python"
+                  solution={temperatureConverterSolution}
+                />
+              </div>
+            </div>
+            
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">🧮 Challenge 2: Simple Calculator</h4>
+              <p class="text-gray-300 mb-4">Create a calculator with basic arithmetic functions.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">🎯 Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Create multiple functions</li>
+                    <li>Handle errors</li>
+                    <li>Test function outputs</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">🚀 Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Check for division by zero</li>
+                    <li>Return error messages</li>
+                    <li>Test edge cases</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="calculator-challenge"
+                  initialCode={calculatorChallenge}
+                  language="python"
+                  solution={calculatorSolution}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</MainLayout>

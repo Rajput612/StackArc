@@ -1,0 +1,478 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+const basicCsvReading = `# Basic CSV reading
+import csv
+
+# Create a sample CSV file
+with open('sample.csv', 'w') as file:
+    file.write('name,age,city\\n')
+    file.write('Alice,25,New York\\n')
+    file.write('Bob,30,San Francisco\\n')
+    file.write('Charlie,35,Chicago\\n')
+
+# Reading CSV file
+with open('sample.csv', 'r') as file:
+    csv_reader = csv.reader(file)
+    
+    # Skip header row
+    header = next(csv_reader)
+    print("Header:", header)
+    
+    # Read data rows
+    print("\\nData rows:")
+    for row in csv_reader:
+        print(row)`;
+
+const dictReader = `# Using DictReader
+import csv
+
+# Create sample data
+data = '''name,age,city
+Alice,25,New York
+Bob,30,San Francisco
+Charlie,35,Chicago'''
+
+with open('people.csv', 'w') as file:
+    file.write(data)
+
+# Reading CSV as dictionaries
+with open('people.csv', 'r') as file:
+    csv_reader = csv.DictReader(file)
+    
+    print("Data as dictionaries:")
+    for row in csv_reader:
+        print("Name:", row['name'])
+        print("Age:", row['age'])
+        print("City:", row['city'])
+        print()`;
+
+const csvWriting = `# Writing CSV files
+import csv
+
+# Data to write
+header = ['name', 'age', 'city']
+data = [
+    ['Alice', 25, 'New York'],
+    ['Bob', 30, 'San Francisco'],
+    ['Charlie', 35, 'Chicago']
+]
+
+# Writing with csv.writer
+with open('output.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(header)
+    writer.writerows(data)
+
+# Reading back the file
+with open('output.csv', 'r') as file:
+    print(file.read())`;
+
+const dictWriter = `# Using DictWriter
+import csv
+
+# Data to write
+data = [
+    {'name': 'Alice', 'age': 25, 'city': 'New York'},
+    {'name': 'Bob', 'age': 30, 'city': 'San Francisco'},
+    {'name': 'Charlie', 'age': 35, 'city': 'Chicago'}
+]
+
+# Writing with DictWriter
+with open('output.csv', 'w', newline='') as file:
+    fieldnames = ['name', 'age', 'city']
+    writer = csv.DictWriter(file, fieldnames=fieldnames)
+    
+    writer.writeheader()
+    writer.writerows(data)
+
+# Reading back the file
+with open('output.csv', 'r') as file:
+    print(file.read())`;
+
+const dataAnalysisChallenge = `# Challenge: CSV Data Analysis
+# Create a program that analyzes student grade data:
+# 1. Calculate average grades
+# 2. Find highest/lowest scores
+# 3. Generate grade distribution
+# 4. Create summary report
+
+def analyze_grades(input_file, output_file):
+    # Your code here
+    pass
+
+# Create sample data
+sample_data = '''Student,Math,Science,History,English
+Alice,85,92,88,95
+Bob,78,85,92,88
+Charlie,92,78,85,90
+David,88,90,85,87'''
+
+with open('grades.csv', 'w') as file:
+    file.write(sample_data)
+
+# Test your function
+analyze_grades('grades.csv', 'analysis.csv')`;
+
+const dataAnalysisSolution = `# Solution: CSV Data Analysis
+import csv
+from statistics import mean
+from collections import defaultdict
+
+def analyze_grades(input_file, output_file):
+    # Initialize data structures
+    grades_by_subject = defaultdict(list)
+    student_averages = {}
+    
+    # Read and process grades
+    with open(input_file, 'r') as file:
+        reader = csv.DictReader(file)
+        subjects = reader.fieldnames[1:]  # Skip 'Student' column
+        
+        for row in reader:
+            # Calculate student average
+            grades = [int(row[subject]) for subject in subjects]
+            student_averages[row['Student']] = mean(grades)
+            
+            # Collect grades by subject
+            for subject in subjects:
+                grades_by_subject[subject].append(int(row[subject]))
+    
+    # Calculate statistics
+    subject_stats = {}
+    for subject, grades in grades_by_subject.items():
+        subject_stats[subject] = {
+            'average': mean(grades),
+            'highest': max(grades),
+            'lowest': min(grades)
+        }
+    
+    # Generate report
+    with open(output_file, 'w', newline='') as file:
+        writer = csv.writer(file)
+        
+        # Write student averages
+        writer.writerow(['Student Averages'])
+        writer.writerow(['Student', 'Average Grade'])
+        for student, avg in sorted(student_averages.items()):
+            writer.writerow([student, "%.1f" % avg])
+        
+        writer.writerow([])  # Empty row for spacing
+        
+        # Write subject statistics
+        writer.writerow(['Subject Statistics'])
+        writer.writerow(['Subject', 'Average', 'Highest', 'Lowest'])
+        for subject, stats in subject_stats.items():
+            writer.writerow([
+                subject,
+                "%.1f" % stats['average'],
+                stats['highest'],
+                stats['lowest']
+            ])
+    
+    return subject_stats, student_averages
+
+# Create sample data
+sample_data = '''Student,Math,Science,History,English
+Alice,85,92,88,95
+Bob,78,85,92,88
+Charlie,92,78,85,90
+David,88,90,85,87'''
+
+with open('grades.csv', 'w') as file:
+    file.write(sample_data)
+
+# Run analysis
+subject_stats, student_averages = analyze_grades('grades.csv', 'analysis.csv')
+
+# Display results
+print("Analysis Results:\\n")
+
+print("Student Averages:")
+for student, avg in sorted(student_averages.items()):
+    print("%s: %.1f" % (student, avg))
+
+print("\\nSubject Statistics:")
+for subject, stats in subject_stats.items():
+    print("\\n%s:" % subject)
+    print("  Average: %.1f" % stats['average'])
+    print("  Highest: %d" % stats['highest'])
+    print("  Lowest: %d" % stats['lowest'])`;
+
+const dataTransformChallenge = `# Challenge: CSV Data Transformer
+# Create a program that transforms CSV data:
+# 1. Convert between different formats
+# 2. Filter rows based on conditions
+# 3. Add calculated columns
+# 4. Aggregate data
+
+def transform_data(input_file, output_file, options):
+    # Your code here
+    pass
+
+# Create sample sales data
+sample_data = '''Date,Product,Category,Quantity,Price
+2023-01-01,Laptop,Electronics,2,1200
+2023-01-01,Mouse,Electronics,5,25
+2023-01-02,Desk,Furniture,1,300
+2023-01-02,Chair,Furniture,4,150
+2023-01-03,Monitor,Electronics,3,200'''
+
+with open('sales.csv', 'w') as file:
+    file.write(sample_data)
+
+# Test transformation options
+options = {
+    'filter_category': 'Electronics',
+    'min_price': 100,
+    'add_total': True,
+    'group_by': 'Category'
+}
+
+transform_data('sales.csv', 'transformed.csv', options)`;
+
+const dataTransformSolution = `# Solution: CSV Data Transformer
+import csv
+from datetime import datetime
+from collections import defaultdict
+
+def transform_data(input_file, output_file, options):
+    # Read input data
+    data = []
+    with open(input_file, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            # Convert types
+            row['Quantity'] = int(row['Quantity'])
+            row['Price'] = float(row['Price'])
+            data.append(row)
+    
+    # Apply filters
+    if 'filter_category' in options:
+        data = [row for row in data 
+                if row['Category'] == options['filter_category']]
+    
+    if 'min_price' in options:
+        data = [row for row in data 
+                if row['Price'] >= options['min_price']]
+    
+    # Add calculated columns
+    if options.get('add_total', False):
+        for row in data:
+            row['Total'] = row['Quantity'] * row['Price']
+    
+    # Group data if requested
+    if 'group_by' in options:
+        group_field = options['group_by']
+        grouped_data = defaultdict(lambda: {
+            'Quantity': 0,
+            'Total_Sales': 0,
+            'Num_Products': 0
+        })
+        
+        for row in data:
+            group = row[group_field]
+            grouped_data[group]['Quantity'] += row['Quantity']
+            grouped_data[group]['Total_Sales'] += row['Quantity'] * row['Price']
+            grouped_data[group]['Num_Products'] += 1
+        
+        # Write grouped data
+        with open(output_file, 'w', newline='') as file:
+            fieldnames = [group_field, 'Quantity', 'Total_Sales', 'Num_Products']
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            
+            writer.writeheader()
+            for group, stats in grouped_data.items():
+                writer.writerow({
+                    group_field: group,
+                    'Quantity': stats['Quantity'],
+                    'Total_Sales': "$%.2f" % stats['Total_Sales'],
+                    'Num_Products': stats['Num_Products']
+                })
+    else:
+        # Write transformed data
+        with open(output_file, 'w', newline='') as file:
+            fieldnames = list(data[0].keys())
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            
+            writer.writeheader()
+            writer.writerows(data)
+    
+    return data
+
+# Create sample sales data
+sample_data = '''Date,Product,Category,Quantity,Price
+2023-01-01,Laptop,Electronics,2,1200
+2023-01-01,Mouse,Electronics,5,25
+2023-01-02,Desk,Furniture,1,300
+2023-01-02,Chair,Furniture,4,150
+2023-01-03,Monitor,Electronics,3,200'''
+
+with open('sales.csv', 'w') as file:
+    file.write(sample_data)
+
+# Test different transformations
+print("Testing different transformations:\\n")
+
+# 1. Filter and add total
+print("1. Electronics items over $100 with total:")
+options1 = {
+    'filter_category': 'Electronics',
+    'min_price': 100,
+    'add_total': True
+}
+result1 = transform_data('sales.csv', 'electronics.csv', options1)
+for row in result1:
+    print("%s: $%.2f" % (row['Product'], row['Total']))
+
+# 2. Group by category
+print("\\n2. Sales by category:")
+options2 = {
+    'group_by': 'Category',
+    'add_total': True
+}
+transform_data('sales.csv', 'by_category.csv', options2)
+
+# Display results
+with open('by_category.csv', 'r') as file:
+    print(file.read())`;
+
+const { Content } = Astro.props;
+---
+
+<MainLayout title="Working with CSV Files in Python">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" />
+    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8">Working with CSV Files in Python</h1>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Basic CSV Reading</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Learn how to read CSV files using the csv module:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={basicCsvReading}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Using DictReader</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Reading CSV files as dictionaries:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={dictReader}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Writing CSV Files</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Learn how to write data to CSV files:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={csvWriting}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Using DictWriter</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Writing dictionary data to CSV files:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={dictWriter}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Practice Problems</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-semibold mb-4">CSV Processing Challenges</h3>
+          <div class="space-y-8">
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">Challenge 1: Grade Analysis</h4>
+              <p class="text-gray-300 mb-4">Create a program that analyzes student grade data.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>CSV reading/writing</li>
+                    <li>Data analysis</li>
+                    <li>Statistics calculation</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use DictReader</li>
+                    <li>Calculate averages</li>
+                    <li>Generate report</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="data-analysis-challenge"
+                  initialCode={dataAnalysisChallenge}
+                  language="python"
+                  solution={dataAnalysisSolution}
+                />
+              </div>
+            </div>
+            
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">Challenge 2: Data Transformer</h4>
+              <p class="text-gray-300 mb-4">Create a program that transforms CSV data.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Data transformation</li>
+                    <li>Filtering and grouping</li>
+                    <li>Calculated fields</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use dictionaries</li>
+                    <li>Implement filters</li>
+                    <li>Group data</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="data-transform-challenge"
+                  initialCode={dataTransformChallenge}
+                  language="python"
+                  solution={dataTransformSolution}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</MainLayout>

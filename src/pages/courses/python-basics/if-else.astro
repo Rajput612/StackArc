@@ -1,0 +1,251 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+const basicIfCode = `# Basic if statement
+age = 18
+
+if age >= 18:
+    print("You are an adult")
+
+# Output: You are an adult`;
+
+const ifElseCode = `# if-else statement
+score = 75
+
+if score >= 60:
+    print("You passed!")
+else:
+    print("You need to study more")
+
+# Output: You passed!`;
+
+const ifElifCode = `# if-elif-else chain
+score = 85
+
+if score >= 90:
+    grade = 'A'
+elif score >= 80:
+    grade = 'B'
+elif score >= 70:
+    grade = 'C'
+elif score >= 60:
+    grade = 'D'
+else:
+    grade = 'F'
+
+print(f"Your grade is: {grade}")
+# Output: Your grade is: B`;
+
+const logicalOperatorsCode = `# Using logical operators
+age = 25
+has_license = True
+
+if age >= 18 and has_license:
+    print("You can drive")
+elif age >= 18 and not has_license:
+    print("You need to get a license")
+else:
+    print("You're too young to drive")
+
+# Output: You can drive`;
+
+const evenOddChallenge = `# Write a program to check if a number is even or odd
+# Hint: Use the modulo operator %
+
+number = int(input("Enter a number: "))
+# Your code here`;
+
+const evenOddSolution = `# Solution: Even/Odd Checker
+number = int(input("Enter a number: "))
+
+if number % 2 == 0:
+    print(f"{number} is even")
+else:
+    print(f"{number} is odd")`;
+
+const gradeCalculatorChallenge = `# Create a grade calculator
+# Input: score (0-100)
+# Output: letter grade (A, B, C, D, F)
+# Rules:
+# A: 90-100
+# B: 80-89
+# C: 70-79
+# D: 60-69
+# F: below 60
+
+score = float(input("Enter score (0-100): "))
+# Your code here`;
+
+const gradeCalculatorSolution = `# Solution: Grade Calculator
+score = float(input("Enter score (0-100): "))
+
+if score >= 90:
+    grade = 'A'
+elif score >= 80:
+    grade = 'B'
+elif score >= 70:
+    grade = 'C'
+elif score >= 60:
+    grade = 'D'
+else:
+    grade = 'F'
+
+print(f"Your grade is: {grade}")`;
+
+const { Content } = Astro.props;
+---
+
+<MainLayout title="Python If-Else Statements">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" />
+    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8">Control Flow: If-Else Statements</h1>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Basic If Statement</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">The simplest form of decision making in Python. Code inside the if block runs only when the condition is True.</p>
+          <CodePlayground 
+            client:load 
+            initialCode={basicIfCode}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">If-Else Statement</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Use if-else when you want to execute one block of code when a condition is True and another when it's False.</p>
+          <CodePlayground 
+            client:load 
+            initialCode={ifElseCode}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">If-Elif-Else Chain</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">When you need to check multiple conditions in sequence, use if-elif-else.</p>
+          <CodePlayground 
+            client:load 
+            initialCode={ifElifCode}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Logical Operators</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Combine conditions using logical operators: and, or, not.</p>
+          <CodePlayground 
+            client:load 
+            initialCode={logicalOperatorsCode}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Practice Problems</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-semibold mb-4">Conditional Logic Challenges</h3>
+          <div class="space-y-8">
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">🔢 Challenge 1: Even/Odd Checker</h4>
+              <p class="text-gray-300 mb-4">Create a program that determines if a number is even or odd.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">🎯 Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use modulo operator</li>
+                    <li>Implement basic if-else</li>
+                    <li>Handle user input</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">🚀 Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use % operator for remainder</li>
+                    <li>Even numbers have 0 remainder</li>
+                    <li>Convert input to integer</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="even-odd-challenge"
+                  initialCode={evenOddChallenge}
+                  language="python"
+                  solution={evenOddSolution}
+                />
+              </div>
+            </div>
+            
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">📊 Challenge 2: Grade Calculator</h4>
+              <p class="text-gray-300 mb-4">Create a program that converts numerical scores to letter grades.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">🎯 Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use if-elif-else chain</li>
+                    <li>Handle numeric ranges</li>
+                    <li>Format output strings</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">🚀 Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Check ranges from highest to lowest</li>
+                    <li>Use >= for comparisons</li>
+                    <li>Consider edge cases</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="grade-calculator-challenge"
+                  initialCode={gradeCalculatorChallenge}
+                  language="python"
+                  solution={gradeCalculatorSolution}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</MainLayout>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleContainers = document.querySelectorAll('.solution-toggle');
+    toggleContainers.forEach(container => {
+      const button = container.querySelector('button');
+      const solution = container.querySelector('.solution');
+      
+      if (button && solution) {
+        button.addEventListener('click', () => {
+          const isHidden = solution.classList.contains('hidden');
+          solution.classList.toggle('hidden');
+          button.textContent = isHidden ? 'Hide Solution' : 'Show Solution';
+        });
+      }
+    });
+  });
+</script>

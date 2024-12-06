@@ -1,0 +1,401 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+const basicWriting = `# Basic file writing
+# Writing a single string
+with open("output.txt", "w") as file:
+    file.write("Hello, World!\\n")
+    file.write("This is a new line.")
+
+# Writing multiple lines at once
+lines = [
+    "First line",
+    "Second line",
+    "Third line"
+]
+with open("output.txt", "w") as file:
+    file.writelines(line + "\\n" for line in lines)
+
+# Reading the file to verify
+with open("output.txt", "r") as file:
+    print("File contents:")
+    print(file.read())`;
+
+const writingMethods = `# Different writing methods
+# Using write()
+with open("example.txt", "w") as file:
+    file.write("Hello")  # Writes string
+    file.write(" ")      # Adds space
+    file.write("World")  # Appends string
+
+# Using writelines()
+lines = ["Line 1\\n", "Line 2\\n", "Line 3\\n"]
+with open("example.txt", "w") as file:
+    file.writelines(lines)
+
+# Using print() with file parameter
+with open("example.txt", "w") as file:
+    print("Hello", file=file)
+    print("World", file=file)
+    print("Using print()", file=file)`;
+
+const formattedOutput = `# Writing formatted output
+data = {
+    "name": "Alice",
+    "age": 25,
+    "scores": [85, 92, 78]
+}
+
+# Writing formatted strings
+with open("report.txt", "w") as file:
+    file.write(f"Name: {data['name']}\\n")
+    file.write(f"Age: {data['age']}\\n")
+    file.write("Scores:\\n")
+    for score in data['scores']:
+        file.write(f"  - {score}\\n")
+
+# Using string formatting
+template = "Name: {}\\nAge: {}\\nAverage Score: {:.2f}\\n"
+avg_score = sum(data['scores']) / len(data['scores'])
+with open("report.txt", "w") as file:
+    file.write(template.format(
+        data['name'], 
+        data['age'], 
+        avg_score
+    ))`;
+
+const errorHandling = `# Error handling in file writing
+filename = "protected.txt"
+
+try:
+    with open(filename, "w") as file:
+        file.write("Some content")
+except PermissionError:
+    print(f"Error: No permission to write to '{filename}'")
+except IOError as e:
+    print(f"IO Error: {e}")
+except Exception as e:
+    print(f"An error occurred: {e}")
+finally:
+    print("File operation attempted")`;
+
+const reportGeneratorChallenge = `# Challenge: Report Generator
+# Create a program that generates a formatted report from data:
+# 1. Accept student data (name, grades, attendance)
+# 2. Calculate statistics (average, highest, lowest)
+# 3. Generate a well-formatted report
+# 4. Include a summary section
+
+def generate_report(students, output_file):
+    # Your code here
+    pass
+
+# Test data
+students = [
+    {"name": "Alice", "grades": [85, 92, 78], "attendance": 95},
+    {"name": "Bob", "grades": [90, 85, 88], "attendance": 92},
+    {"name": "Charlie", "grades": [78, 85, 82], "attendance": 88}
+]
+
+generate_report(students, "student_report.txt")`;
+
+const reportGeneratorSolution = `# Solution: Report Generator
+def generate_report(students, output_file):
+    try:
+        with open(output_file, "w") as file:
+            # Write header
+            file.write("Student Performance Report\\n")
+            file.write("=" * 30 + "\\n\\n")
+            
+            # Process each student
+            class_grades = []
+            class_attendance = []
+            
+            for student in students:
+                # Calculate student statistics
+                avg_grade = sum(student["grades"]) / len(student["grades"])
+                class_grades.extend(student["grades"])
+                class_attendance.append(student["attendance"])
+                
+                # Write student section
+                file.write(f"Student: {student['name']}\\n")
+                file.write("-" * 20 + "\\n")
+                file.write(f"Grades: {', '.join(map(str, student['grades']))}\\n")
+                file.write(f"Average Grade: {avg_grade:.1f}\\n")
+                file.write(f"Attendance: {student['attendance']}%\\n\\n")
+            
+            # Calculate class statistics
+            class_avg = sum(class_grades) / len(class_grades)
+            attendance_avg = sum(class_attendance) / len(class_attendance)
+            
+            # Write summary section
+            file.write("Class Summary\\n")
+            file.write("-" * 20 + "\\n")
+            file.write(f"Class Average: {class_avg:.1f}\\n")
+            file.write(f"Highest Grade: {max(class_grades)}\\n")
+            file.write(f"Lowest Grade: {min(class_grades)}\\n")
+            file.write(f"Average Attendance: {attendance_avg:.1f}%\\n")
+            
+            print(f"Report generated successfully: {output_file}")
+            
+    except Exception as e:
+        print(f"Error generating report: {e}")
+
+# Test data
+students = [
+    {"name": "Alice", "grades": [85, 92, 78], "attendance": 95},
+    {"name": "Bob", "grades": [90, 85, 88], "attendance": 92},
+    {"name": "Charlie", "grades": [78, 85, 82], "attendance": 88}
+]
+
+generate_report(students, "student_report.txt")
+
+# Display the generated report
+with open("student_report.txt", "r") as file:
+    print("\\nGenerated Report Contents:\\n")
+    print(file.read())`;
+
+const dataFormatterChallenge = `# Challenge: Data Formatter
+# Create a program that formats and writes different types of data:
+# 1. Format numbers (integers, floats, scientific notation)
+# 2. Format tables with proper alignment
+# 3. Format hierarchical data with indentation
+# 4. Include headers and footers
+
+def format_data(data, output_file):
+    # Your code here
+    pass
+
+# Test data
+data = {
+    "numbers": [1234.5678, 1e6, -42.123],
+    "table": [
+        ["Name", "Age", "City"],
+        ["Alice", 25, "New York"],
+        ["Bob", 30, "San Francisco"]
+    ],
+    "hierarchy": {
+        "Company": {
+            "Department1": ["Team1", "Team2"],
+            "Department2": ["Team3", "Team4"]
+        }
+    }
+}
+
+format_data(data, "formatted_data.txt")`;
+
+const dataFormatterSolution = `# Solution: Data Formatter
+def format_data(data, output_file):
+    try:
+        with open(output_file, "w") as file:
+            # Write header
+            file.write("Formatted Data Report\\n")
+            file.write("=" * 50 + "\\n\\n")
+            
+            # Format numbers
+            file.write("Number Formatting\\n")
+            file.write("-" * 20 + "\\n")
+            for num in data["numbers"]:
+                file.write(f"Regular: {num}\\n")
+                file.write(f"Fixed: {num:.2f}\\n")
+                file.write(f"Scientific: {num:.2e}\\n")
+                file.write("\\n")
+            
+            # Format table
+            file.write("\\nTabular Data\\n")
+            file.write("-" * 20 + "\\n")
+            # Calculate column widths
+            col_widths = []
+            for col in zip(*data["table"]):
+                col_widths.append(max(len(str(x)) for x in col) + 2)
+            
+            # Write table
+            for row in data["table"]:
+                line = ""
+                for item, width in zip(row, col_widths):
+                    line += str(item).ljust(width)
+                file.write(line + "\\n")
+            
+            # Format hierarchy
+            file.write("\\nHierarchical Data\\n")
+            file.write("-" * 20 + "\\n")
+            
+            def write_hierarchy(data, level=0):
+                indent = "  " * level
+                for key, value in data.items():
+                    file.write(f"{indent}{key}\\n")
+                    if isinstance(value, dict):
+                        write_hierarchy(value, level + 1)
+                    elif isinstance(value, list):
+                        for item in value:
+                            file.write(f"{indent}  - {item}\\n")
+            
+            write_hierarchy(data["hierarchy"])
+            
+            print(f"Data formatted and written to: {output_file}")
+            
+    except Exception as e:
+        print(f"Error formatting data: {e}")
+
+# Test data
+data = {
+    "numbers": [1234.5678, 1e6, -42.123],
+    "table": [
+        ["Name", "Age", "City"],
+        ["Alice", 25, "New York"],
+        ["Bob", 30, "San Francisco"]
+    ],
+    "hierarchy": {
+        "Company": {
+            "Department1": ["Team1", "Team2"],
+            "Department2": ["Team3", "Team4"]
+        }
+    }
+}
+
+format_data(data, "formatted_data.txt")
+
+# Display the formatted output
+with open("formatted_data.txt", "r") as file:
+    print("\\nFormatted Output:\\n")
+    print(file.read())`;
+
+const { Content } = Astro.props;
+---
+
+<MainLayout title="Writing Files in Python">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" />
+    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8">Writing Files in Python</h1>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Basic File Writing</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Learn how to write content to files using basic operations:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={basicWriting}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Different Writing Methods</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Explore different methods to write file content:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={writingMethods}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Formatted Output</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Writing formatted content to files:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={formattedOutput}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Error Handling</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <p class="mb-4">Handling common file writing errors:</p>
+          <CodePlayground 
+            client:load 
+            initialCode={errorHandling}
+            language="python"
+          />
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Practice Problems</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-semibold mb-4">File Writing Challenges</h3>
+          <div class="space-y-8">
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">Challenge 1: Report Generator</h4>
+              <p class="text-gray-300 mb-4">Create a program that generates formatted reports.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>File writing</li>
+                    <li>Data formatting</li>
+                    <li>Report generation</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use string formatting</li>
+                    <li>Calculate statistics</li>
+                    <li>Format output nicely</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="report-generator-challenge"
+                  initialCode={reportGeneratorChallenge}
+                  language="python"
+                  solution={reportGeneratorSolution}
+                />
+              </div>
+            </div>
+            
+            <div class="bg-gray-700 rounded-lg p-6">
+              <h4 class="text-lg font-semibold mb-3">Challenge 2: Data Formatter</h4>
+              <p class="text-gray-300 mb-4">Create a program that formats different types of data.</p>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">Learning Objectives</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Number formatting</li>
+                    <li>Table formatting</li>
+                    <li>Hierarchical data</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 class="font-semibold mb-2">Challenge Hints</h5>
+                  <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Use format specifiers</li>
+                    <li>Calculate column widths</li>
+                    <li>Implement indentation</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <CodePlayground 
+                  client:load 
+                  id="data-formatter-challenge"
+                  initialCode={dataFormatterChallenge}
+                  language="python"
+                  solution={dataFormatterSolution}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</MainLayout>
