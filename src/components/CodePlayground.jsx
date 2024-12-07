@@ -51,32 +51,47 @@ const CodePlayground = ({
   const [variables, setVariables] = useState(new Map());
   const [showSolution, setShowSolution] = useState(false);
   const [originalCode, setOriginalCode] = useState(initialCode);
-  const [theme, setTheme] = useState('vs-light'); // Default to light theme
+  const [theme, setTheme] = useState('vs-light');
+  const [isPyodideReady, setIsPyodideReady] = useState(false);
 
   useEffect(() => {
-    const loadPyodideScript = async () => {
+    const loadPyodide = async () => {
       if (!window.pyodideReadyPromise) {
         const script = document.createElement('script');
         script.src = 'https://cdn.jsdelivr.net/pyodide/v0.22.1/full/pyodide.js';
         script.async = true;
-        script.onload = () => console.log('Pyodide loaded');
+        
+        script.onload = async () => {
+          try {
+            window.pyodideReadyPromise = loadPyodide({
+              indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.22.1/full/',
+              stdout: (text) => console.log(text),
+              stderr: (text) => console.error(text)
+            });
+            await window.pyodideReadyPromise;
+            setIsPyodideReady(true);
+          } catch (error) {
+            console.error('Error loading Pyodide:', error);
+          }
+        };
+        
         document.body.appendChild(script);
+      } else {
+        setIsPyodideReady(true);
       }
     };
-    loadPyodideScript();
+    
+    loadPyodide();
   }, []);
 
   // Toggle solution visibility
   const toggleSolution = () => {
     if (solution) {
       if (showSolution) {
-        // Revert to original code
         setCode(originalCode);
         setShowSolution(false);
       } else {
-        // Store current code before showing solution
         setOriginalCode(code);
-        // Show solution
         setCode(solution);
         setShowSolution(true);
       }
@@ -85,21 +100,15 @@ const CodePlayground = ({
 
   // Execute code 
   const executeCode = async () => {
-    if (!window.pyodideReadyPromise) {
-      setOutput(['Pyodide not loaded']);
+    if (!isPyodideReady) {
+      setOutput(['Loading Python environment...']);
       return;
     }
     try {
-      // Clear previous output
       setOutput([]);
-
-      // Execute code and get output
       const executionOutput = await executePythonCode(code);
-      
-      // Update output
       setOutput(executionOutput || ['No output']);
     } catch (error) {
-      // Handle any execution errors
       setOutput([`Error: ${error.message}`]);
     }
   };
@@ -209,7 +218,7 @@ const CodePlayground = ({
 
   // Start debugging - memoized
   const startDebugging = useCallback(() => {
-    if (!window.pyodideReadyPromise) {
+    if (!isPyodideReady) {
       setOutput(['Pyodide not loaded']);
       return;
     }
@@ -423,8 +432,9 @@ const CodePlayground = ({
           <button 
             onClick={executeCode} 
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            disabled={!isPyodideReady}
           >
-            Run
+            {isPyodideReady ? 'Run' : 'Loading...'}
           </button>
           {solution && (
             <button 
@@ -439,6 +449,7 @@ const CodePlayground = ({
           <button 
             onClick={startDebugging} 
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            disabled={!isPyodideReady}
           >
             Debug
           </button>

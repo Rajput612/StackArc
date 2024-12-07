@@ -144,26 +144,7 @@ export const pythonBasicsTopics = [
       }
     ]
   },
-  {
-    title: "Basic Error Handling",
-    topics: [
-      { 
-        id: "exceptions-intro", 
-        title: "What are Exceptions?",
-        content: "Understanding Python exceptions and error types."
-      },
-      { 
-        id: "try-except-basic", 
-        title: "Basic Try-Except",
-        content: "Handling errors with try-except blocks."
-      },
-      { 
-        id: "common-errors", 
-        title: "Common Error Types",
-        content: "Understanding and fixing common Python errors."
-      }
-    ]
-  },
+
   {
     title: "Simple Projects",
     topics: [

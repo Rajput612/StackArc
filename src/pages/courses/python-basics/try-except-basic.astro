@@ -1,130 +1,138 @@
 ---
 import MainLayout from '../../../layouts/MainLayout.astro';
-import CodeBlock from '../../../components/CodeBlock';
+import CodePlayground from '../../../components/CodePlayground.jsx';
 import CourseSidebar from '../../../components/CourseSidebar.astro';
 
-const basicTryExceptCode = `# Basic try-except structure
+const basicTryExceptCode = `# Basic try-except example
 try:
-    # Code that might raise an exception
-    number = int(input("Enter a number: "))
-    result = 10 / number
-    print(f"Result: {result}")
-except ValueError:
-    print("Please enter a valid number!")
-except ZeroDivisionError:
-    print("Cannot divide by zero!")`;
+    age = int(input("Enter your age: "))
+    if age < 0:
+        raise ValueError("Age cannot be negative!")
+    print(f"You are {age} years old")
+except ValueError as e:
+    print(f"Error: {e}")
+    print("Please enter a valid positive number")`;
 
-const tryExceptElseCode = `# Using try-except-else
-def get_user_input():
+const multipleExceptsCode = `# Handling different types of errors
+def divide_numbers():
     try:
-        age = int(input("Enter your age: "))
+        num1 = float(input("Enter first number: "))
+        num2 = float(input("Enter second number: "))
+        result = num1 / num2
+        print(f"{num1} divided by {num2} is {result}")
     except ValueError:
-        print("Invalid age format!")
-        return None
-    else:
-        # This runs only if no exception occurred
-        print("Input successfully processed!")
-        return age
-    finally:
-        # This always runs
-        print("Input operation completed.")`;
-
-const multipleExceptionsCode = `# Handling multiple exceptions
-def process_list_item(lst, index):
-    try:
-        # Multiple things could go wrong here
-        value = lst[index]
-        result = 100 / value
-        print(f"Result: {result}")
-    except IndexError:
-        print(f"Error: Index {index} is out of range!")
+        print("Error: Please enter valid numbers")
     except ZeroDivisionError:
         print("Error: Cannot divide by zero!")
     except Exception as e:
-        # Catch any other unexpected errors
         print(f"An unexpected error occurred: {e}")
 
-# Example usage
-numbers = [1, 2, 0, 4]
-process_list_item(numbers, 0)  # Works fine
-process_list_item(numbers, 2)  # Division by zero
-process_list_item(numbers, 10) # Index out of range`;
+# Try it with different inputs!
+divide_numbers()`;
+
+const finallyBlockCode = `# Using try-except-finally
+def save_user_data():
+    file = None
+    try:
+        name = input("Enter your name: ")
+        age = int(input("Enter your age: "))
+        file = open("user_data.txt", "w")
+        file.write(f"Name: {name}\\nAge: {age}")
+        print("Data saved successfully!")
+    except ValueError:
+        print("Error: Please enter a valid age (number)")
+    except IOError:
+        print("Error: Could not write to file")
+    finally:
+        if file:
+            file.close()
+            print("File closed")
+
+# Try running this code multiple times
+save_user_data()`;
+
 ---
 
-<MainLayout title="Python Try-Except Basics">
+<MainLayout title="Try-Except in Python">
   <div class="flex">
     <CourseSidebar courseType="python-basics" currentTopicId="try-except-basic" />
-    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold mb-8">Try-Except Basics in Python</h1>
-      
-      <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Understanding Try-Except</h2>
-        <p class="text-gray-600 mb-6">
-          The try-except block is Python's primary mechanism for handling exceptions. It allows you to write code that gracefully handles potential errors.
-        </p>
+    
+    <div class="flex-1 p-8 overflow-y-auto">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Using Try-Except in Python</h1>
 
-        <div class="mb-8">
-          <h3 class="text-xl font-semibold text-gray-800 mb-4">Basic Try-Except Structure</h3>
-          <CodeBlock code={basicTryExceptCode} />
-          <div class="mt-4 text-gray-600">
-            <p>Key components:</p>
-            <ul class="list-disc ml-6 mt-2">
-              <li>try block: Contains code that might raise an exception</li>
-              <li>except blocks: Handle specific types of exceptions</li>
-              <li>Multiple except blocks can handle different exceptions</li>
-              <li>Code continues after exception handling</li>
-            </ul>
-          </div>
+        <div class="bg-yellow-50 rounded-lg p-6 mb-8">
+          <h2 class="text-xl font-semibold mb-4">What is Try-Except?</h2>
+          <p class="mb-4">
+            Try-except is Python's way of handling errors gracefully. Instead of crashing your program when something goes wrong, 
+            you can catch the error and handle it appropriately.
+          </p>
         </div>
 
-        <div class="mb-8">
-          <h3 class="text-xl font-semibold text-gray-800 mb-4">Try-Except-Else-Finally</h3>
-          <CodeBlock code={tryExceptElseCode} />
-          <div class="mt-4 text-gray-600">
-            <p>Additional clauses:</p>
-            <ul class="list-disc ml-6 mt-2">
-              <li>else: Runs if no exception occurs in try block</li>
-              <li>finally: Always runs, regardless of exceptions</li>
-              <li>Useful for cleanup operations</li>
-              <li>Provides clear code structure</li>
-            </ul>
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Basic Try-Except</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              Here's a simple example of how to use try-except to handle invalid user input:
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={basicTryExceptCode}
+              language="python"
+            />
           </div>
-        </div>
+        </section>
 
-        <div class="mb-8">
-          <h3 class="text-xl font-semibold text-gray-800 mb-4">Handling Multiple Exceptions</h3>
-          <CodeBlock code={multipleExceptionsCode} />
-          <div class="mt-4 text-gray-600">
-            <p>Advanced exception handling:</p>
-            <ul class="list-disc ml-6 mt-2">
-              <li>Can handle multiple specific exceptions</li>
-              <li>Order matters - more specific before general</li>
-              <li>Can capture exception information using 'as'</li>
-              <li>General Exception as fallback</li>
-            </ul>
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Handling Multiple Exceptions</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              You can handle different types of errors differently:
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={multipleExceptsCode}
+              language="python"
+            />
           </div>
-        </div>
+        </section>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="bg-gray-50 p-6 rounded-lg">
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Best Practices</h3>
-            <ul class="space-y-2 text-gray-600">
-              <li>Keep try blocks small and focused</li>
-              <li>Handle specific exceptions first</li>
-              <li>Use else clause for success-dependent code</li>
-              <li>Use finally for cleanup code</li>
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Using Finally</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              The finally block runs whether an error occurred or not. It's perfect for cleanup operations:
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={finallyBlockCode}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">What We've Learned</h2>
+          <div class="bg-green-50 dark:bg-gray-800 rounded-lg p-6">
+            <ul class="list-disc ml-6 space-y-2">
+              <li>How to use basic try-except blocks</li>
+              <li>Handling different types of exceptions</li>
+              <li>Using finally for cleanup operations</li>
+              <li>Best practices for error handling</li>
+              <li>Making programs more robust with error handling</li>
             </ul>
           </div>
-          
-          <div class="bg-gray-50 p-6 rounded-lg">
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Common Mistakes</h3>
-            <ul class="space-y-2 text-gray-600">
-              <li>Catching too general exceptions</li>
-              <li>Silently passing exceptions</li>
-              <li>Too large try blocks</li>
-              <li>Wrong order of except blocks</li>
-            </ul>
-          </div>
+        </section>
+
+        <div class="bg-blue-50 rounded-lg p-6">
+          <h2 class="text-xl font-semibold mb-4">Practice Ideas</h2>
+          <ul class="list-disc ml-6 space-y-2">
+            <li>Create a calculator that handles division by zero</li>
+            <li>Build a file reader that gracefully handles missing files</li>
+            <li>Make a program that validates user input for a game</li>
+            <li>Create a data parser that handles different data formats</li>
+            <li>Build a simple database program with error handling</li>
+          </ul>
         </div>
       </div>
     </div>

@@ -1,42 +1,75 @@
 ---
 import MainLayout from '../../../layouts/MainLayout.astro';
-import CodeBlock from '../../../components/CodeBlock';
+import CodePlayground from '../../../components/CodePlayground.jsx';
 import CourseSidebar from '../../../components/CourseSidebar.astro';
 
-const calculatorCode = `# Simple Calculator Application
-def add(x, y):
-    return x + y
+const simpleCalculatorCode = `# Simple Calculator
+# Let's create a basic calculator that can add and subtract
 
-def subtract(x, y):
-    return x - y
+def add(a, b):
+    return a + b
 
-def multiply(x, y):
-    return x * y
+def subtract(a, b):
+    return a - b
 
-def divide(x, y):
-    if y == 0:
-        raise ValueError("Cannot divide by zero!")
-    return x / y
+# Get input from user
+num1 = float(input("Enter first number: "))
+num2 = float(input("Enter second number: "))
 
-def calculator():
-    print("Simple Calculator")
-    print("1. Add")
-    print("2. Subtract")
-    print("3. Multiply")
-    print("4. Divide")
-    
-    while True:
-        try:
-            # Get operation choice
-            choice = input("Enter choice (1-4): ")
-            if choice not in ['1', '2', '3', '4']:
-                print("Invalid choice! Please try again.")
-                continue
-            
-            # Get numbers
-            num1 = float(input("Enter first number: "))
-            num2 = float(input("Enter second number: "))
-            
+# Show options
+print("Select operation:")
+print("1. Add")
+print("2. Subtract")
+
+choice = input("Enter choice (1/2): ")
+
+if choice == '1':
+    result = add(num1, num2)
+    print(f"{num1} + {num2} = {result}")
+elif choice == '2':
+    result = subtract(num1, num2)
+    print(f"{num1} - {num2} = {result}")
+else:
+    print("Invalid choice!")`;
+
+const advancedCalculatorCode = `# Advanced Calculator
+# Now let's add multiplication and division!
+
+def add(a, b):
+    return a + b
+
+def subtract(a, b):
+    return a - b
+
+def multiply(a, b):
+    return a * b
+
+def divide(a, b):
+    if b == 0:
+        return "Error: Cannot divide by zero!"
+    return a / b
+
+while True:
+    try:
+        # Get input from user
+        num1 = float(input("Enter first number: "))
+        num2 = float(input("Enter second number: "))
+
+        # Show options
+        print("\\nSelect operation:")
+        print("1. Add")
+        print("2. Subtract")
+        print("3. Multiply")
+        print("4. Divide")
+        print("5. Exit")
+
+        choice = input("\\nEnter choice (1/2/3/4/5): ")
+
+        if choice == '5':
+            print("Thank you for using the calculator!")
+            break
+
+        if choice in ['1', '2', '3', '4']:
             if choice == '1':
                 result = add(num1, num2)
                 print(f"{num1} + {num2} = {result}")
@@ -46,161 +79,88 @@ def calculator():
             elif choice == '3':
                 result = multiply(num1, num2)
                 print(f"{num1} * {num2} = {result}")
-            else:
-                try:
-                    result = divide(num1, num2)
-                    print(f"{num1} / {num2} = {result}")
-                except ValueError as e:
-                    print(f"Error: {e}")
+            else:  # choice == '4'
+                result = divide(num1, num2)
+                print(f"{num1} / {num2} = {result}")
+        else:
+            print("Invalid choice! Please try again.")
             
-            # Ask if user wants to continue
-            again = input("Calculate again? (yes/no): ")
-            if again.lower() != 'yes':
-                break
-                
-        except ValueError:
-            print("Invalid input! Please enter numeric values.")
-        except Exception as e:
-            print(f"An error occurred: {e}")
+    except ValueError:
+        print("Please enter valid numbers!")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        
+    print("\\n" + "="*30 + "\\n")  # Separator line`;
 
-if __name__ == "__main__":
-    calculator()`;
-
-const enhancedCalculatorCode = `# Enhanced Calculator with Memory and Scientific Operations
-import math
-
-class Calculator:
-    def __init__(self):
-        self.memory = 0
-        self.history = []
-    
-    def add(self, x, y):
-        result = x + y
-        self.history.append(f"{x} + {y} = {result}")
-        return result
-    
-    def subtract(self, x, y):
-        result = x - y
-        self.history.append(f"{x} - {y} = {result}")
-        return result
-    
-    def multiply(self, x, y):
-        result = x * y
-        self.history.append(f"{x} * {y} = {result}")
-        return result
-    
-    def divide(self, x, y):
-        if y == 0:
-            raise ValueError("Cannot divide by zero!")
-        result = x / y
-        self.history.append(f"{x} / {y} = {result}")
-        return result
-    
-    def square_root(self, x):
-        if x < 0:
-            raise ValueError("Cannot calculate square root of negative number!")
-        result = math.sqrt(x)
-        self.history.append(f"√{x} = {result}")
-        return result
-    
-    def power(self, x, y):
-        result = math.pow(x, y)
-        self.history.append(f"{x}^{y} = {result}")
-        return result
-    
-    def store_in_memory(self, value):
-        self.memory = value
-        self.history.append(f"Stored {value} in memory")
-    
-    def recall_memory(self):
-        return self.memory
-    
-    def clear_memory(self):
-        self.memory = 0
-        self.history.append("Memory cleared")
-    
-    def get_history(self):
-        return self.history
-
-# Example usage:
-calc = Calculator()
-result = calc.add(10, 5)
-calc.store_in_memory(result)
-sqrt_result = calc.square_root(16)
-power_result = calc.power(2, 3)
-print("History:", calc.get_history())`;
 ---
 
-<MainLayout title="Simple Calculator Project">
+<MainLayout title="Calculator Project">
   <div class="flex">
     <CourseSidebar courseType="python-basics" currentTopicId="calculator" />
-    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold mb-8">Building a Simple Calculator</h1>
-      
-      <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Basic Calculator Implementation</h2>
-        <p class="text-gray-600 mb-6">
-          Let's create a simple calculator that can perform basic arithmetic operations. This project will help you understand:
-        </p>
-        <ul class="list-disc ml-6 mb-6 text-gray-600">
-          <li>Function definitions and calls</li>
-          <li>User input handling</li>
-          <li>Control flow with if-elif-else</li>
-          <li>Basic error handling</li>
-          <li>Loop control for program flow</li>
-        </ul>
+    
+    <div class="flex-1 p-8 overflow-y-auto">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Building a Calculator in Python</h1>
 
-        <div class="mb-8">
-          <h3 class="text-xl font-semibold text-gray-800 mb-4">Basic Calculator Code</h3>
-          <CodeBlock code={calculatorCode} />
-          <div class="mt-4 text-gray-600">
-            <p>Key features of the basic calculator:</p>
-            <ul class="list-disc ml-6 mt-2">
-              <li>Supports addition, subtraction, multiplication, and division</li>
-              <li>Handles invalid inputs gracefully</li>
-              <li>Includes error handling for division by zero</li>
-              <li>Allows continuous calculations</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="mb-8">
-          <h3 class="text-xl font-semibold text-gray-800 mb-4">Enhanced Calculator Implementation</h3>
-          <p class="text-gray-600 mb-4">
-            Let's extend our calculator with more advanced features like memory operations and scientific calculations.
+        <div class="bg-yellow-50 rounded-lg p-6 mb-8">
+          <h2 class="text-xl font-semibold mb-4">Project Overview</h2>
+          <p class="mb-4">
+            Let's create a calculator program that can perform basic arithmetic operations. 
+            We'll start with a simple version and then make it more advanced!
           </p>
-          <CodeBlock code={enhancedCalculatorCode} />
-          <div class="mt-4 text-gray-600">
-            <p>Additional features in the enhanced version:</p>
-            <ul class="list-disc ml-6 mt-2">
-              <li>Memory storage and recall</li>
-              <li>Scientific operations (square root, power)</li>
-              <li>Calculation history tracking</li>
-              <li>Object-oriented implementation</li>
-            </ul>
-          </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="bg-gray-50 p-6 rounded-lg">
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Learning Outcomes</h3>
-            <ul class="space-y-2 text-gray-600">
-              <li>Function organization</li>
-              <li>Class-based design</li>
-              <li>Error handling patterns</li>
-              <li>User input validation</li>
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Simple Calculator</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              Our first version will handle addition and subtraction. Try running the code and performing some calculations!
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={simpleCalculatorCode}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Advanced Calculator</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              Now let's add multiplication, division, and better error handling. This version also runs in a loop until you choose to exit!
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={advancedCalculatorCode}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">What We've Learned</h2>
+          <div class="bg-green-50 dark:bg-gray-800 rounded-lg p-6">
+            <ul class="list-disc ml-6 space-y-2">
+              <li>Creating functions for different operations</li>
+              <li>Getting user input and converting strings to numbers</li>
+              <li>Using if-elif-else for menu options</li>
+              <li>Handling errors with try-except</li>
+              <li>Creating an interactive program loop</li>
+              <li>Adding user-friendly messages</li>
             </ul>
           </div>
-          
-          <div class="bg-gray-50 p-6 rounded-lg">
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Project Extensions</h3>
-            <ul class="space-y-2 text-gray-600">
-              <li>Add trigonometric functions</li>
-              <li>Implement unit conversions</li>
-              <li>Create a GUI interface</li>
-              <li>Add expression parsing</li>
-            </ul>
-          </div>
+        </section>
+
+        <div class="bg-blue-50 rounded-lg p-6">
+          <h2 class="text-xl font-semibold mb-4">Challenge Ideas</h2>
+          <ul class="list-disc ml-6 space-y-2">
+            <li>Add more operations (power, square root, etc.)</li>
+            <li>Add memory functions (store results, recall previous calculations)</li>
+            <li>Create a scientific calculator mode</li>
+            <li>Add support for calculating with multiple numbers</li>
+            <li>Create a graphical interface using tkinter</li>
+          </ul>
         </div>
       </div>
     </div>

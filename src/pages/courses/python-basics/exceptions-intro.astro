@@ -1,135 +1,340 @@
 ---
 import MainLayout from '../../../layouts/MainLayout.astro';
-import CodeBlock from '../../../components/CodeBlock';
+import CodePlayground from '../../../components/CodePlayground.jsx';
 import CourseSidebar from '../../../components/CourseSidebar.astro';
 
-const exceptionBasicsCode = `# Understanding Exceptions in Python
-def divide_numbers(a, b):
-    try:
-        result = a / b
-        return result
-    except ZeroDivisionError:
-        print("Error: Cannot divide by zero!")
-        return None
+const cricketScoreExample = `# Let's create a simple cricket score calculator
 
-# Examples of exceptions
-print(divide_numbers(10, 2))   # Works fine: prints 5.0
-print(divide_numbers(10, 0))   # Handles error gracefully`;
+total_runs = 0
 
-const exceptionTypesCode = `# Common Types of Exceptions
-# 1. ZeroDivisionError
-result = 10 / 0  # Raises ZeroDivisionError
-
-# 2. TypeError
-text = "hello" + 5  # Raises TypeError
-
-# 3. ValueError
-number = int("abc")  # Raises ValueError
-
-# 4. IndexError
-list = [1, 2, 3]
-value = list[10]  # Raises IndexError
-
-# 5. KeyError
-dict = {"name": "John"}
-age = dict["age"]  # Raises KeyError`;
-
-const exceptionFlowCode = `# Exception Flow Control
-def process_data(data):
-    if not isinstance(data, (int, float)):
-        raise TypeError("Data must be a number")
-    
-    if data < 0:
-        raise ValueError("Data must be positive")
-    
-    return data * 2
-
-# Using the function
+# Try to add runs scored by a player
 try:
-    result = process_data(-5)
-except TypeError as e:
-    print(f"Type Error: {e}")
-except ValueError as e:
-    print(f"Value Error: {e}")`;
+    runs = int(input("Enter runs scored: "))
+    total_runs = total_runs + runs
+    print(f"Total score is now: {total_runs}")
+except ValueError:
+    print("Oops! Please enter a valid number for runs.")
+    print("For example: 4 for a boundary, 6 for a sixer")`;
+
+const divisionExample = `# Let's try to divide sweets among friends
+
+sweets = 25  # Total number of sweets
+
+try:
+    friends = int(input("Enter number of friends: "))
+    sweets_per_friend = sweets / friends
+    print(f"Each friend will get {sweets_per_friend} sweets")
+except ValueError:
+    print("Please enter a valid number of friends!")
+except ZeroDivisionError:
+    print("Oh no! You can't divide sweets among 0 friends!")`;
+
+const examMarksExample = `# Example: Checking student's marks
+
+try:
+    marks = int(input("Enter your marks (0-100): "))
+    if marks < 0 or marks > 100:
+        raise ValueError("Marks should be between 0 and 100")
+    print(f"Your marks: {marks}")
+except ValueError as error:
+    print(f"Error: {error}")
+    print("Please enter valid marks!")`;
+
+const movieAgeChallenge = `# Challenge: Movie Age Checker
+# Create a program that checks if someone can watch a U/A rated movie
+# Age should be 12 or above
+# Handle invalid inputs appropriately
+
+def can_watch_movie(age_input):
+    # Your code here
+    pass
+
+# Test the function
+test_ages = ["15", "10", "twelve", "-5", "100"]
+for age in test_ages:
+    print(f"\\nChecking age: {age}")
+    can_watch_movie(age)`;
+
+const movieAgeSolution = `# Solution: Movie Age Checker
+def can_watch_movie(age_input):
+    try:
+        age = int(age_input)
+        if age < 0:
+            print("Age cannot be negative!")
+        elif age < 12:
+            print("Sorry, you are too young for this movie.")
+        else:
+            print("You can watch the movie. Enjoy!")
+    except ValueError:
+        print("Please enter a valid age as a number.")`;
+
+const pocketMoneyChallenge = `# Challenge: Pocket Money Savings Calculator
+# Calculate days needed to save for a toy
+# Handle cases where pocket money or toy price is invalid
+
+def calculate_saving_days(daily_money_input, toy_price_input):
+    # Your code here
+    pass
+
+# Test cases
+test_cases = [
+    ("50", "500"),    # Valid case
+    ("abc", "500"),   # Invalid pocket money
+    ("50", "xyz"),    # Invalid toy price
+    ("-10", "500"),   # Negative pocket money
+    ("0", "500")      # Zero pocket money
+]
+
+for money, price in test_cases:
+    print(f"\\nCalculating for daily money: {money}, toy price: {price}")
+    calculate_saving_days(money, price)`;
+
+const pocketMoneySolution = `# Solution: Pocket Money Savings Calculator
+def calculate_saving_days(daily_money_input, toy_price_input):
+    try:
+        daily_money = float(daily_money_input)
+        toy_price = float(toy_price_input)
+        
+        if daily_money <= 0:
+            print("Daily pocket money must be positive!")
+            return
+        if toy_price <= 0:
+            print("Toy price must be positive!")
+            return
+            
+        days = toy_price / daily_money
+        print(f"You need {days:.1f} days to save for the toy!")
+        
+    except ValueError:
+        print("Please enter valid numbers for money and price!")`;
+
+const cricketOverChallenge = `# Challenge: Cricket Over Calculator
+# Convert number of balls into overs (6 balls = 1 over)
+# Handle invalid inputs appropriately
+
+def calculate_overs(balls_input):
+    # Your code here
+    pass
+
+# Test cases
+test_balls = ["12", "7", "abc", "-6", "0", "45"]
+for balls in test_balls:
+    print(f"\\nCalculating overs for {balls} balls:")
+    calculate_overs(balls)`;
+
+const cricketOverSolution = `# Solution: Cricket Over Calculator
+def calculate_overs(balls_input):
+    try:
+        balls = int(balls_input)
+        if balls < 0:
+            print("Number of balls cannot be negative!")
+            return
+            
+        complete_overs = balls // 6
+        remaining_balls = balls % 6
+        
+        if remaining_balls == 0:
+            print(f"{balls} balls = {complete_overs} overs")
+        else:
+            print(f"{balls} balls = {complete_overs}.{remaining_balls} overs")
+            
+    except ValueError:
+        print("Please enter a valid number of balls!")`;
+
 ---
 
-<MainLayout title="Introduction to Python Exceptions">
+<MainLayout title="Introduction to Exceptions">
   <div class="flex">
     <CourseSidebar courseType="python-basics" currentTopicId="exceptions-intro" />
-    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold mb-8">Introduction to Python Exceptions</h1>
-      
-      <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-4">What are Exceptions?</h2>
-        <p class="text-gray-600 mb-6">
-          Exceptions are events that occur during program execution that disrupt the normal flow of instructions.
-          Understanding exceptions is crucial for writing robust Python programs that can handle errors gracefully.
-        </p>
+    
+    <div class="flex-1 p-8 overflow-y-auto">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-4">Understanding Errors in Python</h1>
 
-        <div class="mb-8">
-          <h3 class="text-xl font-semibold text-gray-800 mb-4">Exception Basics</h3>
-          <CodeBlock code={exceptionBasicsCode} />
-          <div class="mt-4 text-gray-600">
-            <p>Key concepts about exceptions:</p>
-            <ul class="list-disc ml-6 mt-2">
-              <li>Exceptions signal that something unexpected happened</li>
-              <li>They help prevent program crashes</li>
-              <li>Python provides many built-in exception types</li>
-              <li>Exceptions can be caught and handled</li>
-            </ul>
-          </div>
+        <div class="bg-yellow-50 rounded-lg p-6 mb-8">
+          <h2 class="text-xl font-semibold mb-4">Think About This...</h2>
+          <p class="mb-4">
+            Imagine you're playing cricket with your friends, and someone says they scored "teen-sau-bees" (३२०) runs.
+            Would you just write that down, or would you ask them to say it in numbers? 
+            Just like in cricket, in programming we need to make sure the information we get is correct!
+          </p>
         </div>
+        
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">What are Errors?</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              When we write programs, sometimes things don't go as planned. For example:
+            </p>
+            <ul class="list-disc ml-6 mb-4 space-y-2">
+              <li>Someone types "twenty" instead of "20"</li>
+              <li>We try to divide by zero</li>
+              <li>We try to open a file that doesn't exist</li>
+            </ul>
+            <p class="mb-4">
+              These are called errors or exceptions in Python. Let's learn how to handle them!
+            </p>
+          </div>
+        </section>
 
-        <div class="mb-8">
-          <h3 class="text-xl font-semibold text-gray-800 mb-4">Types of Exceptions</h3>
-          <CodeBlock code={exceptionTypesCode} />
-          <div class="mt-4 text-gray-600">
-            <p>Common built-in exceptions:</p>
-            <ul class="list-disc ml-6 mt-2">
-              <li>ZeroDivisionError: Division or modulo by zero</li>
-              <li>TypeError: Operation on incompatible types</li>
-              <li>ValueError: Operation with correct type but inappropriate value</li>
-              <li>IndexError: Sequence index out of range</li>
-              <li>KeyError: Dictionary key not found</li>
-            </ul>
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Example 1: Cricket Score Calculator</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">Let's create a simple program to add cricket scores. What happens if someone types "four" instead of "4"?</p>
+            <CodePlayground 
+              client:load 
+              initialCode={cricketScoreExample}
+              language="python"
+            />
           </div>
-        </div>
+        </section>
 
-        <div class="mb-8">
-          <h3 class="text-xl font-semibold text-gray-800 mb-4">Exception Flow Control</h3>
-          <CodeBlock code={exceptionFlowCode} />
-          <div class="mt-4 text-gray-600">
-            <p>Understanding exception flow:</p>
-            <ul class="list-disc ml-6 mt-2">
-              <li>Exceptions can be raised explicitly using raise</li>
-              <li>Multiple exception types can be handled separately</li>
-              <li>Exceptions can carry additional information</li>
-              <li>Exception handling affects program flow</li>
-            </ul>
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Example 2: Dividing Sweets</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">Imagine you have 25 sweets and you want to share them equally among your friends. What happens if you try to divide them among 0 friends?</p>
+            <CodePlayground 
+              client:load 
+              initialCode={divisionExample}
+              language="python"
+            />
           </div>
-        </div>
+        </section>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="bg-gray-50 p-6 rounded-lg">
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Why Use Exceptions?</h3>
-            <ul class="space-y-2 text-gray-600">
-              <li>Separate error handling from normal code</li>
-              <li>Handle multiple error cases elegantly</li>
-              <li>Provide meaningful error messages</li>
-              <li>Make code more maintainable</li>
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Example 3: Checking Exam Marks</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">Let's create a program to enter exam marks. We know marks can't be less than 0 or more than 100!</p>
+            <CodePlayground 
+              client:load 
+              initialCode={examMarksExample}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Practice Problems</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <div class="space-y-8">
+              <div class="bg-gray-700 rounded-lg p-6">
+                <h3 class="text-xl font-semibold mb-4">Challenge 1: Movie Age Checker</h3>
+                <p class="text-gray-300 mb-4">Create a program that checks if someone can watch a U/A rated movie (age should be 12 or above).</p>
+                
+                <div class="grid md:grid-cols-2 gap-6 mb-4">
+                  <div>
+                    <h4 class="font-semibold mb-2">Learning Objectives</h4>
+                    <ul class="list-disc list-inside text-gray-300 space-y-2">
+                      <li>Handling numeric input</li>
+                      <li>Age validation</li>
+                      <li>Error messages</li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 class="font-semibold mb-2">Test Cases</h4>
+                    <ul class="list-disc list-inside text-gray-300 space-y-2">
+                      <li>Valid age: 15</li>
+                      <li>Too young: 10</li>
+                      <li>Invalid input: "twelve"</li>
+                      <li>Negative age: -5</li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <CodePlayground 
+                  client:load 
+                  id="movie-age-challenge"
+                  initialCode={movieAgeChallenge}
+                  solution={movieAgeSolution}
+                  language="python"
+                />
+              </div>
+
+              <div class="bg-gray-700 rounded-lg p-6">
+                <h3 class="text-xl font-semibold mb-4">Challenge 2: Pocket Money Calculator</h3>
+                <p class="text-gray-300 mb-4">Calculate how many days it will take to save for a toy, given daily pocket money.</p>
+                
+                <div class="grid md:grid-cols-2 gap-6 mb-4">
+                  <div>
+                    <h4 class="font-semibold mb-2">Learning Objectives</h4>
+                    <ul class="list-disc list-inside text-gray-300 space-y-2">
+                      <li>Multiple input handling</li>
+                      <li>Division operations</li>
+                      <li>Negative number checking</li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 class="font-semibold mb-2">Test Cases</h4>
+                    <ul class="list-disc list-inside text-gray-300 space-y-2">
+                      <li>Valid inputs</li>
+                      <li>Invalid money amount</li>
+                      <li>Invalid toy price</li>
+                      <li>Zero pocket money</li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <CodePlayground 
+                  client:load 
+                  id="pocket-money-challenge"
+                  initialCode={pocketMoneyChallenge}
+                  solution={pocketMoneySolution}
+                  language="python"
+                />
+              </div>
+
+              <div class="bg-gray-700 rounded-lg p-6">
+                <h3 class="text-xl font-semibold mb-4">Challenge 3: Cricket Over Calculator</h3>
+                <p class="text-gray-300 mb-4">Convert number of balls into overs (6 balls = 1 over).</p>
+                
+                <div class="grid md:grid-cols-2 gap-6 mb-4">
+                  <div>
+                    <h4 class="font-semibold mb-2">Learning Objectives</h4>
+                    <ul class="list-disc list-inside text-gray-300 space-y-2">
+                      <li>Integer division</li>
+                      <li>Modulo operation</li>
+                      <li>Input validation</li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 class="font-semibold mb-2">Test Cases</h4>
+                    <ul class="list-disc list-inside text-gray-300 space-y-2">
+                      <li>Complete over: 12 balls</li>
+                      <li>Partial over: 7 balls</li>
+                      <li>Invalid input: "abc"</li>
+                      <li>Negative balls: -6</li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <CodePlayground 
+                  client:load 
+                  id="cricket-over-challenge"
+                  initialCode={cricketOverChallenge}
+                  solution={cricketOverSolution}
+                  language="python"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">What We've Learned</h2>
+          <div class="bg-green-50 dark:bg-gray-800 rounded-lg p-6">
+            <ul class="list-disc ml-6">
+              <li>Errors (exceptions) are Python's way of telling us something went wrong</li>
+              <li>We can use try-except to handle errors nicely</li>
+              <li>ValueError happens when we get the wrong type of input</li>
+              <li>ZeroDivisionError happens when we try to divide by zero</li>
+              <li>We can raise our own errors using raise</li>
+              <li>Proper error handling makes programs more user-friendly</li>
             </ul>
           </div>
-          
-          <div class="bg-gray-50 p-6 rounded-lg">
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Best Practices</h3>
-            <ul class="space-y-2 text-gray-600">
-              <li>Only catch exceptions you can handle</li>
-              <li>Be specific about which exceptions to catch</li>
-              <li>Keep try blocks focused and minimal</li>
-              <li>Use appropriate exception types</li>
-            </ul>
-          </div>
-        </div>
+        </section>
       </div>
     </div>
   </div>

@@ -1,0 +1,214 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import CodeBlock from '../../components/CodeBlock';
+import CodePlayground from '../../components/CodePlayground.astro';
+
+const schoolBagExample = `# Let's pack a school bag!
+# We need to make sure we have all important items
+
+def check_bag_items():
+    essential_items = ["books", "pencil", "lunch"]
+    my_bag = []
+    
+    try:
+        # Let's add items to our bag
+        while True:
+            item = input("Add an item to your bag (or 'done' when finished): ")
+            if item.lower() == 'done':
+                break
+            my_bag.append(item.lower())
+        
+        # Check if we have all essential items
+        for item in essential_items:
+            if item not in my_bag:
+                raise ValueError(f"Oh no! You forgot your {item}!")
+        
+        print("Great! Your bag is packed properly!")
+        print(f"Your bag contains: {', '.join(my_bag)}")
+        
+    except ValueError as error:
+        print(f"Error: {error}")
+        print("Please check your bag again!")`;
+
+const trainTicketExample = `# Railway Ticket Booking System
+def book_train_ticket():
+    try:
+        age = int(input("Enter passenger age: "))
+        if age < 0:
+            raise ValueError("Age cannot be negative!")
+        
+        seat_number = int(input("Enter preferred seat number (1-72): "))
+        if seat_number < 1 or seat_number > 72:
+            raise ValueError("Invalid seat number! Choose between 1 and 72.")
+        
+        # If we reach here, both inputs are valid
+        if age < 5:
+            print("Children under 5 travel free!")
+        else:
+            print(f"Ticket booked successfully for seat {seat_number}")
+            
+    except ValueError as error:
+        print(f"Booking failed: {error}")
+    else:
+        print("Thank you for choosing Indian Railways!")
+    finally:
+        print("Visit again!")`;
+
+const tryExceptElseExample = `# Using try-except-else-finally
+def divide_prasad(total_prasad):
+    try:
+        devotees = int(input("Enter number of devotees: "))
+        if devotees <= 0:
+            raise ValueError("Number of devotees must be positive!")
+        
+        prasad_per_person = total_prasad / devotees
+        
+    except ValueError as error:
+        print(f"Error: {error}")
+        return False
+        
+    except ZeroDivisionError:
+        print("Error: Cannot divide prasad among zero devotees!")
+        return False
+        
+    else:
+        # This runs only if no exception occurred
+        print(f"Each devotee will get {prasad_per_person:.2f} portions of prasad")
+        return True
+        
+    finally:
+        # This always runs
+        print("Jai Shree Krishna!")
+
+# Try with different inputs
+total_prasad = 100
+divide_prasad(total_prasad)`;
+
+---
+
+<MainLayout title="Try-Except in Python">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">Understanding Try-Except in Python</h1>
+
+    <div class="bg-yellow-50 rounded-lg p-6 mb-8">
+      <h2 class="text-xl font-semibold mb-4">Why Do We Need Try-Except?</h2>
+      <p class="mb-4">
+        Imagine you're packing your school bag. What do you do?
+      </p>
+      <ul class="list-disc ml-6 mb-4">
+        <li>First, you put in your items</li>
+        <li>Then, you check if you have everything</li>
+        <li>If something is missing, you add it</li>
+      </ul>
+      <p>
+        Try-Except in Python works the same way - it helps us handle situations when things go wrong!
+      </p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <h2 class="text-xl font-semibold mb-4">Example 1: School Bag Checker</h2>
+      <p class="mb-4">
+        Let's create a program that helps you pack your school bag and makes sure you don't forget anything important!
+      </p>
+      <div class="mb-6">
+        <CodeBlock code={schoolBagExample} />
+      </div>
+      <div class="bg-blue-50 p-4 rounded-lg mb-4">
+        <h3 class="font-semibold mb-2">Try it yourself!</h3>
+        <p>Try these scenarios:</p>
+        <ul class="list-disc ml-6">
+          <li>Pack all essential items (books, pencil, lunch)</li>
+          <li>Forget to pack your lunch</li>
+          <li>Pack extra items like water bottle</li>
+        </ul>
+      </div>
+      <CodePlayground code={schoolBagExample} language="python" />
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <h2 class="text-xl font-semibold mb-4">Example 2: Railway Ticket Booking</h2>
+      <p class="mb-4">
+        Now let's create a simple railway ticket booking system that uses try-except-else-finally.
+        This example shows how to handle multiple checks and provide proper feedback.
+      </p>
+      <div class="mb-6">
+        <CodeBlock code={trainTicketExample} />
+      </div>
+      <div class="bg-blue-50 p-4 rounded-lg mb-4">
+        <h3 class="font-semibold mb-2">Understanding the Code:</h3>
+        <ul class="list-disc ml-6">
+          <li><strong>try:</strong> Contains the main booking logic</li>
+          <li><strong>except:</strong> Handles booking errors</li>
+          <li><strong>else:</strong> Runs when booking is successful</li>
+          <li><strong>finally:</strong> Always runs, whether booking succeeds or fails</li>
+        </ul>
+      </div>
+      <CodePlayground code={trainTicketExample} language="python" />
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <h2 class="text-xl font-semibold mb-4">Example 3: Temple Prasad Distribution</h2>
+      <p class="mb-4">
+        Let's see how to use try-except-else-finally together with a temple prasad distribution example.
+      </p>
+      <div class="mb-6">
+        <CodeBlock code={tryExceptElseExample} />
+      </div>
+      <div class="bg-blue-50 p-4 rounded-lg mb-4">
+        <h3 class="font-semibold mb-2">Code Structure:</h3>
+        <ul class="list-disc ml-6">
+          <li><strong>try:</strong> The main code that might raise an exception</li>
+          <li><strong>except:</strong> Handles specific types of errors</li>
+          <li><strong>else:</strong> Runs only if try block succeeds</li>
+          <li><strong>finally:</strong> Always runs, success or failure</li>
+        </ul>
+      </div>
+      <CodePlayground code={tryExceptElseExample} language="python" />
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <h2 class="text-xl font-semibold mb-4">Practice Problems</h2>
+      <ol class="list-decimal ml-6 space-y-4">
+        <li>
+          <strong>Library Book System:</strong>
+          <p>Create a program for borrowing library books. Check if:</p>
+          <ul class="list-disc ml-6">
+            <li>The book is available</li>
+            <li>The student has returned previous books</li>
+            <li>The student's library card is valid</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Cricket Score Calculator:</strong>
+          <p>Build a program that:</p>
+          <ul class="list-disc ml-6">
+            <li>Calculates total runs in an over</li>
+            <li>Handles wides and no-balls</li>
+            <li>Ensures valid cricket scores (0-6 per ball)</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Temple Donation Counter:</strong>
+          <p>Create a program that:</p>
+          <ul class="list-disc ml-6">
+            <li>Accepts donations in rupees</li>
+            <li>Validates donation amount (positive numbers only)</li>
+            <li>Keeps track of total donations</li>
+            <li>Prints donation receipt</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+
+    <div class="bg-green-50 rounded-lg shadow-md p-6">
+      <h2 class="text-xl font-semibold mb-4">Key Points to Remember</h2>
+      <ul class="list-disc ml-6">
+        <li>Use try-except when you expect something might go wrong</li>
+        <li>Be specific about which exceptions you're catching</li>
+        <li>Use else for code that should run only if no exceptions occur</li>
+        <li>Use finally for cleanup code that should always run</li>
+        <li>Provide helpful error messages that users can understand</li>
+      </ul>
+    </div>
+  </div>
+</MainLayout>
