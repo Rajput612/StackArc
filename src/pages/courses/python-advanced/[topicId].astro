@@ -2,6 +2,7 @@
 import CourseLayout from '../../../layouts/CourseLayout.astro';
 import { pythonAdvancedTopics } from './topics';
 import { loadMarkdownContent } from '../../../utils/markdown';
+import PythonNavigation from '../../../components/PythonNavigation.astro';
 
 export function getStaticPaths() {
   const paths = [];
@@ -41,9 +42,16 @@ const content = await loadMarkdownContent(topicId, 'python-advanced');
       </ol>
     </nav>
 
-    <article class="prose dark:prose-invert max-w-none">
-      <Fragment set:html={content} />
-    </article>
+    <div class="flex">
+      <div class="flex-1 p-8 overflow-y-auto">
+        <div class="max-w-4xl mx-auto">
+          <PythonNavigation currentPath={Astro.url.pathname} />
+          <article class="prose dark:prose-invert max-w-none">
+            <Fragment set:html={content} />
+          </article>
+        </div>
+      </div>
+    </div>
   </div>
 </CourseLayout>
 

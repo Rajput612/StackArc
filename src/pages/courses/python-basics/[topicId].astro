@@ -3,6 +3,7 @@ import MainLayout from '../../../layouts/MainLayout.astro';
 import CodePlayground from '../../../components/CodePlayground.jsx';
 import CourseSidebar from '../../../components/CourseSidebar.astro';
 import CourseLayout from '../../../layouts/CourseLayout.astro';
+import PythonNavigation from '../../../components/PythonNavigation.astro';
 import MarkdownIt from 'markdown-it';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -127,6 +128,8 @@ const title = titleMatch ? titleMatch[1] : 'Python Basics';
       </nav>
 
       <article class="prose dark:prose-invert max-w-none">
+        <PythonNavigation currentPath={Astro.url.pathname} />
+        <h1 class="text-3xl font-bold mb-8">{topic.title}</h1>
         <Fragment set:html={htmlContent} />
       </article>
     </div>

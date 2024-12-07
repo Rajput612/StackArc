@@ -1,0 +1,19 @@
+---
+import MainLayout from './MainLayout.astro';
+import CourseSidebar from '../components/CourseSidebar.astro';
+import PythonNavigation from '../components/PythonNavigation.astro';
+
+const { title, courseType } = Astro.props;
+---
+
+<MainLayout title={title}>
+  <div class="flex">
+    <CourseSidebar courseType={courseType} />
+    <div class="flex-1 p-8 overflow-y-auto">
+      <div class="max-w-4xl mx-auto">
+        <PythonNavigation currentPath={Astro.url.pathname} />
+        <slot />
+      </div>
+    </div>
+  </div>
+</MainLayout>

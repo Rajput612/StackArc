@@ -1,0 +1,220 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+import PythonNavigation from '../../../components/PythonNavigation.astro';
+
+const basicMetaclassCode = `# Basic Metaclass Example
+# A metaclass is a class for a class - it defines how a class should be created
+
+class MyMetaclass(type):
+    def __new__(cls, name, bases, attrs):
+        # Print the class being created
+        print(f"Creating class: {name}")
+        
+        # Add a new method to the class
+        attrs['greet'] = lambda self: f"Hello from {name}!"
+        
+        # Create and return the new class
+        return super().__new__(cls, name, bases, attrs)
+
+# Use the metaclass to create a new class
+class MyClass(metaclass=MyMetaclass):
+    def __init__(self):
+        self.name = "Instance"
+
+# Create an instance and test it
+obj = MyClass()
+print(obj.greet())  # This method was added by the metaclass!`;
+
+const attributeValidationCode = `# Metaclass for Attribute Validation
+class ValidateAttributes(type):
+    def __new__(cls, name, bases, attrs):
+        # Check for required attributes
+        required = ['name', 'age']
+        for attr in required:
+            if attr not in attrs:
+                raise TypeError(f"{name} must define {attr}")
+        
+        # Validate attribute types
+        if not isinstance(attrs['age'], property):
+            raise TypeError(f"{name}.age must be a property")
+        
+        return super().__new__(cls, name, bases, attrs)
+
+# Create a class with the validation metaclass
+class Person(metaclass=ValidateAttributes):
+    def __init__(self, name, age):
+        self._name = name
+        self._age = age
+    
+    @property
+    def name(self):
+        return self._name
+    
+    @property
+    def age(self):
+        return self._age
+    
+    @age.setter
+    def age(self, value):
+        if value < 0:
+            raise ValueError("Age cannot be negative")
+        self._age = value
+
+# Test the class
+person = Person("Alice", 25)
+print(f"{person.name} is {person.age} years old")
+
+# This would raise an error:
+# person.age = -5  # ValueError: Age cannot be negative`;
+
+const singletonMetaclassCode = `# Singleton Metaclass Example
+class Singleton(type):
+    _instances = {}
+    
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super().__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+# Create a singleton class
+class DatabaseConnection(metaclass=Singleton):
+    def __init__(self):
+        self.connected = False
+    
+    def connect(self):
+        if not self.connected:
+            print("Connecting to database...")
+            self.connected = True
+        else:
+            print("Already connected!")
+
+# Test the singleton behavior
+db1 = DatabaseConnection()
+db2 = DatabaseConnection()
+
+print("Are db1 and db2 the same object?", db1 is db2)
+
+db1.connect()  # Connects
+db2.connect()  # Already connected!`;
+
+const abstractMetaclassCode = `# Abstract Base Class with Metaclass
+from abc import ABCMeta, abstractmethod
+
+class Shape(metaclass=ABCMeta):
+    @abstractmethod
+    def area(self):
+        """Calculate the area of the shape"""
+        pass
+    
+    @abstractmethod
+    def perimeter(self):
+        """Calculate the perimeter of the shape"""
+        pass
+
+# Concrete implementation
+class Rectangle(Shape):
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+    
+    def area(self):
+        return self.width * self.height
+    
+    def perimeter(self):
+        return 2 * (self.width + self.height)
+
+# This would raise an error:
+# shape = Shape()  # Can't instantiate abstract class
+
+# This works:
+rect = Rectangle(5, 3)
+print(f"Rectangle area: {rect.area()}")
+print(f"Rectangle perimeter: {rect.perimeter()}")`;
+---
+
+<MainLayout title="Python Metaclasses">
+  <div class="flex">
+    <CourseSidebar courseType="python-advanced" currentTopicId="metaclasses" />
+    <div class="flex-1 p-8 overflow-y-auto">
+      <div class="max-w-4xl mx-auto">
+        <PythonNavigation currentPath={Astro.url.pathname} />
+        <h1 class="text-3xl font-bold mb-8">Python Metaclasses</h1>
+
+        <div class="space-y-12">
+          <section>
+            <h2 class="text-2xl font-semibold mb-4">Introduction to Metaclasses</h2>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">
+              Metaclasses are classes for classes - they define how classes should be created. In Python, everything is an object, including classes themselves. 
+              Metaclasses allow you to customize class creation, add validation, implement patterns like singletons, and more.
+            </p>
+            <div class="bg-yellow-50 rounded-lg p-6 mb-8">
+              <h3 class="text-lg font-semibold mb-2">Key Points:</h3>
+              <ul class="list-disc list-inside space-y-2 text-gray-700">
+                <li>A metaclass is called when a class is created</li>
+                <li>It can modify the class attributes before the class is created</li>
+                <li>Common uses include validation, registration, and interface checking</li>
+                <li>The default metaclass for all classes is 'type'</li>
+              </ul>
+            </div>
+            <div class="space-y-6">
+              <div>
+                <h3 class="text-xl font-semibold mb-2">Basic Metaclass Example</h3>
+                <p class="mb-4">
+                  Here's a simple example of a metaclass that adds a method to any class that uses it:
+                </p>
+                <CodePlayground client:load initialCode={basicMetaclassCode} />
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-semibold mb-4">Attribute Validation with Metaclasses</h2>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">
+              Metaclasses can enforce class design by validating attributes and methods. This example shows how to ensure
+              classes have required attributes and proper property decorators:
+            </p>
+            <CodePlayground client:load initialCode={attributeValidationCode} />
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-semibold mb-4">Singleton Pattern with Metaclasses</h2>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">
+              The Singleton pattern ensures a class has only one instance. Metaclasses provide an elegant way to implement this pattern:
+            </p>
+            <CodePlayground client:load initialCode={singletonMetaclassCode} />
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-semibold mb-4">Abstract Base Classes with Metaclasses</h2>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">
+              Python's abc module uses metaclasses to implement abstract base classes. This enforces that derived classes implement required methods:
+            </p>
+            <CodePlayground client:load initialCode={abstractMetaclassCode} />
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-semibold mb-4">Best Practices</h2>
+            <div class="bg-blue-50 rounded-lg p-6">
+              <h3 class="text-lg font-semibold mb-2">When to Use Metaclasses:</h3>
+              <ul class="list-disc list-inside space-y-2 text-gray-700">
+                <li>Enforcing coding standards or design patterns across multiple classes</li>
+                <li>Automatically registering classes (e.g., for plugins or serialization)</li>
+                <li>Adding methods or attributes to classes dynamically</li>
+                <li>Implementing singleton or other design patterns</li>
+                <li>Creating abstract base classes with required methods</li>
+              </ul>
+              <div class="mt-4 p-4 bg-yellow-100 rounded">
+                <p class="text-sm text-gray-700">
+                  <strong>Note:</strong> As the saying goes, "Metaclasses are deeper magic than 99% of users should ever worry about."
+                  Only use them when simpler approaches (like class decorators or inheritance) won't suffice.
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>

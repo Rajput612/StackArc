@@ -2,6 +2,7 @@
 import MainLayout from '../../../layouts/MainLayout.astro';
 import CodePlayground from '../../../components/CodePlayground.jsx';
 import CourseSidebar from '../../../components/CourseSidebar.astro';
+import PythonNavigation from '../../../components/PythonNavigation.astro';
 
 const introCode = `# Creating variables
 name = "Alice"      # String
@@ -337,74 +338,77 @@ print("list2:", list2)  # list2 is also modified`
 <MainLayout title="Python Variables & Data Types">
   <div class="flex">
     <CourseSidebar courseType="python-basics" />
-    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold mb-8">Python Variables & Data Types</h1>
+    <div class="flex-1 max-w-4xl mx-auto px-4">
+      <PythonNavigation currentPath={Astro.url.pathname} />
+      <div class="py-8">
+        <h1 class="text-3xl font-bold mb-8">Python Variables & Data Types</h1>
 
-      <div class="space-y-12">
-        <section>
-          <h2 class="text-2xl font-semibold mb-4">Introduction to Variables</h2>
-          <p class="text-gray-600 dark:text-gray-300 mb-4">
-            Variables are names that reference objects in memory. Unlike some other programming languages, Python variables don't store the actual data but instead store references (or pointers) to objects in memory.
-          </p>
-          <div class="space-y-6">
-            <div>
-              <h3 class="text-xl font-semibold mb-2">Variables as References</h3>
-              <p class="mb-4">
-                In Python, variables are names that reference objects in memory. Unlike some other programming languages, Python variables don’t store the actual data but instead store references (or pointers) to objects in memory.
-              </p>
-              <div class="bg-gray-800 rounded-lg p-4 mb-4">
-                <pre class="text-green-400"><code>{introCode}</code></pre>
+        <div class="space-y-12">
+          <section>
+            <h2 class="text-2xl font-semibold mb-4">Introduction to Variables</h2>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">
+              Variables are names that reference objects in memory. Unlike some other programming languages, Python variables don't store the actual data but instead store references (or pointers) to objects in memory.
+            </p>
+            <div class="space-y-6">
+              <div>
+                <h3 class="text-xl font-semibold mb-2">Variables as References</h3>
+                <p class="mb-4">
+                  In Python, variables are names that reference objects in memory. Unlike some other programming languages, Python variables don’t store the actual data but instead store references (or pointers) to objects in memory.
+                </p>
+                <div class="bg-gray-800 rounded-lg p-4 mb-4">
+                  <pre class="text-green-400"><code>{introCode}</code></pre>
+                </div>
+                <CodePlayground client:load initialCode={introCode} />
               </div>
-              <CodePlayground client:load initialCode={introCode} />
             </div>
-          </div>
-        </section>
+          </section>
 
-        <section>
-          <h2 class="text-2xl font-semibold mb-4">Numbers in Python</h2>
-          <p class="text-gray-600 dark:text-gray-300 mb-4">
-            Python supports several types of numbers:
-            <ul class="list-disc list-inside ml-4 space-y-2">
-              <li>Integers (int) - Whole numbers, positive or negative</li>
-              <li>Floating point numbers (float) - Decimal numbers</li>
-              <li>Complex numbers (complex) - Numbers with real and imaginary parts</li>
-            </ul>
-          </p>
-          <CodePlayground client:load initialCode={numbersCode} />
-        </section>
+          <section>
+            <h2 class="text-2xl font-semibold mb-4">Numbers in Python</h2>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">
+              Python supports several types of numbers:
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>Integers (int) - Whole numbers, positive or negative</li>
+                <li>Floating point numbers (float) - Decimal numbers</li>
+                <li>Complex numbers (complex) - Numbers with real and imaginary parts</li>
+              </ul>
+            </p>
+            <CodePlayground client:load initialCode={numbersCode} />
+          </section>
 
-        <section>
-          <h2 class="text-2xl font-semibold mb-4">Strings</h2>
-          <p class="text-gray-600 dark:text-gray-300 mb-4">
-            Strings in Python are sequences of characters, surrounded by either single quotes ('...') or double quotes ("..."). 
-            Python provides many built-in methods to manipulate strings.
-          </p>
-          <CodePlayground client:load initialCode={stringsCode} />
-        </section>
+          <section>
+            <h2 class="text-2xl font-semibold mb-4">Strings</h2>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">
+              Strings in Python are sequences of characters, surrounded by either single quotes ('...') or double quotes ("..."). 
+              Python provides many built-in methods to manipulate strings.
+            </p>
+            <CodePlayground client:load initialCode={stringsCode} />
+          </section>
 
-        <section>
-          <h2 class="text-2xl font-semibold mb-4">Lists</h2>
-          <p class="text-gray-600 dark:text-gray-300 mb-4">
-            Lists are ordered, changeable collections that can store different types of data. They are created using square brackets [].
-          </p>
-          <CodePlayground client:load initialCode={listsCode} />
-        </section>
+          <section>
+            <h2 class="text-2xl font-semibold mb-4">Lists</h2>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">
+              Lists are ordered, changeable collections that can store different types of data. They are created using square brackets [].
+            </p>
+            <CodePlayground client:load initialCode={listsCode} />
+          </section>
 
-        <section>
-          <h2 class="text-2xl font-semibold mb-4">Dictionaries</h2>
-          <p class="text-gray-600 dark:text-gray-300 mb-4">
-            Dictionaries are unordered collections of key-value pairs. They are created using curly braces {} with key:value syntax.
-          </p>
-          <CodePlayground client:load initialCode={dictionariesCode} />
-        </section>
+          <section>
+            <h2 class="text-2xl font-semibold mb-4">Dictionaries</h2>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">
+              Dictionaries are unordered collections of key-value pairs. They are created using curly braces {} with key:value syntax.
+            </p>
+            <CodePlayground client:load initialCode={dictionariesCode} />
+          </section>
 
-        <section>
-          <h2 class="text-2xl font-semibold mb-4">Type Conversion</h2>
-          <p class="text-gray-600 dark:text-gray-300 mb-4">
-            Python provides built-in functions for converting between different data types. This is also known as type casting.
-          </p>
-          <CodePlayground client:load initialCode={typeConversionCode} />
-        </section>
+          <section>
+            <h2 class="text-2xl font-semibold mb-4">Type Conversion</h2>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">
+              Python provides built-in functions for converting between different data types. This is also known as type casting.
+            </p>
+            <CodePlayground client:load initialCode={typeConversionCode} />
+          </section>
+        </div>
       </div>
     </div>
   </div>
