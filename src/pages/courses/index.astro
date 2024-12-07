@@ -1,165 +1,64 @@
 ---
-import MainLayout from '../../layouts/MainLayout.astro';
-import { courseContent } from '../../config/courseContent';
-import EnrollmentModal from '../../components/EnrollmentModal.astro';
+import Layout from '../../layouts/Layout.astro';
+import CourseCard from '../../components/CourseCard';
 
-const courses = Object.values(courseContent);
+const API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:8000';
+
+// Fetch courses from Django backend
+let courses = [];
+let error = null;
+
+try {
+  const response = await fetch(`${API_URL}/api/courses/`);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  courses = await response.json();
+} catch (e) {
+  console.error('Error fetching courses:', e);
+  error = 'Failed to load courses. Please try again later.';
+}
+
+// Group courses by status
+const availableCourses = courses.filter(course => course.status === 'available');
+const upcomingCourses = courses.filter(course => course.status === 'coming-soon');
 ---
 
-<MainLayout title="StackArc - Available Courses">
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <!-- Hero Section -->
-    <div class="relative overflow-hidden">
-      <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 to-blue-700 opacity-90"></div>
-      <div class="relative pt-24 pb-16 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto text-center">
-          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6">
-            Python Learning Paths
-          </h1>
-          <p class="text-xl text-indigo-100 mb-8 max-w-3xl mx-auto">
-            Start your Python journey with our comprehensive, hands-on courses
-          </p>
+<Layout title="Courses - StackArc">
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold mb-8 text-gray-900 dark:text-white">
+      Available Courses
+    </h1>
+
+    {error && (
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
+        <span class="block sm:inline">{error}</span>
+      </div>
+    )}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+      {availableCourses.map(course => (
+        <CourseCard course={course} />
+      ))}
+    </div>
+
+    {upcomingCourses.length > 0 && (
+      <>
+        <h2 class="text-3xl font-bold mb-6 text-gray-800 dark:text-white">
+          Coming Soon
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {upcomingCourses.map(course => (
+            <CourseCard course={course} />
+          ))}
         </div>
-      </div>
-    </div>
-
-    <!-- Course Grid -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="course-grid">
-        {courses.map(course => {
-          const conceptCount = course.concepts.length;
-          const totalDuration = course.concepts.reduce((acc, concept) => {
-            const minutes = parseInt(concept.duration);
-            return acc + minutes;
-          }, 0);
-          
-          return (
-            <div class="course-card bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700" data-course-id={course.id}>
-              <div class="p-6">
-                <div class="flex justify-between items-start mb-4">
-                  <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
-                    {course.title}
-                  </h2>
-                  <div class="enrollment-status"></div>
-                </div>
-                <div class="space-y-4">
-                  <div class="flex items-center text-gray-600 dark:text-gray-400">
-                    <span class="material-icons mr-2">schedule</span>
-                    <span>{totalDuration} minutes</span>
-                  </div>
-                  <div class="flex items-center text-gray-600 dark:text-gray-400">
-                    <span class="material-icons mr-2">menu_book</span>
-                    <span>{conceptCount} concepts</span>
-                  </div>
-                  <div class="course-progress hidden">
-                    <div class="flex items-center text-gray-600 dark:text-gray-400">
-                      <span class="material-icons mr-2">trending_up</span>
-                      <span class="progress-text">0% complete</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="mt-6">
-                  <button
-                    class="course-button block w-full text-center px-4 py-2 rounded-lg transition-colors bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600"
-                    data-course-id={course.id}
-                  >
-                    Start Learning
-                  </button>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  </div>
-
-  <!-- Enrollment Modals -->
-  {courses.map(course => (
-    <EnrollmentModal
-      courseId={course.id}
-      courseTitle={course.title}
-      conceptCount={course.concepts.length}
-      duration={course.concepts.reduce((acc, concept) => acc + parseInt(concept.duration), 0)}
-    />
-  ))}
-</MainLayout>
-
-<script>
-  import { EnrollmentStore } from '../../stores/enhancedEnrollmentStore';
-
-  const userId = 'user123'; // Replace with actual user ID from auth system
-
-  // Update course cards with enrollment information
-  function updateCourseCards() {
-    document.querySelectorAll('.course-card').forEach(card => {
-      const courseId = card.getAttribute('data-course-id');
-      if (!courseId) return;
-
-      const isEnrolled = EnrollmentStore.isEnrolled(courseId, userId);
-      const enrollment = isEnrolled ? EnrollmentStore.getEnrollment(courseId, userId) : null;
-      
-      // Update enrollment status badge
-      const statusEl = card.querySelector('.enrollment-status');
-      if (isEnrolled && enrollment && statusEl) {
-        const statusClass = {
-          completed: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200',
-          paused: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-200',
-          active: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200'
-        }[enrollment.status];
-        
-        statusEl.innerHTML = `
-          <span class="px-2 py-1 rounded-full text-sm ${statusClass}">
-            ${enrollment.status.charAt(0).toUpperCase() + enrollment.status.slice(1)}
-          </span>
-        `;
-      }
-
-      // Update progress
-      const progressEl = card.querySelector('.course-progress');
-      const progressTextEl = card.querySelector('.progress-text');
-      if (isEnrolled && enrollment && progressEl && progressTextEl) {
-        progressEl.classList.remove('hidden');
-        const conceptCount = parseInt(card.querySelector('.material-icons:nth-child(2)').nextElementSibling.textContent);
-        const progress = Math.round((enrollment.progress.completedConcepts.length / conceptCount) * 100);
-        progressTextEl.textContent = `${progress}% complete`;
-      }
-
-      // Update button
-      const buttonEl = card.querySelector('.course-button');
-      if (buttonEl) {
-        if (isEnrolled) {
-          buttonEl.textContent = 'Continue Learning';
-          buttonEl.classList.remove('bg-indigo-600', 'hover:bg-indigo-700', 'dark:bg-indigo-500', 'dark:hover:bg-indigo-600');
-          buttonEl.classList.add('bg-indigo-100', 'text-indigo-700', 'hover:bg-indigo-200', 'dark:bg-indigo-900/50', 'dark:text-indigo-200', 'dark:hover:bg-indigo-800/50');
-        }
-
-        // Add click handler
-        buttonEl.addEventListener('click', () => {
-          const courseId = buttonEl.getAttribute('data-course-id');
-          if (isEnrolled) {
-            window.location.href = `/courses/${courseId}`;
-          } else if (courseId && typeof window.showEnrollmentModal === 'function') {
-            window.showEnrollmentModal(courseId);
-          }
-        });
-      }
-    });
-  }
-
-  // Update cards on page load
-  updateCourseCards();
-
-  // Update cards when enrollment changes
-  window.addEventListener('enrollmentChanged', (event) => {
-    updateCourseCards();
-  });
-</script>
+      </>
+    )}
+  </main>
+</Layout>
 
 <style>
-  .material-icons {
-    font-family: 'Material Icons';
-    font-size: 1.25rem;
+  main {
+    min-height: calc(100vh - 64px); /* Adjust based on your header height */
   }
 </style>

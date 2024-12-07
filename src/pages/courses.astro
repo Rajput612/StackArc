@@ -1,97 +1,54 @@
 ---
-import MainLayout from '../layouts/MainLayout.astro'
+import MainLayout from '../layouts/MainLayout.astro';
+import CourseCard from '../components/CourseCard';
 
-const courses = [
-  {
-    id: 'python-basics',
-    title: 'Python Basics',
-    description: 'Master fundamental Python concepts: variables, data types, control structures, and functions',
-    icon: '🐍',
-    level: 'Beginner',
-    status: 'available'
-  },
-  {
-    id: 'python-advanced',
-    title: 'Python Advanced',
-    description: 'Explore advanced topics: decorators, generators, context managers, and metaclasses',
-    icon: '⚡',
-    level: 'Advanced',
-    status: 'available'
-  },
-  {
-    id: 'data-structures',
-    title: 'Data Structures',
-    description: 'Learn essential data structures: arrays, linked lists, trees, graphs, and hash tables',
-    icon: '📚',
-    level: 'Intermediate',
-    status: 'available'
-  },
-  {
-    id: 'algorithms',
-    title: 'Algorithms',
-    description: 'Master algorithmic concepts: sorting, searching, dynamic programming, and graph algorithms',
-    icon: '🔄',
-    level: 'Advanced',
-    status: 'available'
-  },
-  {
-    id: 'django',
-    title: 'Django',
-    description: 'Build web applications with Django: MVT pattern, ORM, authentication, and REST APIs',
-    icon: '🎯',
-    level: 'Intermediate',
-    status: 'available'
-  },
-  {
-    id: 'docker',
-    title: 'Docker',
-    description: 'Learn containerization, Docker compose, and container orchestration',
-    icon: '🐳',
-    level: 'Intermediate',
-    status: 'available'
-  },
-  {
-    id: 'gunicorn',
-    title: 'Gunicorn',
-    description: 'Deploy Python web applications with Gunicorn WSGI HTTP Server',
-    icon: '🦄',
-    level: 'Intermediate',
-    status: 'available'
-  },
-  {
-    id: 'nginx',
-    title: 'Nginx',
-    description: 'Configure and optimize Nginx as a web server, reverse proxy, and load balancer',
-    icon: '🌐',
-    level: 'Advanced',
-    status: 'available'
-  },
-  {
-    id: 'sql-mastery',
-    title: 'SQL Mastery',
-    description: 'Master SQL database design, queries, optimization, and best practices',
-    icon: '💾',
-    level: 'Intermediate',
-    status: 'coming-soon'
-  },
-  {
-    id: 'git-github',
-    title: 'Git & GitHub',
-    description: 'Learn version control, collaboration, and project management with Git and GitHub',
-    icon: '🔄',
-    level: 'Beginner',
-    status: 'coming-soon'
+const API_URL = import.meta.env.PUBLIC_API_URL || 'http://127.0.0.1:8000';
+
+// Fetch courses from Django backend
+let courses = [];
+let error = null;
+
+try {
+  const response = await fetch(`${API_URL}/api/courses/`);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
-]
+  const data = await response.json();
+  courses = Array.isArray(data) ? data : data.results || [];
+  console.log('Fetched courses:', courses);
+} catch (e) {
+  console.error('Error fetching courses:', e);
+  error = 'Failed to load courses. Please try again later.';
+}
+
+// Group available courses by level
+const coursesByLevel = courses.reduce((acc, course) => {
+  if (course.status === 'available') {
+    const level = course.level || 'Other';
+    acc[level] = acc[level] || [];
+    acc[level].push(course);
+  }
+  return acc;
+}, {});
+
+// Sort levels in order: Beginner, Intermediate, Advanced, Other
+const levelOrder = ['Beginner', 'Intermediate', 'Advanced', 'Other'];
+const sortedLevels = Object.keys(coursesByLevel).sort(
+  (a, b) => levelOrder.indexOf(a) - levelOrder.indexOf(b)
+);
+
+// Get upcoming courses
+const upcomingCourses = courses.filter(course => course.status === 'coming-soon');
 
 function getLevelColor(level) {
   const colors = {
-    beginner: 'bg-green-100 text-green-800 ring-green-600/20 dark:bg-green-900/30 dark:text-green-400',
-    intermediate: 'bg-blue-100 text-blue-800 ring-blue-600/20 dark:bg-blue-900/30 dark:text-blue-400',
-    advanced: 'bg-purple-100 text-purple-800 ring-purple-600/20 dark:bg-purple-900/30 dark:text-purple-400'
+    'Beginner': 'bg-green-100 text-green-800 ring-green-600/20 dark:bg-green-900/30 dark:text-green-400',
+    'Intermediate': 'bg-blue-100 text-blue-800 ring-blue-600/20 dark:bg-blue-900/30 dark:text-blue-400',
+    'Advanced': 'bg-purple-100 text-purple-800 ring-purple-600/20 dark:bg-purple-900/30 dark:text-purple-400'
   }
-  return colors[level.toLowerCase()] || 'bg-gray-100 text-gray-800 ring-gray-600/20 dark:bg-gray-900/30 dark:text-gray-400'
+  return colors[level] || 'bg-gray-100 text-gray-800 ring-gray-600/20 dark:bg-gray-900/30 dark:text-gray-400'
 }
+
 ---
 
 <MainLayout title="Courses - StackArc">
@@ -106,54 +63,112 @@ function getLevelColor(level) {
         </p>
       </div>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {courses.map((course) => (
-          <div class="group relative bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-500 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden h-[260px]">
-            {course.status === 'coming-soon' && (
-              <div class="absolute top-3 right-3 z-10">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 ring-1 ring-inset ring-red-600/20 dark:bg-red-900/30 dark:text-red-400">
-                  Coming Soon
-                </span>
-              </div>
-            )}
-            
-            <div class="p-5">
-              <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 text-2xl shadow-inner">
-                  {course.icon}
+      {error && (
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
+          <span class="block sm:inline">{error}</span>
+        </div>
+      )}
+      
+      {sortedLevels.map(level => (
+        <div class="mb-16">
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
+            {level} Courses
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {coursesByLevel[level].map(course => (
+              <div class="group relative bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-500 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden h-[260px]">
+                {course.status === 'coming-soon' && (
+                  <div class="absolute top-3 right-3 z-10">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 ring-1 ring-inset ring-red-600/20 dark:bg-red-900/30 dark:text-red-400">
+                      Coming Soon
+                    </span>
+                  </div>
+                )}
+                
+                <div class="p-5">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 text-2xl shadow-inner">
+                      {course.icon}
+                    </div>
+                    <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ring-1 ring-inset ${getLevelColor(course.level)}`}>
+                      {course.level}
+                    </span>
+                  </div>
+                  
+                  <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
+                    {course.title}
+                  </h2>
+                  
+                  <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2 text-sm">
+                    {course.description}
+                  </p>
+                  
+                  {course.status === 'available' ? (
+                    <a
+                      href={`/courses/${course.id}`}
+                      class="block w-full text-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-sm font-medium rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg"
+                    >
+                      Start Learning
+                    </a>
+                  ) : (
+                    <button
+                      disabled
+                      class="block w-full text-center px-4 py-2 bg-gray-100 dark:bg-gray-700/50 text-gray-400 dark:text-gray-500 text-sm font-medium rounded-lg cursor-not-allowed"
+                    >
+                      Coming Soon
+                    </button>
+                  )}
                 </div>
-                <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ring-1 ring-inset ${getLevelColor(course.level)}`}>
-                  {course.level}
-                </span>
               </div>
-              
-              <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
-                {course.title}
-              </h2>
-              
-              <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2 text-sm">
-                {course.description}
-              </p>
-              
-              {course.status === 'available' ? (
-                <a
-                  href={`/courses/${course.id}`}
-                  class="block w-full text-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-sm font-medium rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg"
-                >
-                  Start Learning
-                </a>
-              ) : (
-                <button
-                  disabled
-                  class="block w-full text-center px-4 py-2 bg-gray-100 dark:bg-gray-700/50 text-gray-400 dark:text-gray-500 text-sm font-medium rounded-lg cursor-not-allowed"
-                >
-                  Coming Soon
-                </button>
-              )}
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
+      
+      {upcomingCourses.length > 0 && (
+        <div class="mt-16">
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
+            Coming Soon
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {upcomingCourses.map(course => (
+              <div class="group relative bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-500 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden h-[260px]">
+                <div class="absolute top-3 right-3 z-10">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 ring-1 ring-inset ring-red-600/20 dark:bg-red-900/30 dark:text-red-400">
+                    Coming Soon
+                  </span>
+                </div>
+                
+                <div class="p-5">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 text-2xl shadow-inner">
+                      {course.icon}
+                    </div>
+                    <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ring-1 ring-inset ${getLevelColor(course.level)}`}>
+                      {course.level}
+                    </span>
+                  </div>
+                  
+                  <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
+                    {course.title}
+                  </h2>
+                  
+                  <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2 text-sm">
+                    {course.description}
+                  </p>
+                  
+                  <button
+                    disabled
+                    class="block w-full text-center px-4 py-2 bg-gray-100 dark:bg-gray-700/50 text-gray-400 dark:text-gray-500 text-sm font-medium rounded-lg cursor-not-allowed"
+                  >
+                    Coming Soon
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   </div>
 </MainLayout>
