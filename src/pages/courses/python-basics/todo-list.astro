@@ -1,6 +1,6 @@
 ---
 import MainLayout from '../../../layouts/MainLayout.astro';
-import CodeBlock from '../../../components/CodeBlock';
+import CodePlayground from '../../../components/CodePlayground.jsx';
 import CourseSidebar from '../../../components/CourseSidebar.astro';
 
 const basicTodoCode = `# Simple Todo List Application
@@ -40,51 +40,15 @@ class TodoList:
         else:
             print("Invalid task number!")
 
-def main():
-    todo = TodoList()
-    
-    while True:
-        print("\n=== Todo List Menu ===")
-        print("1. Add Task")
-        print("2. View Tasks")
-        print("3. Mark Task as Completed")
-        print("4. Remove Task")
-        print("5. Exit")
-        
-        choice = input("\nEnter your choice (1-5): ")
-        
-        if choice == "1":
-            task = input("Enter task description: ")
-            todo.add_task(task)
-        
-        elif choice == "2":
-            todo.view_tasks()
-        
-        elif choice == "3":
-            todo.view_tasks()
-            task_num = input("Enter task number to mark as completed: ")
-            try:
-                todo.mark_completed(int(task_num))
-            except ValueError:
-                print("Please enter a valid number!")
-        
-        elif choice == "4":
-            todo.view_tasks()
-            task_num = input("Enter task number to remove: ")
-            try:
-                todo.remove_task(int(task_num))
-            except ValueError:
-                print("Please enter a valid number!")
-        
-        elif choice == "5":
-            print("Goodbye!")
-            break
-        
-        else:
-            print("Invalid choice! Please try again.")
-
-if __name__ == "__main__":
-    main()`;
+# Example Usage:
+todo = TodoList()
+todo.add_task("Learn Python OOP")
+todo.add_task("Build a project")
+todo.view_tasks()
+todo.mark_completed(1)
+todo.view_tasks()
+todo.remove_task(2)
+todo.view_tasks()`;
 
 const enhancedTodoCode = `# Enhanced Todo List with File Storage and Due Dates
 import json
@@ -108,8 +72,8 @@ class EnhancedTodoList:
         with open(self.filename, 'w') as f:
             json.dump(self.tasks, f, indent=2)
     
-    def add_task(self, task, due_days=None):
-        """Add a new task with optional due date"""
+    def add_task(self, task, due_days=None, priority="normal"):
+        """Add a new task with due date and priority"""
         due_date = None
         if due_days:
             due_date = (datetime.now() + timedelta(days=due_days)).strftime("%Y-%m-%d")
@@ -119,9 +83,10 @@ class EnhancedTodoList:
             "completed": False,
             "created_date": datetime.now().strftime("%Y-%m-%d"),
             "due_date": due_date,
-            "priority": "normal"
+            "priority": priority
         })
         self.save_tasks()
+        print(f"Added task: {task}")
     
     def view_tasks(self, show_completed=True):
         """Display tasks with due dates and priority"""
@@ -139,97 +104,84 @@ class EnhancedTodoList:
             priority = f"[{task['priority'].upper()}]"
             
             print(f"{i}. [{status}] {priority} {task['task']} {due}")
-    
-    def set_priority(self, task_index, priority):
-        """Set task priority (low, normal, high)"""
-        if 1 <= task_index <= len(self.tasks):
-            if priority in ["low", "normal", "high"]:
-                self.tasks[task_index-1]["priority"] = priority
-                self.save_tasks()
-                print(f"Priority set for task {task_index}")
-            else:
-                print("Invalid priority level!")
-        else:
-            print("Invalid task number!")
 
-# Example usage:
+# Example Usage:
 todo = EnhancedTodoList()
-todo.add_task("Complete project", due_days=7)
-todo.add_task("Review code")
-todo.set_priority(1, "high")
+todo.add_task("Complete project", due_days=7, priority="high")
+todo.add_task("Review code", priority="normal")
+todo.add_task("Update documentation", due_days=3, priority="low")
 todo.view_tasks()`;
+
 ---
 
 <MainLayout title="Todo List Project">
   <div class="flex">
     <CourseSidebar courseType="python-basics" currentTopicId="todo-list" />
-    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold mb-8">Building a Todo List Application</h1>
-      
-      <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Basic Todo List Implementation</h2>
-        <p class="text-gray-600 mb-6">
-          Let's create a command-line todo list application that helps users manage their tasks. This project will teach you:
-        </p>
-        <ul class="list-disc ml-6 mb-6 text-gray-600">
-          <li>Object-oriented programming basics</li>
-          <li>List manipulation</li>
-          <li>User input handling</li>
-          <li>Basic data structures</li>
-          <li>Command-line interface design</li>
-        </ul>
+    
+    <div class="flex-1 p-8 overflow-y-auto">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Building a Todo List in Python</h1>
 
-        <div class="mb-8">
-          <h3 class="text-xl font-semibold text-gray-800 mb-4">Basic Todo List Code</h3>
-          <CodeBlock code={basicTodoCode} />
-          <div class="mt-4 text-gray-600">
-            <p>Key features of the basic todo list:</p>
-            <ul class="list-disc ml-6 mt-2">
-              <li>Add and remove tasks</li>
-              <li>View all tasks</li>
-              <li>Mark tasks as completed</li>
-              <li>Simple command-line interface</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="mb-8">
-          <h3 class="text-xl font-semibold text-gray-800 mb-4">Enhanced Todo List Implementation</h3>
-          <p class="text-gray-600 mb-4">
-            Let's extend our todo list with more advanced features like file storage and due dates.
+        <div class="bg-yellow-50 rounded-lg p-6 mb-8">
+          <h2 class="text-xl font-semibold mb-4">Project Overview</h2>
+          <p class="mb-4">
+            Let's create a todo list application that helps users manage their tasks. We'll start with a basic version 
+            and then enhance it with features like file storage and due dates!
           </p>
-          <CodeBlock code={enhancedTodoCode} />
-          <div class="mt-4 text-gray-600">
-            <p>Additional features in the enhanced version:</p>
-            <ul class="list-disc ml-6 mt-2">
-              <li>Persistent storage using JSON</li>
-              <li>Due dates for tasks</li>
-              <li>Task priorities</li>
-              <li>Created date tracking</li>
-            </ul>
-          </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="bg-gray-50 p-6 rounded-lg">
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Learning Outcomes</h3>
-            <ul class="space-y-2 text-gray-600">
-              <li>Class and object usage</li>
-              <li>File I/O operations</li>
-              <li>JSON data handling</li>
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Basic Todo List</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              Our first version will handle adding, viewing, completing, and removing tasks. Try running the code and managing some tasks!
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={basicTodoCode}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Enhanced Todo List</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              Now let's add file storage, due dates, and priority levels. This version persists your tasks and helps you track deadlines!
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={enhancedTodoCode}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">What We've Learned</h2>
+          <div class="bg-green-50 dark:bg-gray-800 rounded-lg p-6">
+            <ul class="list-disc ml-6 space-y-2">
+              <li>Creating classes and methods in Python</li>
+              <li>Working with lists and dictionaries</li>
+              <li>File handling with JSON</li>
               <li>Date and time operations</li>
+              <li>Error handling with try-except</li>
+              <li>Building a user-friendly interface</li>
             </ul>
           </div>
-          
-          <div class="bg-gray-50 p-6 rounded-lg">
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Project Extensions</h3>
-            <ul class="space-y-2 text-gray-600">
-              <li>Add categories/tags</li>
-              <li>Create a GUI interface</li>
-              <li>Add task notifications</li>
-              <li>Implement task sharing</li>
-            </ul>
-          </div>
+        </section>
+
+        <div class="bg-blue-50 rounded-lg p-6">
+          <h2 class="text-xl font-semibold mb-4">Challenge Ideas</h2>
+          <ul class="list-disc ml-6 space-y-2">
+            <li>Add categories or tags for tasks</li>
+            <li>Implement task search and filtering</li>
+            <li>Add recurring tasks feature</li>
+            <li>Create a GUI using tkinter</li>
+            <li>Add multi-user support</li>
+            <li>Implement task sharing between users</li>
+          </ul>
         </div>
       </div>
     </div>

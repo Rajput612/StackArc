@@ -1,6 +1,6 @@
 ---
 import MainLayout from '../../../layouts/MainLayout.astro';
-import CodeBlock from '../../../components/CodeBlock';
+import CodePlayground from '../../../components/CodePlayground.jsx';
 import CourseSidebar from '../../../components/CourseSidebar.astro';
 
 const basicGameCode = `# Simple Number Guessing Game
@@ -19,7 +19,7 @@ def play_game():
     while attempts < max_attempts:
         try:
             # Get player's guess
-            guess = int(input("\nEnter your guess: "))
+            guess = int(input("\\nEnter your guess: "))
             attempts += 1
             
             # Check the guess
@@ -28,7 +28,7 @@ def play_game():
             elif guess > secret_number:
                 print("Too high! Try a lower number.")
             else:
-                print(f"\nCongratulations! You guessed it in {attempts} attempts!")
+                print(f"\\nCongratulations! You guessed it in {attempts} attempts!")
                 return True
             
             # Show remaining attempts
@@ -39,204 +39,157 @@ def play_game():
             print("Please enter a valid number!")
             continue
     
-    print(f"\nGame Over! The number was {secret_number}")
+    print(f"\\nGame Over! The number was {secret_number}")
     return False
 
-def main():
-    while True:
-        play_game()
-        
-        # Ask to play again
-        play_again = input("\nWould you like to play again? (yes/no): ")
-        if play_again.lower() != 'yes':
-            print("Thanks for playing! Goodbye!")
-            break
+# Start the game
+play_game()`;
 
-if __name__ == "__main__":
-    main()`;
-
-const enhancedGameCode = `# Enhanced Number Guessing Game with Difficulty Levels and Scoring
+const enhancedGameCode = `# Enhanced Number Guessing Game with Difficulty Levels
 import random
-import json
-from datetime import datetime
 
 class NumberGame:
     def __init__(self):
-        self.scores_file = "high_scores.json"
         self.difficulties = {
             'easy': {'range': (1, 50), 'attempts': 15},
             'medium': {'range': (1, 100), 'attempts': 10},
             'hard': {'range': (1, 200), 'attempts': 8}
         }
-        self.high_scores = self.load_scores()
+        self.current_difficulty = 'medium'
     
-    def load_scores(self):
-        """Load high scores from file"""
-        try:
-            with open(self.scores_file, 'r') as f:
-                return json.load(f)
-        except FileNotFoundError:
-            return {'easy': [], 'medium': [], 'hard': []}
+    def get_temperature(self, guess, secret):
+        """Return a temperature-based hint"""
+        diff = abs(guess - secret)
+        if diff == 0:
+            return "🎯 Spot on!"
+        elif diff <= 5:
+            return "🔥 Very Hot!"
+        elif diff <= 10:
+            return "🌡️ Hot"
+        elif diff <= 20:
+            return "😊 Warm"
+        elif diff <= 30:
+            return "❄️ Cool"
+        else:
+            return "🧊 Cold"
     
-    def save_score(self, difficulty, attempts, time_taken):
-        """Save score to high scores"""
-        score = {
-            'attempts': attempts,
-            'time_taken': time_taken,
-            'date': datetime.now().strftime("%Y-%m-%d %H:%M")
-        }
-        self.high_scores[difficulty].append(score)
-        self.high_scores[difficulty].sort(key=lambda x: (x['attempts'], x['time_taken']))
-        self.high_scores[difficulty] = self.high_scores[difficulty][:5]  # Keep top 5
-        
-        with open(self.scores_file, 'w') as f:
-            json.dump(self.high_scores, f, indent=2)
-    
-    def show_high_scores(self, difficulty):
-        """Display high scores for a difficulty level"""
-        scores = self.high_scores[difficulty]
-        if not scores:
-            print(f"No high scores for {difficulty} level yet!")
-            return
-        
-        print(f"\nHigh Scores - {difficulty.upper()} level:")
-        for i, score in enumerate(scores, 1):
-            print(f"{i}. Attempts: {score['attempts']}, "
-                  f"Time: {score['time_taken']:.1f}s, "
-                  f"Date: {score['date']}")
-    
-    def get_hint(self, secret_number, guess, attempts):
-        """Provide hints based on number of attempts"""
-        if attempts > 3:
-            if secret_number % 2 == 0:
-                return "Hint: The number is even"
-            return "Hint: The number is odd"
-        if attempts > 5:
-            return f"Hint: The number is {'divisible' if secret_number % 5 == 0 else 'not divisible'} by 5"
-        return ""
-    
-    def play_game(self, difficulty='medium'):
+    def play_game(self, difficulty=None):
         """Play one round of the game"""
-        settings = self.difficulties[difficulty]
+        if difficulty:
+            self.current_difficulty = difficulty
+            
+        settings = self.difficulties[self.current_difficulty]
         number_range = settings['range']
         max_attempts = settings['attempts']
         secret_number = random.randint(*number_range)
         attempts = 0
-        start_time = datetime.now()
         
-        print(f"\nGuess a number between {number_range[0]} and {number_range[1]}")
+        print(f"\\nDifficulty: {self.current_difficulty.upper()}")
+        print(f"Guess a number between {number_range[0]} and {number_range[1]}")
         print(f"You have {max_attempts} attempts.")
         
         while attempts < max_attempts:
             try:
-                guess = int(input("\nEnter your guess: "))
+                guess = int(input("\\nEnter your guess: "))
                 attempts += 1
                 
                 if guess < number_range[0] or guess > number_range[1]:
-                    print(f"Please guess a number between {number_range[0]} and {number_range[1]}!")
+                    print(f"Please guess between {number_range[0]} and {number_range[1]}!")
                     continue
                 
-                if guess < secret_number:
-                    print("Too low!")
-                elif guess > secret_number:
-                    print("Too high!")
-                else:
-                    time_taken = (datetime.now() - start_time).total_seconds()
-                    print(f"\nCongratulations! You won in {attempts} attempts!")
-                    print(f"Time taken: {time_taken:.1f} seconds")
-                    self.save_score(difficulty, attempts, time_taken)
-                    return True
+                temperature = self.get_temperature(guess, secret_number)
+                print(temperature)
                 
-                # Show hints and remaining attempts
-                hint = self.get_hint(secret_number, guess, attempts)
-                if hint:
-                    print(hint)
+                if guess == secret_number:
+                    print(f"\\n🎉 Congratulations! You won in {attempts} attempts!")
+                    return True
+                elif guess < secret_number:
+                    print("Try higher!")
+                else:
+                    print("Try lower!")
+                
                 print(f"Attempts remaining: {max_attempts - attempts}")
                 
             except ValueError:
                 print("Please enter a valid number!")
         
-        print(f"\nGame Over! The number was {secret_number}")
+        print(f"\\nGame Over! The number was {secret_number}")
         return False
 
-# Example usage:
+# Start the game with medium difficulty
 game = NumberGame()
-game.play_game('medium')
-game.show_high_scores('medium')`;
+game.play_game('medium')`;
+
 ---
 
 <MainLayout title="Number Guessing Game Project">
   <div class="flex">
     <CourseSidebar courseType="python-basics" currentTopicId="number-game" />
-    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold mb-8">Building a Number Guessing Game</h1>
-      
-      <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Basic Number Game Implementation</h2>
-        <p class="text-gray-600 mb-6">
-          Let's create an interactive number guessing game that teaches fundamental programming concepts through fun gameplay.
-          This project will help you learn:
-        </p>
-        <ul class="list-disc ml-6 mb-6 text-gray-600">
-          <li>Random number generation</li>
-          <li>User input validation</li>
-          <li>Loop control structures</li>
-          <li>Basic game logic</li>
-          <li>Error handling</li>
-        </ul>
+    
+    <div class="flex-1 p-8 overflow-y-auto">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Building a Number Guessing Game</h1>
 
-        <div class="mb-8">
-          <h3 class="text-xl font-semibold text-gray-800 mb-4">Basic Game Code</h3>
-          <CodeBlock code={basicGameCode} />
-          <div class="mt-4 text-gray-600">
-            <p>Key features of the basic game:</p>
-            <ul class="list-disc ml-6 mt-2">
-              <li>Random number generation</li>
-              <li>Limited number of attempts</li>
-              <li>Input validation</li>
-              <li>Play again option</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="mb-8">
-          <h3 class="text-xl font-semibold text-gray-800 mb-4">Enhanced Game Implementation</h3>
-          <p class="text-gray-600 mb-4">
-            Let's enhance our game with additional features like difficulty levels, hints, and high scores.
+        <div class="bg-yellow-50 rounded-lg p-6 mb-8">
+          <h2 class="text-xl font-semibold mb-4">Project Overview</h2>
+          <p class="mb-4">
+            Let's create an exciting number guessing game that teaches fundamental programming concepts through fun gameplay. 
+            We'll start with a basic version and then enhance it with temperature-based hints and difficulty levels!
           </p>
-          <CodeBlock code={enhancedGameCode} />
-          <div class="mt-4 text-gray-600">
-            <p>Additional features in the enhanced version:</p>
-            <ul class="list-disc ml-6 mt-2">
-              <li>Multiple difficulty levels</li>
-              <li>High score tracking</li>
-              <li>Timing system</li>
-              <li>Progressive hints</li>
-              <li>Score persistence</li>
-            </ul>
-          </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="bg-gray-50 p-6 rounded-lg">
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Learning Outcomes</h3>
-            <ul class="space-y-2 text-gray-600">
-              <li>Class-based game design</li>
-              <li>File I/O for score tracking</li>
-              <li>Time handling in Python</li>
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Basic Number Game</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              Our first version includes random number generation, user input handling, and basic game logic. Try running the code and see if you can guess the number!
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={basicGameCode}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Enhanced Number Game</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              This enhanced version adds exciting features like temperature-based hints (🔥 Hot or 🧊 Cold) and multiple difficulty levels. The closer you are to the number, the "hotter" your guess!
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={enhancedGameCode}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">What We've Learned</h2>
+          <div class="bg-green-50 dark:bg-gray-800 rounded-lg p-6">
+            <ul class="list-disc ml-6 space-y-2">
+              <li>Random number generation using Python's random module</li>
+              <li>User input validation and error handling</li>
+              <li>Object-oriented programming with classes</li>
               <li>Game state management</li>
+              <li>Implementing difficulty levels</li>
+              <li>Creating engaging user feedback with emojis</li>
             </ul>
           </div>
-          
-          <div class="bg-gray-50 p-6 rounded-lg">
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Project Extensions</h3>
-            <ul class="space-y-2 text-gray-600">
-              <li>Add multiplayer mode</li>
-              <li>Create a GUI version</li>
-              <li>Implement custom ranges</li>
-              <li>Add sound effects</li>
-            </ul>
-          </div>
+        </section>
+
+        <div class="bg-blue-50 rounded-lg p-6">
+          <h2 class="text-xl font-semibold mb-4">Challenge Ideas</h2>
+          <ul class="list-disc ml-6 space-y-2">
+            <li>Add a high score system that persists between games</li>
+            <li>Implement a time limit for each guess</li>
+            <li>Create a multiplayer mode where players take turns</li>
+            <li>Add sound effects for different temperature levels</li>
+            <li>Create a graphical interface using tkinter</li>
+            <li>Add achievements for special accomplishments</li>
+          </ul>
         </div>
       </div>
     </div>

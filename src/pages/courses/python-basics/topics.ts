@@ -144,7 +144,6 @@ export const pythonBasicsTopics = [
       }
     ]
   },
-
   {
     title: "Simple Projects",
     topics: [

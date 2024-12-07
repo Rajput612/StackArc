@@ -1,0 +1,212 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+const instanceMethodCode = `# Instance method example
+class Student:
+    def __init__(self, name, grade):
+        self.name = name
+        self.grade = grade
+    
+    # Instance method - has access to instance attributes
+    def get_grade_status(self):
+        if self.grade >= 90:
+            return f"{self.name} is an excellent student!"
+        elif self.grade >= 70:
+            return f"{self.name} is doing well."
+        else:
+            return f"{self.name} needs improvement."
+
+# Create student and use instance method
+student = Student("Alice", 95)
+print(student.get_grade_status())  # Alice is an excellent student!`;
+
+const classMethodCode = `# Class method example
+class Date:
+    def __init__(self, year, month, day):
+        self.year = year
+        self.month = month
+        self.day = day
+    
+    # Class method to create Date from string
+    @classmethod
+    def from_string(cls, date_string):
+        year, month, day = map(int, date_string.split('-'))
+        return cls(year, month, day)
+    
+    # Class method to create Date for today
+    @classmethod
+    def today(cls):
+        import datetime
+        today = datetime.datetime.now()
+        return cls(today.year, today.month, today.day)
+    
+    def __str__(self):
+        return f"{self.year}-{self.month:02d}-{self.day:02d}"
+
+# Create Date objects using class methods
+date1 = Date.from_string('2023-12-25')
+date2 = Date.today()
+
+print(f"Christmas: {date1}")
+print(f"Today: {date2}")`;
+
+const staticMethodCode = `# Static method example
+class MathOperations:
+    # Static method - doesn't need class or instance state
+    @staticmethod
+    def is_prime(n):
+        if n < 2:
+            return False
+        for i in range(2, int(n ** 0.5) + 1):
+            if n % i == 0:
+                return False
+        return True
+    
+    @staticmethod
+    def factorial(n):
+        if n < 0:
+            raise ValueError("Factorial not defined for negative numbers")
+        if n == 0:
+            return 1
+        return n * MathOperations.factorial(n - 1)
+
+# Use static methods without creating an instance
+print(f"Is 17 prime? {MathOperations.is_prime(17)}")
+print(f"Factorial of 5: {MathOperations.factorial(5)}")`;
+
+const factoryMethodCode = `# Factory method pattern using class methods
+class Pizza:
+    def __init__(self, ingredients):
+        self.ingredients = ingredients
+    
+    def __str__(self):
+        return f"Pizza with {', '.join(self.ingredients)}"
+    
+    @classmethod
+    def margherita(cls):
+        return cls(['mozzarella', 'tomatoes', 'basil'])
+    
+    @classmethod
+    def pepperoni(cls):
+        return cls(['mozzarella', 'tomatoes', 'pepperoni'])
+    
+    @classmethod
+    def create_custom(cls, *ingredients):
+        return cls(list(ingredients))
+
+# Create pizzas using factory methods
+pizza1 = Pizza.margherita()
+pizza2 = Pizza.pepperoni()
+pizza3 = Pizza.create_custom('mushrooms', 'olives', 'onions')
+
+print(pizza1)  # Pizza with mozzarella, tomatoes, basil
+print(pizza2)  # Pizza with mozzarella, tomatoes, pepperoni
+print(pizza3)  # Pizza with mushrooms, olives, onions`;
+
+---
+
+<MainLayout title="Class & Static Methods in Python">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" currentTopicId="class-static-methods" />
+    
+    <div class="flex-1 p-8 overflow-y-auto">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Understanding Class & Static Methods</h1>
+
+        <div class="bg-yellow-50 rounded-lg p-6 mb-8">
+          <h2 class="text-xl font-semibold mb-4">Method Types in Python</h2>
+          <p class="mb-4">
+            Python classes can have three types of methods, each serving different purposes:
+          </p>
+          <ul class="list-disc ml-6 space-y-2">
+            <li><strong>Instance Methods:</strong> Regular methods that need instance state</li>
+            <li><strong>Class Methods:</strong> Methods that work with the class itself</li>
+            <li><strong>Static Methods:</strong> Utility functions that don't need class or instance state</li>
+          </ul>
+        </div>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Instance Methods</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              Instance methods are the most common type. They can access and modify instance and class attributes:
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={instanceMethodCode}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Class Methods</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              Class methods work with the class itself. They're often used as alternative constructors:
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={classMethodCode}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Static Methods</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              Static methods are utility functions that belong to the class namespace:
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={staticMethodCode}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Factory Method Pattern</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              Class methods are commonly used to implement the factory pattern:
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={factoryMethodCode}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">What We've Learned</h2>
+          <div class="bg-green-50 dark:bg-gray-800 rounded-lg p-6">
+            <ul class="list-disc ml-6 space-y-2">
+              <li>The difference between instance, class, and static methods</li>
+              <li>When to use each type of method</li>
+              <li>How to use decorators (@classmethod and @staticmethod)</li>
+              <li>Implementing alternative constructors with class methods</li>
+              <li>Creating utility functions with static methods</li>
+            </ul>
+          </div>
+        </section>
+
+        <div class="bg-blue-50 rounded-lg p-6">
+          <h2 class="text-xl font-semibold mb-4">Practice Ideas</h2>
+          <ul class="list-disc ml-6 space-y-2">
+            <li>Create a Temperature class with Celsius and Fahrenheit conversions</li>
+            <li>Build a TimeStamp class with various creation methods</li>
+            <li>Implement a geometric shape class with area calculation utilities</li>
+            <li>Design a file parser with different format handlers</li>
+            <li>Create a configuration manager with various loading methods</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>

@@ -1,0 +1,207 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+const basicInheritanceCode = `# Basic inheritance example
+class Animal:
+    def __init__(self, name):
+        self.name = name
+    
+    def speak(self):
+        pass  # Base method to be overridden
+
+class Dog(Animal):
+    def speak(self):
+        return f"{self.name} says Woof!"
+
+class Cat(Animal):
+    def speak(self):
+        return f"{self.name} says Meow!"
+
+# Create and use animal objects
+dog = Dog("Buddy")
+cat = Cat("Whiskers")
+
+print(dog.speak())  # Buddy says Woof!
+print(cat.speak())  # Whiskers says Meow!`;
+
+const superMethodCode = `# Using super() for parent class methods
+class Vehicle:
+    def __init__(self, brand, model):
+        self.brand = brand
+        self.model = model
+    
+    def get_info(self):
+        return f"{self.brand} {self.model}"
+
+class Car(Vehicle):
+    def __init__(self, brand, model, fuel_type):
+        # Call parent's __init__ using super()
+        super().__init__(brand, model)
+        self.fuel_type = fuel_type
+    
+    def get_info(self):
+        # Extend parent's method
+        basic_info = super().get_info()
+        return f"{basic_info} ({self.fuel_type})"
+
+# Create a car object
+my_car = Car("Toyota", "Camry", "Hybrid")
+print(my_car.get_info())  # Toyota Camry (Hybrid)`;
+
+const multipleInheritanceCode = `# Multiple inheritance example
+class Student:
+    def __init__(self, name):
+        self.name = name
+    
+    def study(self):
+        return f"{self.name} is studying"
+
+class Athlete:
+    def __init__(self, sport):
+        self.sport = sport
+    
+    def train(self):
+        return f"Training for {self.sport}"
+
+class StudentAthlete(Student, Athlete):
+    def __init__(self, name, sport):
+        Student.__init__(self, name)
+        Athlete.__init__(self, sport)
+    
+    def daily_routine(self):
+        return f"{self.study()} and {self.train()}"
+
+# Create a student athlete
+person = StudentAthlete("Alex", "Basketball")
+print(person.daily_routine())
+# Output: Alex is studying and Training for Basketball`;
+
+const methodResolutionCode = `# Method Resolution Order (MRO)
+class A:
+    def greet(self):
+        return "Hello from A"
+
+class B(A):
+    def greet(self):
+        return "Hello from B"
+
+class C(A):
+    def greet(self):
+        return "Hello from C"
+
+class D(B, C):
+    pass
+
+# See the method resolution order
+print(D.mro())
+d = D()
+print(d.greet())  # Will print "Hello from B"`;
+
+---
+
+<MainLayout title="Inheritance in Python">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" currentTopicId="inheritance" />
+    
+    <div class="flex-1 p-8 overflow-y-auto">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Understanding Inheritance in Python</h1>
+
+        <div class="bg-yellow-50 rounded-lg p-6 mb-8">
+          <h2 class="text-xl font-semibold mb-4">What is Inheritance?</h2>
+          <p class="mb-4">
+            Inheritance is a fundamental concept in Object-Oriented Programming that allows a class to inherit attributes and methods from another class.
+            The class that inherits is called a child class (or derived class), and the class being inherited from is called a parent class (or base class).
+          </p>
+          <ul class="list-disc ml-6 space-y-2">
+            <li>Promotes code reuse and reduces redundancy</li>
+            <li>Establishes relationships between classes</li>
+            <li>Enables method overriding for customized behavior</li>
+          </ul>
+        </div>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Basic Inheritance</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              Here's a simple example of inheritance using animals:
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={basicInheritanceCode}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Using super()</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              The super() function allows you to call methods from the parent class:
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={superMethodCode}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Multiple Inheritance</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              Python supports inheriting from multiple parent classes:
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={multipleInheritanceCode}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Method Resolution Order (MRO)</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              When using multiple inheritance, Python follows MRO to determine which method to call:
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={methodResolutionCode}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">What We've Learned</h2>
+          <div class="bg-green-50 dark:bg-gray-800 rounded-lg p-6">
+            <ul class="list-disc ml-6 space-y-2">
+              <li>How to create parent and child classes</li>
+              <li>Using super() to call parent methods</li>
+              <li>Working with multiple inheritance</li>
+              <li>Understanding method resolution order</li>
+              <li>Best practices for class inheritance</li>
+            </ul>
+          </div>
+        </section>
+
+        <div class="bg-blue-50 rounded-lg p-6">
+          <h2 class="text-xl font-semibold mb-4">Practice Ideas</h2>
+          <ul class="list-disc ml-6 space-y-2">
+            <li>Create a hierarchy of shapes with common properties</li>
+            <li>Build an employee management system with different types of employees</li>
+            <li>Design a game with different character classes</li>
+            <li>Implement a file system with different types of files</li>
+            <li>Create a vehicle rental system with various vehicle types</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>

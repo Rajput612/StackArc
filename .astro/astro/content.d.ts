@@ -141,9 +141,23 @@ declare module 'astro:content' {
 
 	type ContentEntryMap = {
 		"courses": {
+"python-advanced/class-methods.md": {
+	id: "python-advanced/class-methods.md";
+  slug: "python-advanced/class-methods";
+  body: string;
+  collection: "courses";
+  data: InferEntrySchema<"courses">
+} & { render(): Render[".md"] };
 "python-advanced/decorators.md": {
 	id: "python-advanced/decorators.md";
   slug: "python-advanced/decorators";
+  body: string;
+  collection: "courses";
+  data: InferEntrySchema<"courses">
+} & { render(): Render[".md"] };
+"python-basics/class-static-methods.md": {
+	id: "python-basics/class-static-methods.md";
+  slug: "python-basics/class-static-methods";
   body: string;
   collection: "courses";
   data: InferEntrySchema<"courses">

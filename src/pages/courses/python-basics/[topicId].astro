@@ -2,10 +2,13 @@
 import MainLayout from '../../../layouts/MainLayout.astro';
 import CodePlayground from '../../../components/CodePlayground.jsx';
 import CourseSidebar from '../../../components/CourseSidebar.astro';
+import CourseLayout from '../../../layouts/CourseLayout.astro';
 import MarkdownIt from 'markdown-it';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { pythonBasicsTopics } from './topics';
+import { loadMarkdownContent } from '../../../utils/markdown';
 
 export async function getStaticPaths() {
   const topics = [
@@ -19,11 +22,19 @@ export async function getStaticPaths() {
     'interactive-shell'
   ];
 
-  return topics.map(topic => ({
-    params: { topicId: topic }
-  }));
+  const paths = [];
+  pythonBasicsTopics.forEach(section => {
+    section.topics.forEach(topic => {
+      paths.push({
+        params: { topicId: topic.id },
+        props: { topic, section }
+      });
+    });
+  });
+  return paths;
 }
 
+const { topic, section } = Astro.props;
 const { topicId } = Astro.params;
 
 // Read and process markdown content
@@ -93,16 +104,34 @@ const titleMatch = content.match(/^#\s+(.+)$/m);
 const title = titleMatch ? titleMatch[1] : 'Python Basics';
 ---
 
-<MainLayout title={`Python Basics - ${topicId.charAt(0).toUpperCase() + topicId.slice(1)}`}>
+<CourseLayout title={`Python Basics - ${topicId.charAt(0).toUpperCase() + topicId.slice(1)}`} currentTopicId={topicId} courseType="python-basics">
   <div class="flex">
     <CourseSidebar courseType="python-basics" currentTopicId={topicId} />
     <div class="flex-1 max-w-4xl px-4 py-8">
+      <nav class="text-sm breadcrumbs mb-6">
+        <ol class="list-none p-0 inline-flex">
+          <li class="flex items-center">
+            <a href="/courses" class="text-blue-600 dark:text-blue-400">Courses</a>
+            <span class="mx-2 text-gray-500 dark:text-gray-400">/</span>
+          </li>
+          <li class="flex items-center">
+            <a href="/courses/python-basics" class="text-blue-600 dark:text-blue-400">Python Basics</a>
+            <span class="mx-2 text-gray-500 dark:text-gray-400">/</span>
+          </li>
+          <li class="flex items-center">
+            <span class="text-gray-500 dark:text-gray-400">{section.title}</span>
+            <span class="mx-2 text-gray-500 dark:text-gray-400">/</span>
+          </li>
+          <li class="text-gray-800 dark:text-gray-200">{topic.title}</li>
+        </ol>
+      </nav>
+
       <article class="prose dark:prose-invert max-w-none">
         <Fragment set:html={htmlContent} />
       </article>
     </div>
   </div>
-</MainLayout>
+</CourseLayout>
 
 <style>
   .content-wrapper :global(.heading-1) {
@@ -119,5 +148,17 @@ const title = titleMatch ? titleMatch[1] : 'Python Basics';
 
   .content-wrapper :global(blockquote) {
     @apply pl-4 border-l-4 border-gray-300 dark:border-gray-700 italic my-4;
+  }
+</style>
+
+<style is:global>
+  /* Syntax highlighting styles */
+  .hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 1em;
+    background: #1E1E1E;
+    color: #DCDCDC;
+    border-radius: 0.5rem;
   }
 </style>

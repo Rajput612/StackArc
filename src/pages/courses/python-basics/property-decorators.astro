@@ -1,0 +1,273 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+const basicPropertyCode = `# Basic property example
+class Circle:
+    def __init__(self, radius):
+        self._radius = radius  # Protected attribute
+    
+    # Getter property
+    @property
+    def radius(self):
+        return self._radius
+    
+    # Setter property
+    @radius.setter
+    def radius(self, value):
+        if value < 0:
+            raise ValueError("Radius cannot be negative")
+        self._radius = value
+    
+    # Computed property
+    @property
+    def area(self):
+        return 3.14159 * self._radius ** 2
+
+# Using properties
+circle = Circle(5)
+print(f"Radius: {circle.radius}")
+print(f"Area: {circle.area}")
+
+# Using setter
+circle.radius = 10
+print(f"New area: {circle.area}")
+
+# This will raise an error
+try:
+    circle.radius = -1
+except ValueError as e:
+    print(f"Error: {e}")`;
+
+const propertyValidationCode = `# Property validation example
+class BankAccount:
+    def __init__(self, balance=0):
+        self._balance = balance
+    
+    @property
+    def balance(self):
+        return self._balance
+    
+    @balance.setter
+    def balance(self, value):
+        if not isinstance(value, (int, float)):
+            raise TypeError("Balance must be a number")
+        if value < 0:
+            raise ValueError("Balance cannot be negative")
+        self._balance = value
+    
+    @property
+    def is_premium(self):
+        return self._balance >= 10000
+
+# Using the BankAccount class
+account = BankAccount(1000)
+print(f"Initial balance: ${account.balance}")
+print(f"Premium account? {account.is_premium}")
+
+# Update balance
+account.balance = 15000
+print(f"New balance: ${account.balance}")
+print(f"Premium account? {account.is_premium}")
+
+# Try invalid operations
+try:
+    account.balance = "not a number"
+except TypeError as e:
+    print(f"Error: {e}")
+
+try:
+    account.balance = -500
+except ValueError as e:
+    print(f"Error: {e}")`;
+
+const propertyDeletionCode = `# Property with deletion example
+class User:
+    def __init__(self, username, email):
+        self._username = username
+        self._email = email
+        self._is_active = True
+    
+    @property
+    def username(self):
+        if not self._is_active:
+            raise ValueError("Account is deactivated")
+        return self._username
+    
+    @property
+    def email(self):
+        if not self._is_active:
+            raise ValueError("Account is deactivated")
+        return self._email
+    
+    @email.setter
+    def email(self, value):
+        if '@' not in value:
+            raise ValueError("Invalid email format")
+        self._email = value
+    
+    @property
+    def is_active(self):
+        return self._is_active
+    
+    def deactivate(self):
+        self._is_active = False
+
+# Using the User class
+user = User("john_doe", "john@example.com")
+print(f"Username: {user.username}")
+print(f"Email: {user.email}")
+
+# Update email
+user.email = "john.doe@example.com"
+print(f"New email: {user.email}")
+
+# Deactivate account
+user.deactivate()
+try:
+    print(user.username)
+except ValueError as e:
+    print(f"Error: {e}")`;
+
+const cachedPropertyCode = `# Cached property example
+class DataAnalyzer:
+    def __init__(self, data):
+        self._data = data
+        self._mean = None
+        self._median = None
+    
+    @property
+    def mean(self):
+        if self._mean is None:
+            print("Calculating mean...")  # Show when calculation happens
+            self._mean = sum(self._data) / len(self._data)
+        return self._mean
+    
+    @property
+    def median(self):
+        if self._median is None:
+            print("Calculating median...")  # Show when calculation happens
+            sorted_data = sorted(self._data)
+            mid = len(sorted_data) // 2
+            self._median = (sorted_data[mid] + sorted_data[~mid]) / 2
+        return self._median
+
+# Using cached properties
+data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+analyzer = DataAnalyzer(data)
+
+# First access - will calculate
+print(f"Mean: {analyzer.mean}")
+print(f"Median: {analyzer.median}")
+
+# Second access - will use cached value
+print(f"Mean again: {analyzer.mean}")
+print(f"Median again: {analyzer.median}")`;
+
+---
+
+<MainLayout title="Property Decorators in Python">
+  <div class="flex">
+    <CourseSidebar courseType="python-basics" currentTopicId="property-decorators" />
+    
+    <div class="flex-1 p-8 overflow-y-auto">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Understanding Property Decorators</h1>
+
+        <div class="bg-yellow-50 rounded-lg p-6 mb-8">
+          <h2 class="text-xl font-semibold mb-4">What are Property Decorators?</h2>
+          <p class="mb-4">
+            Property decorators allow you to define methods that can be accessed like attributes. They provide a way to:
+          </p>
+          <ul class="list-disc ml-6 space-y-2">
+            <li>Control attribute access (get, set, delete)</li>
+            <li>Add validation to attributes</li>
+            <li>Create computed properties</li>
+            <li>Implement data hiding and encapsulation</li>
+          </ul>
+        </div>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Basic Properties</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              Here's a basic example showing getter, setter, and computed properties:
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={basicPropertyCode}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Property Validation</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              Properties are great for adding validation to attributes:
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={propertyValidationCode}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Property Deletion</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              Properties can also control attribute deletion and handle state:
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={propertyDeletionCode}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Cached Properties</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              Properties can cache computed values for better performance:
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={cachedPropertyCode}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">What We've Learned</h2>
+          <div class="bg-green-50 dark:bg-gray-800 rounded-lg p-6">
+            <ul class="list-disc ml-6 space-y-2">
+              <li>How to use @property decorator</li>
+              <li>Creating getter and setter methods</li>
+              <li>Implementing validation logic</li>
+              <li>Using computed properties</li>
+              <li>Caching property values</li>
+            </ul>
+          </div>
+        </section>
+
+        <div class="bg-blue-50 rounded-lg p-6">
+          <h2 class="text-xl font-semibold mb-4">Practice Ideas</h2>
+          <ul class="list-disc ml-6 space-y-2">
+            <li>Create a Temperature class with Celsius/Fahrenheit conversion</li>
+            <li>Build a Password class with validation rules</li>
+            <li>Implement a Rectangle class with computed area and perimeter</li>
+            <li>Design a Person class with age validation</li>
+            <li>Create an Email class with format validation</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>

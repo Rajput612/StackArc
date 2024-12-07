@@ -5,27 +5,32 @@ export const pythonAdvancedTopics = [
       { 
         id: "class-methods", 
         title: "Class & Static Methods",
-        content: "Understanding and implementing class and static methods in Python."
+        content: "Understanding and implementing class and static methods in Python.",
+        path: "/courses/python-advanced/class-methods"
       },
       { 
         id: "property-decorators", 
         title: "Property Decorators",
-        content: "Using property decorators for attribute access control."
+        content: "Using property decorators for attribute access control.",
+        path: "/courses/python-advanced/property-decorators"
       },
       { 
         id: "metaclasses", 
         title: "Metaclasses",
-        content: "Deep dive into Python metaclasses and class creation."
+        content: "Deep dive into Python metaclasses and class creation.",
+        path: "/courses/python-advanced/metaclasses"
       },
       { 
         id: "descriptors", 
         title: "Descriptors",
-        content: "Implementing and using Python descriptors."
+        content: "Implementing and using Python descriptors.",
+        path: "/courses/python-advanced/descriptors"
       },
       { 
         id: "mro", 
         title: "Method Resolution Order",
-        content: "Understanding Python's method resolution order in inheritance."
+        content: "Understanding Python's method resolution order in inheritance.",
+        path: "/courses/python-advanced/mro"
       }
     ]
   },
