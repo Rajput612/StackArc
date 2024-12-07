@@ -1,0 +1,328 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+const basicClassMethodCode = `# Understanding Class Methods and Static Methods
+class Student:
+    school_name = "Python Academy"  # Class variable
+    
+    def __init__(self, name, age):
+        self.name = name  # Instance variable
+        self.age = age    # Instance variable
+    
+    # Regular instance method
+    def introduce(self):
+        print(f"Hi, I'm {self.name}, age {self.age}")
+        print(f"I study at {self.school_name}")
+    
+    # Class method
+    @classmethod
+    def change_school(cls, new_name):
+        print(f"Changing school name from {cls.school_name} to {new_name}")
+        cls.school_name = new_name
+    
+    # Static method
+    @staticmethod
+    def is_school_day(day):
+        return day.lower() not in ['saturday', 'sunday']
+
+# Example usage
+print("Creating students...")
+alice = Student("Alice", 20)
+bob = Student("Bob", 21)
+
+print("\\nCalling instance method:")
+alice.introduce()
+bob.introduce()
+
+print("\\nCalling class method:")
+Student.change_school("Code Academy")
+alice.introduce()  # Notice the new school name
+
+print("\\nCalling static method:")
+print("Is Monday a school day?", Student.is_school_day("Monday"))
+print("Is Saturday a school day?", Student.is_school_day("Saturday"))`;
+
+const enhancedClassMethodCode = `# Advanced Class Methods and Factory Patterns
+from datetime import datetime, timedelta
+
+class Course:
+    def __init__(self, name, teacher, start_date, duration_weeks):
+        self.name = name
+        self.teacher = teacher
+        self.start_date = start_date
+        self.duration_weeks = duration_weeks
+        self.students = []
+    
+    @classmethod
+    def create_python_course(cls, teacher, start_date):
+        """Factory method for creating Python courses"""
+        return cls("Python Programming", teacher, start_date, 12)
+    
+    @classmethod
+    def create_web_course(cls, teacher, start_date):
+        """Factory method for creating Web Development courses"""
+        return cls("Web Development", teacher, start_date, 8)
+    
+    @classmethod
+    def from_dict(cls, data):
+        """Create a course from a dictionary (useful for JSON data)"""
+        return cls(
+            name=data['name'],
+            teacher=data['teacher'],
+            start_date=datetime.strptime(data['start_date'], '%Y-%m-%d'),
+            duration_weeks=data['duration_weeks']
+        )
+    
+    @property
+    def end_date(self):
+        """Calculate the end date based on start date and duration"""
+        return self.start_date + timedelta(weeks=self.duration_weeks)
+    
+    def add_student(self, student):
+        self.students.append(student)
+        print(f"✅ Added {student} to {self.name}")
+    
+    def get_course_info(self):
+        return {
+            "name": self.name,
+            "teacher": self.teacher,
+            "students": len(self.students),
+            "start_date": self.start_date.strftime('%Y-%m-%d'),
+            "end_date": self.end_date.strftime('%Y-%m-%d'),
+            "duration": f"{self.duration_weeks} weeks"
+        }
+    
+    @staticmethod
+    def format_date(date):
+        """Utility method to format dates consistently"""
+        return date.strftime('%B %d, %Y')
+    
+    @staticmethod
+    def is_valid_email(email):
+        """Validate email format"""
+        return '@' in email and '.' in email.split('@')[1]
+
+# Example usage
+print("🏫 Creating courses using factory methods...")
+python_course = Course.create_python_course(
+    teacher="Dr. Smith",
+    start_date=datetime.now()
+)
+
+web_course = Course.create_web_course(
+    teacher="Prof. Johnson",
+    start_date=datetime.now() + timedelta(weeks=4)
+)
+
+print("\\n📚 Course Information:")
+for course in [python_course, web_course]:
+    info = course.get_course_info()
+    print(f"\\n{info['name']}:")
+    print(f"👨‍🏫 Teacher: {info['teacher']}")
+    print(f"📅 Duration: {info['duration']}")
+    print(f"🎯 Start Date: {Course.format_date(course.start_date)}")
+    print(f"🏁 End Date: {Course.format_date(course.end_date)}")
+
+print("\\n✉️ Email Validation:")
+emails = ["student@school.com", "invalid.email", "another@email.com"]
+for email in emails:
+    valid = "✅" if Course.is_valid_email(email) else "❌"
+    print(f"{valid} {email}")
+
+# Creating a course from dictionary data (e.g., JSON)
+course_data = {
+    "name": "Data Science",
+    "teacher": "Dr. Davis",
+    "start_date": "2024-01-15",
+    "duration_weeks": 10
+}
+
+print("\\n📊 Creating course from dictionary data...")
+data_course = Course.from_dict(course_data)
+info = data_course.get_course_info()
+print(f"Created {info['name']} course with {info['teacher']}")
+print(f"Running from {info['start_date']} to {info['end_date']}")`;
+
+---
+
+<MainLayout title="Class Methods and Static Methods">
+  <div class="flex">
+    <CourseSidebar courseType="python-advanced" currentTopicId="class-methods" />
+    
+    <div class="flex-1 p-8 overflow-y-auto">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Understanding Python Class Methods and Static Methods</h1>
+
+        <div class="bg-yellow-50 rounded-lg p-6 mb-8">
+          <h2 class="text-xl font-semibold mb-4">Overview</h2>
+          <p class="mb-4">
+            Before diving into code examples, let's understand the three types of methods in Python classes and when to use each one.
+            This knowledge will help you write more organized and maintainable object-oriented code.
+          </p>
+        </div>
+
+        <div class="space-y-8 mb-12">
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <h2 class="text-2xl font-semibold mb-4">1. Instance Methods</h2>
+            
+            <div class="mb-4">
+              <h3 class="text-lg font-semibold mb-2">What are Instance Methods?</h3>
+              <p class="mb-4">
+                These are the regular methods you define in a class. They are the most common type of method and operate on individual instances of the class.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                <h4 class="font-semibold mb-2">Key Characteristics:</h4>
+                <ul class="list-disc ml-6 space-y-1">
+                  <li>First parameter is always <code>self</code></li>
+                  <li>Can access and modify instance attributes</li>
+                  <li>Can access and modify class attributes</li>
+                  <li>Called on class instances</li>
+                </ul>
+              </div>
+
+              <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                <h4 class="font-semibold mb-2">When to Use:</h4>
+                <ul class="list-disc ml-6 space-y-1">
+                  <li>Object-specific operations</li>
+                  <li>Modifying instance state</li>
+                  <li>Accessing instance data</li>
+                  <li>Instance-specific calculations</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <h2 class="text-2xl font-semibold mb-4">2. Class Methods</h2>
+            
+            <div class="mb-4">
+              <h3 class="text-lg font-semibold mb-2">What are Class Methods?</h3>
+              <p class="mb-4">
+                Class methods are methods that work with the class itself rather than instances. They're defined using the 
+                <code>@classmethod</code> decorator and are commonly used for alternative constructors or factory methods.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                <h4 class="font-semibold mb-2">Key Characteristics:</h4>
+                <ul class="list-disc ml-6 space-y-1">
+                  <li>Decorated with <code>@classmethod</code></li>
+                  <li>First parameter is <code>cls</code> (the class)</li>
+                  <li>Can access and modify class attributes</li>
+                  <li>Cannot access instance attributes</li>
+                  <li>Can be called on class or instance</li>
+                </ul>
+              </div>
+
+              <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                <h4 class="font-semibold mb-2">Common Use Cases:</h4>
+                <ul class="list-disc ml-6 space-y-1">
+                  <li>Alternative constructors</li>
+                  <li>Factory methods</li>
+                  <li>Working with class attributes</li>
+                  <li>Creating objects from different data formats</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <h2 class="text-2xl font-semibold mb-4">3. Static Methods</h2>
+            
+            <div class="mb-4">
+              <h3 class="text-lg font-semibold mb-2">What are Static Methods?</h3>
+              <p class="mb-4">
+                Static methods are utility functions that belong to the class namespace but don't operate on class or instance data.
+                They're defined using the <code>@staticmethod</code> decorator.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                <h4 class="font-semibold mb-2">Key Characteristics:</h4>
+                <ul class="list-disc ml-6 space-y-1">
+                  <li>Decorated with <code>@staticmethod</code></li>
+                  <li>No automatic parameters (<code>self</code> or <code>cls</code>)</li>
+                  <li>Cannot access instance or class attributes directly</li>
+                  <li>Can be called on class or instance</li>
+                </ul>
+              </div>
+
+              <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                <h4 class="font-semibold mb-2">Common Use Cases:</h4>
+                <ul class="list-disc ml-6 space-y-1">
+                  <li>Utility functions</li>
+                  <li>Helper methods</li>
+                  <li>Pure functions related to class purpose</li>
+                  <li>Input validation</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Basic Example</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              Now that we understand the different types of methods, let's see them in action! This example demonstrates 
+              all three types in a simple Student class. Try running the code and observe how each method behaves differently.
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={basicClassMethodCode}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Advanced Class Methods</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <p class="mb-4">
+              Now let's explore advanced patterns using class methods and static methods. This example shows factory methods, 
+              alternative constructors, and utility methods in a course management system.
+            </p>
+            <CodePlayground 
+              client:load 
+              initialCode={enhancedClassMethodCode}
+              language="python"
+            />
+          </div>
+        </section>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">What We've Learned</h2>
+          <div class="bg-green-50 dark:bg-gray-800 rounded-lg p-6">
+            <ul class="list-disc ml-6 space-y-2">
+              <li>Differences between instance, class, and static methods</li>
+              <li>Using @classmethod and @staticmethod decorators</li>
+              <li>Implementing factory methods with class methods</li>
+              <li>Creating alternative constructors</li>
+              <li>Building utility methods with static methods</li>
+              <li>Real-world patterns and best practices</li>
+            </ul>
+          </div>
+        </section>
+
+        <div class="bg-blue-50 rounded-lg p-6">
+          <h2 class="text-xl font-semibold mb-4">Challenge Ideas</h2>
+          <ul class="list-disc ml-6 space-y-2">
+            <li>Create a BankAccount class with factory methods for different account types</li>
+            <li>Build a Temperature class with static methods for unit conversions</li>
+            <li>Implement a Logger class with class methods for different log levels</li>
+            <li>Design a DateUtil class with static methods for common operations</li>
+            <li>Create a ConfigManager with alternative constructors for different formats</li>
+            <li>Build a Shape class hierarchy using the factory pattern</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>

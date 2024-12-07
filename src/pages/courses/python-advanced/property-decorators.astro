@@ -1,0 +1,254 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import CodePlayground from '../../../components/CodePlayground.jsx';
+import CourseSidebar from '../../../components/CourseSidebar.astro';
+
+const basicPropertyCode = `# Simple BankAccount class with property decorators
+class BankAccount:
+    def __init__(self, balance=0):
+        self._balance = balance  # Protected attribute
+    
+    @property
+    def balance(self):
+        """Get the current balance"""
+        return self._balance
+    
+    @balance.setter
+    def balance(self, value):
+        """Set the balance with validation"""
+        if not isinstance(value, (int, float)):
+            raise TypeError("Balance must be a number")
+        if value < 0:
+            raise ValueError("Balance cannot be negative")
+        self._balance = value
+    
+    @balance.deleter
+    def balance(self):
+        """Delete the balance (set to 0)"""
+        print("Balance being reset to 0")
+        self._balance = 0
+
+def run_bank_example():
+    # Create a bank account
+    account = BankAccount(1000)
+    print("Created account with $1000")
+    print(f"Current balance: ${account.balance}")
+
+    print("\\nSetting balance to $2000...")
+    account.balance = 2000
+    print(f"New balance: ${account.balance}")
+
+    print("\\nTrying to set negative balance...")
+    try:
+        account.balance = -500
+    except ValueError as e:
+        print(f"Error: {e}")
+
+    print("\\nDeleting balance...")
+    del account.balance
+    print(f"Final balance: ${account.balance}")
+
+# Run the example
+run_bank_example()`;
+
+const advancedPropertyCode = `# Temperature class with computed properties
+class Temperature:
+    def __init__(self, celsius=0):
+        self._celsius = celsius
+    
+    @property
+    def celsius(self):
+        """Temperature in Celsius"""
+        return self._celsius
+    
+    @celsius.setter
+    def celsius(self, value):
+        if not isinstance(value, (int, float)):
+            raise TypeError("Temperature must be a number")
+        self._celsius = value
+    
+    @property
+    def fahrenheit(self):
+        """Temperature in Fahrenheit (computed property)"""
+        return (self.celsius * 9/5) + 32
+    
+    @fahrenheit.setter
+    def fahrenheit(self, value):
+        if not isinstance(value, (int, float)):
+            raise TypeError("Temperature must be a number")
+        self.celsius = (value - 32) * 5/9
+    
+    @property
+    def kelvin(self):
+        """Temperature in Kelvin (computed property)"""
+        return self.celsius + 273.15
+    
+    @kelvin.setter
+    def kelvin(self, value):
+        if not isinstance(value, (int, float)):
+            raise TypeError("Temperature must be a number")
+        self.celsius = value - 273.15
+    
+    def __str__(self):
+        return f"Temperature:\\n  {self.celsius:.2f}°C\\n  {self.fahrenheit:.2f}°F\\n  {self.kelvin:.2f}K"
+
+def run_temperature_example():
+    # Create a temperature object
+    temp = Temperature(25)
+    print("Created temperature at 25°C:")
+    print(temp)
+
+    print("\\nSetting to 98.6°F...")
+    temp.fahrenheit = 98.6
+    print(temp)
+
+    print("\\nSetting to 300K...")
+    temp.kelvin = 300
+    print(temp)
+
+    print("\\nSetting to 0°C...")
+    temp.celsius = 0
+    print(temp)
+
+# Run the example
+run_temperature_example()`;
+
+---
+
+<MainLayout title="Python Property Decorators">
+  <div class="flex">
+    <CourseSidebar courseType="python-advanced" currentTopicId="property-decorators" />
+    
+    <div class="flex-1 p-8 overflow-y-auto">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Python Property Decorators</h1>
+
+        <div class="bg-yellow-50 rounded-lg p-6 mb-8">
+          <h2 class="text-xl font-semibold mb-4">Overview</h2>
+          <p class="mb-4">
+            Property decorators in Python provide a way to customize attribute access, making your code more maintainable 
+            and encapsulated. Let's explore how they work and their practical applications.
+          </p>
+        </div>
+
+        <div class="space-y-8 mb-12">
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <h2 class="text-2xl font-semibold mb-4">1. Understanding Properties</h2>
+            
+            <div class="mb-4">
+              <h3 class="text-lg font-semibold mb-2">What are Property Decorators?</h3>
+              <p class="mb-4">
+                Property decorators allow you to define methods that can be accessed like attributes. They provide a clean way 
+                to implement getters, setters, and deleters while maintaining a simple interface.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                <h4 class="font-semibold mb-2">Key Components:</h4>
+                <ul class="list-disc ml-6 space-y-1">
+                  <li><code>@property</code> - Defines getter</li>
+                  <li><code>@name.setter</code> - Defines setter</li>
+                  <li><code>@name.deleter</code> - Defines deleter</li>
+                  <li>Protected attributes (with _)</li>
+                </ul>
+              </div>
+
+              <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                <h4 class="font-semibold mb-2">Benefits:</h4>
+                <ul class="list-disc ml-6 space-y-1">
+                  <li>Encapsulation of data</li>
+                  <li>Input validation</li>
+                  <li>Computed attributes</li>
+                  <li>Backward compatibility</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <h2 class="text-2xl font-semibold mb-4">2. Basic Properties</h2>
+            
+            <div class="mb-4">
+              <h3 class="text-lg font-semibold mb-2">Simple Property Example</h3>
+              <p class="mb-4">
+                Let's start with a basic example using a BankAccount class. This demonstrates how to use properties 
+                for data validation and controlled access to attributes.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-4">
+              <h4 class="font-semibold mb-2">What to Notice:</h4>
+              <ul class="list-disc ml-6 space-y-1">
+                <li>Protected <code>_balance</code> attribute</li>
+                <li>Getter returns the balance</li>
+                <li>Setter validates the input</li>
+                <li>Deleter resets the balance</li>
+              </ul>
+            </div>
+
+            <CodePlayground 
+              client:load 
+              initialCode={basicPropertyCode}
+              language="python"
+            />
+          </div>
+
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <h2 class="text-2xl font-semibold mb-4">3. Advanced Properties</h2>
+            
+            <div class="mb-4">
+              <h3 class="text-lg font-semibold mb-2">Computed Properties</h3>
+              <p class="mb-4">
+                Properties can also be used to create computed attributes that are calculated on-the-fly. This example shows 
+                a Temperature class that automatically converts between different temperature scales.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-4">
+              <h4 class="font-semibold mb-2">Advanced Features:</h4>
+              <ul class="list-disc ml-6 space-y-1">
+                <li>Multiple properties</li>
+                <li>Automatic conversions</li>
+                <li>Interdependent properties</li>
+                <li>String representation</li>
+              </ul>
+            </div>
+
+            <CodePlayground 
+              client:load 
+              initialCode={advancedPropertyCode}
+              language="python"
+            />
+          </div>
+        </div>
+
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">What We've Learned</h2>
+          <div class="bg-green-50 dark:bg-gray-800 rounded-lg p-6">
+            <ul class="list-disc ml-6 space-y-2">
+              <li>How to use the <code>@property</code> decorator</li>
+              <li>Implementing getters, setters, and deleters</li>
+              <li>Data validation with properties</li>
+              <li>Creating computed properties</li>
+              <li>Converting between different units</li>
+              <li>Maintaining clean interfaces</li>
+            </ul>
+          </div>
+        </section>
+
+        <div class="bg-blue-50 rounded-lg p-6">
+          <h2 class="text-xl font-semibold mb-4">Challenge Ideas</h2>
+          <ul class="list-disc ml-6 space-y-2">
+            <li>Create a Rectangle class with computed area and perimeter properties</li>
+            <li>Build a Password class that validates and hashes passwords</li>
+            <li>Implement a Date class with properties for different date formats</li>
+            <li>Design a Currency class with conversion properties</li>
+            <li>Create a File class with properties for size in different units</li>
+            <li>Build a Vector class with magnitude and angle properties</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>
