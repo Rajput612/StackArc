@@ -11,14 +11,24 @@ from .serializers import (
     ExerciseSerializer, ExerciseDetailSerializer
 )
 from .permissions import IsEnrolledOrPreview
+from django_filters import rest_framework as django_filters
+
+class CourseFilter(django_filters.FilterSet):
+    level = django_filters.CharFilter(field_name='level', lookup_expr='exact')
+    status = django_filters.ChoiceFilter(field_name='status', choices=[('available', 'Available'), ('coming-soon', 'Coming Soon')])
+
+    class Meta:
+        model = Course
+        fields = ['level', 'status']
 
 class CourseViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Course.objects.prefetch_related('topics', 'topics__exercises')#.filter(is_published=True)
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    queryset = Course.objects.prefetch_related('topics', 'topics__exercises')
+    filter_backends = (django_filters.DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter)
+    filterset_class = CourseFilter
     search_fields = ['title', 'description']
-    ordering_fields = ['title', 'difficulty', 'duration']
+    ordering_fields = ['title', 'level', 'difficulty', 'duration']
     ordering = ['title']
-    lookup_field = 'slug'
+    lookup_field = 'id'
     permission_classes = [AllowAny]
 
     def get_serializer_class(self):
@@ -27,7 +37,7 @@ class CourseViewSet(viewsets.ReadOnlyModelViewSet):
         return CourseListSerializer
 
     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
-    def enroll(self, request, slug=None):
+    def enroll(self, request, id=None):
         course = self.get_object()
         progress, created = UserCourseProgress.objects.get_or_create(
             user=request.user,
@@ -42,7 +52,7 @@ class CourseViewSet(viewsets.ReadOnlyModelViewSet):
         return Response({'detail': 'Successfully enrolled in the course.'})
 
     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
-    def unenroll(self, request, slug=None):
+    def unenroll(self, request, id=None):
         course = self.get_object()
         deleted_count, _ = UserCourseProgress.objects.filter(
             user=request.user,
