@@ -1,45 +1,59 @@
 import React, { useState, useEffect } from 'react';
 
-const CourseSorting: React.FC = () => {
-  const [selectedSort, setSelectedSort] = useState('newest');
+const sortOptions = [
+  { value: '', label: 'Default Sorting' },
+  { value: 'title', label: 'Title (A-Z)' },
+  { value: '-title', label: 'Title (Z-A)' },
+  { value: 'level', label: 'Level (Ascending)' },
+  { value: '-level', label: 'Level (Descending)' },
+  { value: 'created_at', label: 'Newest First' },
+  { value: '-created_at', label: 'Oldest First' }
+];
+
+interface CourseSortingProps {
+  initialSort?: string;
+}
+
+const CourseSorting: React.FC<CourseSortingProps> = ({ 
+  initialSort = '' 
+}) => {
+  const [selectedSort, setSelectedSort] = useState(initialSort);
 
   useEffect(() => {
-    const updateURL = () => {
-      const currentParams = new URLSearchParams(window.location.search);
-      
-      // Update ordering parameter
-      if (selectedSort) {
-        currentParams.set('ordering', selectedSort);
-      } else {
-        currentParams.delete('ordering');
-      }
-
-      const newURL = `${window.location.pathname}?${currentParams.toString()}`;
-      window.history.pushState({ path: newURL }, '', newURL);
-      
-      // Dispatch custom event for sorting
+    const updateSorting = () => {
+      // Dispatch custom event with sort parameter
       window.dispatchEvent(new CustomEvent('course-sort-change', {
         detail: { sort: selectedSort }
       }));
     };
 
-    updateURL();
+    updateSorting();
   }, [selectedSort]);
+
+  const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedSort(event.target.value);
+  };
 
   return (
     <div>
-      <select
-        name="sort"
+      <label 
+        htmlFor="course-sorting" 
+        className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1"
+      >
+        Sort Courses
+      </label>
+      <select 
+        id="course-sorting" 
+        name="ordering"
         value={selectedSort}
-        onChange={(e) => setSelectedSort(e.target.value)}
+        onChange={handleSortChange}
         className="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
       >
-        <option value="newest">Newest First</option>
-        <option value="oldest">Oldest First</option>
-        <option value="title">Name (A-Z)</option>
-        <option value="-title">Name (Z-A)</option>
-        <option value="level">Level (Ascending)</option>
-        <option value="-level">Level (Descending)</option>
+        {sortOptions.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
       </select>
     </div>
   );

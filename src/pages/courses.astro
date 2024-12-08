@@ -1,10 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
-import CourseSidebarFilter from '../components/CourseSidebarFilter.astro';
-import CourseSorting from '../components/CourseSorting.astro';
+import CourseSidebarFilter from '../components/CourseSidebarFilter.tsx';
+import CourseSorting from '../components/CourseSorting.tsx';
 
 const PUBLIC_API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:8000';
+
+// Get initial URL parameters
+const url = Astro.url;
+const initialSearchQuery = url.searchParams.get('search') || '';
+const initialSelectedLevel = url.searchParams.get('level') || '';
+const initialSelectedStatus = url.searchParams.get('status') || '';
+const initialOrdering = url.searchParams.get('ordering') || '';
 ---
 
 <Layout title="Courses">
@@ -16,7 +23,12 @@ const PUBLIC_API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:8000'
         <div class="grid grid-cols-12 gap-8">
           <div class="col-span-12 md:col-span-4 lg:col-span-3 xl:col-span-3">
             <div class="sticky top-24 space-y-6 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-              <CourseSidebarFilter client:load />
+              <CourseSidebarFilter 
+                client:load 
+                initialSearchQuery={initialSearchQuery}
+                initialSelectedLevel={initialSelectedLevel}
+                initialSelectedStatus={initialSelectedStatus}
+              />
             </div>
           </div>
           
@@ -27,7 +39,10 @@ const PUBLIC_API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:8000'
               </h1>
               
               <div class="w-56">
-                <CourseSorting client:load />
+                <CourseSorting 
+                  client:load 
+                  initialSort={initialOrdering}
+                />
               </div>
             </div>
             
@@ -79,16 +94,11 @@ const PUBLIC_API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:8000'
       const coursesContainer = document.getElementById('courses-container');
       
       try {
-        // Log the current parameters and API URL for debugging
-        // debugLog(`Fetching courses with params: ${currentParams.toString()}`);
-
         // Construct API URL with current parameters
         const apiUrl = new URL(`${PUBLIC_API_URL}/api/courses/`);
         currentParams.forEach((value, key) => {
           apiUrl.searchParams.append(key, value);
         });
-
-        // debugLog(`Full API URL: ${apiUrl.toString()}`);
 
         const response = await fetch(apiUrl.toString());
         
@@ -97,7 +107,6 @@ const PUBLIC_API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:8000'
         }
 
         const courses = await response.json();
-        // debugLog(`Received data: ${JSON.stringify(courses)}`);
 
         // Render courses
         coursesContainer.innerHTML = courses.map(course => `
@@ -124,7 +133,6 @@ const PUBLIC_API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:8000'
         `).join('');
 
       } catch (error) {
-        debugLog(`Error fetching courses: ${error.message}`, true);
         coursesContainer.innerHTML = `
           <div class="col-span-full text-center py-12 text-red-600">
             Failed to load courses. ${error.message}
@@ -135,8 +143,6 @@ const PUBLIC_API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:8000'
 
     // Event listeners for dynamic filtering
     window.addEventListener('course-filter-change', (event) => {
-      debugLog(`Filter change event: ${JSON.stringify(event.detail)}`);
-      
       const newParams = new URLSearchParams(event.detail.params);
       updateURLAndState(newParams);
       
@@ -144,8 +150,6 @@ const PUBLIC_API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:8000'
     });
 
     window.addEventListener('course-sort-change', (event) => {
-      debugLog(`Sort change event: ${JSON.stringify(event.detail)}`);
-      
       const newParams = new URLSearchParams(currentParams);
       newParams.set('ordering', event.detail.sort);
       updateURLAndState(newParams);
