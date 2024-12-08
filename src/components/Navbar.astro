@@ -1,0 +1,194 @@
+---
+---
+
+<nav class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-lg fixed w-full top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16">
+      <div class="flex">
+        <div class="flex-shrink-0 flex items-center">
+          <a href="/" class="text-2xl font-bold">
+            <span class="text-gradient">Stack<span class="text-indigo-600 dark:text-indigo-400">Arc</span></span>
+          </a>
+        </div>
+        <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+          <a href="/courses" class="nav-link" id="courses-link">
+            Courses
+          </a>
+          <a href="/resources" class="nav-link" id="resources-link">
+            Resources
+          </a>
+          <a href="/community" class="nav-link" id="community-link">
+            Community
+          </a>
+          <a href="/admin" class="nav-link admin-only hidden">
+            Admin Dashboard
+          </a>
+        </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <!-- Theme Toggle -->
+        <button
+          id="theme-toggle"
+          class="rounded-lg p-2.5 text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+        >
+          <svg
+            id="theme-toggle-dark-icon"
+            class="hidden h-5 w-5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+          </svg>
+          <svg
+            id="theme-toggle-light-icon"
+            class="hidden h-5 w-5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path>
+          </svg>
+        </button>
+
+        <!-- Auth Buttons -->
+        <div id="auth-buttons" class="flex items-center space-x-4">
+          <!-- Buttons will be inserted here by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="sm:hidden" id="mobile-menu">
+    <div class="space-y-1 pb-3 pt-2">
+      <a href="/courses" class="mobile-nav-link">
+        Courses
+      </a>
+      <a href="/resources" class="mobile-nav-link">
+        Resources
+      </a>
+      <a href="/community" class="mobile-nav-link">
+        Community
+      </a>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .nav-link {
+    @apply inline-flex items-center px-3 pt-1 text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white border-b-2 border-transparent hover:border-indigo-500 transition-colors duration-200;
+    height: 4rem;
+    line-height: 4rem;
+  }
+
+  .nav-link.active {
+    @apply border-indigo-500 text-gray-900 dark:text-white;
+  }
+
+  .mobile-nav-link {
+    @apply block pl-3 pr-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-200;
+  }
+
+  .auth-button {
+    @apply px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 transform hover:scale-[1.02];
+  }
+
+  .primary-button {
+    @apply bg-gradient-to-r from-indigo-600 to-indigo-700 text-white hover:from-indigo-700 hover:to-indigo-800 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800;
+  }
+
+  .secondary-button {
+    @apply border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-indigo-400;
+  }
+</style>
+
+<script>
+  import { isAuthenticated, getUserData, logout } from '../utils/auth';
+
+  // Theme toggle functionality
+  const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+  const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+  const themeToggleBtn = document.getElementById('theme-toggle');
+
+  // Function to set theme and update UI
+  function setTheme(isDark) {
+    // Force remove both classes first
+    document.documentElement.classList.remove('dark', 'light');
+    // Then add the appropriate one
+    document.documentElement.classList.add(isDark ? 'dark' : 'light');
+    
+    // Update icons
+    themeToggleDarkIcon.classList.toggle('hidden', isDark);
+    themeToggleLightIcon.classList.toggle('hidden', !isDark);
+    
+    // Save to localStorage
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  }
+
+  // Initialize theme
+  function initializeTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setTheme(savedTheme === 'dark');
+    } else {
+      // Default to light theme if no preference saved
+      setTheme(false);
+    }
+  }
+
+  // Run initialization
+  initializeTheme();
+
+  // Theme toggle click handler
+  themeToggleBtn.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.contains('light');
+    setTheme(isDark);
+  });
+
+  // Auth and Navigation Logic
+  const authButtons = document.getElementById('auth-buttons');
+  const adminElements = document.querySelectorAll('.admin-only');
+
+  async function updateNavigation() {
+    const isLoggedIn = await isAuthenticated();
+    const userData = isLoggedIn ? await getUserData() : null;
+
+    // Update auth buttons
+    if (isLoggedIn && userData) {
+      authButtons.innerHTML = `
+        <span class="text-gray-700 dark:text-gray-300">${userData.username}</span>
+        <button id="logout-btn" class="btn-secondary">Logout</button>
+      `;
+      
+      // Show/hide admin elements
+      if (userData.type === 'admin') {
+        adminElements.forEach(el => el.classList.remove('hidden'));
+      } else {
+        adminElements.forEach(el => el.classList.add('hidden'));
+      }
+
+      // Add logout functionality
+      document.getElementById('logout-btn')?.addEventListener('click', async () => {
+        await logout();
+        window.location.href = '/';
+      });
+    } else {
+      authButtons.innerHTML = `
+        <a href="/login" class="btn-primary">Login</a>
+        <a href="/signup" class="btn-secondary">Sign Up</a>
+      `;
+      
+      // Hide admin elements for non-logged in users
+      adminElements.forEach(el => el.classList.add('hidden'));
+    }
+  }
+
+  // Initial navigation update
+  updateNavigation();
+
+  // Update navigation when user data changes
+  window.addEventListener('user-data-changed', updateNavigation);
+</script>

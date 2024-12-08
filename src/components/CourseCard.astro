@@ -1,57 +1,61 @@
 ---
 interface Props {
   course: {
+    id: string;
     title: string;
-    instructor: string;
-    rating: number;
-    students: number;
-    price: number;
-    image: string;
-    icon: string;
-    badge?: string;
-    badgeColor?: string;
+    description: string;
+    level: string;
+    status: string;
+    topic_count?: number;
+    icon?: string;
   };
-  buttonText?: string;
+  levelColor: string;
 }
 
-const { course, buttonText = "Enroll Now" } = Astro.props;
+const { course, levelColor } = Astro.props;
+
+// Get the appropriate button text and style based on status
+const buttonConfig = course.status === 'available' 
+  ? { text: 'Start Learning', style: 'bg-blue-600 hover:bg-blue-700 text-white' }
+  : { text: 'Coming Soon', style: 'bg-gray-200 text-gray-500 cursor-not-allowed' };
 ---
 
-<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-lg transition-all overflow-hidden border border-gray-100 dark:border-gray-700">
-  <div class="relative aspect-video bg-gradient-to-br from-indigo-500 to-blue-600">
-    <div class="absolute inset-0 flex items-center justify-center text-6xl">
-      {course.icon}
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 p-6">
+  <div class="flex justify-between items-start mb-4">
+    <div class="text-4xl">
+      {course.icon || '📚'}
     </div>
-    {course.badge && (
-      <span class={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-medium ${course.badgeColor}`}>
-        {course.badge}
-      </span>
-    )}
+    <span class={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${levelColor}`}>
+      {course.level}
+    </span>
   </div>
-  <div class="p-6">
-    <h3 class="font-bold text-xl text-gray-900 dark:text-white mb-2">
-      {course.title}
-    </h3>
-    <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">
-      by {course.instructor}
-    </p>
-    <div class="flex items-center mb-3">
-      <div class="flex items-center">
-        <span class="text-yellow-400 mr-1">★</span>
-        <span class="font-medium text-gray-900 dark:text-white">{course.rating}</span>
-      </div>
-      <span class="mx-2 text-gray-300 dark:text-gray-600">•</span>
-      <span class="text-sm text-gray-500 dark:text-gray-400">
-        {course.students.toLocaleString()} students
-      </span>
-    </div>
-    <div class="flex items-center justify-between">
-      <span class="text-2xl font-bold text-gray-900 dark:text-white">
-        ${course.price}
-      </span>
-      <button class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors">
-        {buttonText}
-      </button>
-    </div>
+
+  <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+    {course.title}
+  </h3>
+
+  <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
+    {course.description}
+  </p>
+
+  <div class="flex items-center justify-between mt-auto">
+    <span class="text-sm text-gray-500 dark:text-gray-400">
+      {course.topic_count || 0} Topics
+    </span>
+    <button 
+      class={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${buttonConfig.style}`}
+      disabled={course.status !== 'available'}
+    >
+      {buttonConfig.text}
+    </button>
   </div>
 </div>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.db.models import Count
 from .models import Course, Topic, Exercise, UserCourseProgress
 from .serializers import (
     CourseListSerializer, CourseDetailSerializer,
@@ -14,8 +15,12 @@ from .permissions import IsEnrolledOrPreview
 from django_filters import rest_framework as django_filters
 
 class CourseFilter(django_filters.FilterSet):
-    level = django_filters.CharFilter(field_name='level', lookup_expr='exact')
-    status = django_filters.ChoiceFilter(field_name='status', choices=[('available', 'Available'), ('coming-soon', 'Coming Soon')])
+    level = django_filters.CharFilter(field_name='level', lookup_expr='icontains')
+    status = django_filters.ChoiceFilter(
+        field_name='status', 
+        choices=[('available', 'Available'), ('coming-soon', 'Coming Soon')],
+        lookup_expr='iexact'
+    )
 
     class Meta:
         model = Course
@@ -23,13 +28,27 @@ class CourseFilter(django_filters.FilterSet):
 
 class CourseViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Course.objects.prefetch_related('topics', 'topics__exercises')
-    filter_backends = (django_filters.DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter)
+    filter_backends = (
+        django_filters.DjangoFilterBackend, 
+        filters.OrderingFilter, 
+        filters.SearchFilter
+    )
     filterset_class = CourseFilter
-    search_fields = ['title', 'description']
-    ordering_fields = ['title', 'level', 'difficulty', 'duration']
+    search_fields = ['title', 'description', 'topics__title']  
+    ordering_fields = [
+        'title', 
+        'level', 
+        'created_at',  
+        'total_topics'
+    ]
     ordering = ['title']
     lookup_field = 'id'
     permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        return Course.objects.prefetch_related('topics', 'topics__exercises').annotate(
+            total_topics=Count('topics')
+        )
 
     def get_serializer_class(self):
         if self.action == 'retrieve':

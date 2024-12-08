@@ -24,6 +24,7 @@ class Course(models.Model):
     duration = models.IntegerField(help_text="Total duration in minutes", default=120)
     is_published = models.BooleanField(default=True)
     enrolled_users = models.ManyToManyField(User, through='UserCourseProgress')
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
