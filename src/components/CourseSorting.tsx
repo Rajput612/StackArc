@@ -35,26 +35,28 @@ const CourseSorting: React.FC<CourseSortingProps> = ({
   };
 
   return (
-    <div>
+    <div className="flex items-center space-x-3 w-full">
       <label 
         htmlFor="course-sorting" 
-        className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1"
+        className="text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap"
       >
-        Sort Courses
+        Sort By:
       </label>
-      <select 
-        id="course-sorting" 
-        name="ordering"
-        value={selectedSort}
-        onChange={handleSortChange}
-        className="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-      >
-        {sortOptions.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+      <div className="flex-grow">
+        <select 
+          id="course-sorting" 
+          name="ordering"
+          value={selectedSort}
+          onChange={handleSortChange}
+          className="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2 px-3"
+        >
+          {sortOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 };

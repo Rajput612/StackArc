@@ -18,7 +18,7 @@ const initialOrdering = url.searchParams.get('ordering') || '';
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <Navbar />
     
-    <div class="pt-16 pb-12">
+    <div class="pt-24 pb-12">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-12 gap-8">
           <div class="col-span-12 md:col-span-4 lg:col-span-3 xl:col-span-3">
@@ -33,12 +33,12 @@ const initialOrdering = url.searchParams.get('ordering') || '';
           </div>
           
           <div class="col-span-12 md:col-span-8 lg:col-span-9 xl:col-span-9">
-            <div class="mb-8 flex justify-between items-center">
+            <div class="flex justify-between items-center mb-8">
               <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
                 Available Courses
               </h1>
               
-              <div class="w-56">
+              <div class="w-64">
                 <CourseSorting 
                   client:load 
                   initialSort={initialOrdering}
@@ -110,23 +110,36 @@ const initialOrdering = url.searchParams.get('ordering') || '';
 
         // Render courses
         coursesContainer.innerHTML = courses.map(course => `
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden relative group">
+            <div class="absolute top-4 right-4 z-10">
+              <span class="px-3 py-1 text-xs font-semibold rounded-full ${
+                course.status === 'coming-soon' 
+                  ? 'bg-yellow-100 text-yellow-800 border border-yellow-200' 
+                  : 'bg-green-100 text-green-800 border border-green-200'
+              }">
+                ${course.status === 'coming-soon' ? 'Coming Soon' : 'Available'}
+              </span>
+            </div>
+            
             <div class="p-4 flex flex-col h-full">
               <div class="text-3xl mb-2">${course.icon}</div>
               <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">${course.title}</h3>
               <p class="text-sm text-gray-600 dark:text-gray-300 flex-grow mb-4">${course.description}</p>
-              <div class="flex justify-between items-center">
+              
+              <div class="flex items-center justify-between">
                 <div class="flex flex-col">
                   <span class="text-xs text-gray-500 dark:text-gray-400">Level: ${course.level}</span>
                   <span class="text-xs text-gray-500 dark:text-gray-400">Topics: ${course.topic_count}</span>
                 </div>
-                <span class="px-2 py-1 text-xs font-medium rounded-full ${
-                  course.status === 'coming-soon' 
-                    ? 'bg-yellow-100 text-yellow-800' 
-                    : 'bg-green-100 text-green-800'
-                }">
-                  ${course.status === 'coming-soon' ? 'Coming Soon' : 'Available'}
-                </span>
+                
+                <button 
+                  class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded-md transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 ${
+                    course.status === 'coming-soon' ? 'opacity-50 cursor-not-allowed' : ''
+                  }"
+                  ${course.status === 'coming-soon' ? 'disabled' : ''}
+                >
+                  Start Learning
+                </button>
               </div>
             </div>
           </div>
