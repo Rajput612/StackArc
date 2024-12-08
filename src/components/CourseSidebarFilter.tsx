@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 
 interface CourseSidebarFilterProps {
   initialSelectedLevel?: string;
-  initialSelectedStatus?: string;
   initialSearchQuery?: string;
+  initialSelectedStatus?: string;
 }
 
 const CourseSidebarFilter: React.FC<CourseSidebarFilterProps> = ({
   initialSelectedLevel = '',
-  initialSelectedStatus = '',
-  initialSearchQuery = ''
+  initialSearchQuery = '',
+  initialSelectedStatus = ''
 }) => {
   const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
   const [selectedLevel, setSelectedLevel] = useState(initialSelectedLevel);
@@ -85,19 +85,18 @@ const CourseSidebarFilter: React.FC<CourseSidebarFilterProps> = ({
           {['', 'beginner', 'intermediate', 'advanced'].map((level) => (
             <div key={level} className="flex items-center">
               <input
-                type="radio"
                 id={`level-${level || 'all'}`}
                 name="level"
-                value={level}
+                type="radio"
                 checked={selectedLevel === level}
                 onChange={() => setSelectedLevel(level)}
-                className="h-4 w-4 border-gray-300 dark:border-gray-700 text-indigo-600 focus:ring-indigo-500"
+                className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
               />
               <label 
                 htmlFor={`level-${level || 'all'}`} 
-                className="ml-3 text-sm text-gray-600 dark:text-gray-300"
+                className="ml-3 block text-sm text-gray-700 dark:text-gray-300 capitalize"
               >
-                {level ? level.charAt(0).toUpperCase() + level.slice(1) : 'All Levels'}
+                {level || 'All Levels'}
               </label>
             </div>
           ))}
@@ -111,19 +110,18 @@ const CourseSidebarFilter: React.FC<CourseSidebarFilterProps> = ({
           {['', 'available', 'coming-soon'].map((status) => (
             <div key={status} className="flex items-center">
               <input
-                type="radio"
                 id={`status-${status || 'all'}`}
                 name="status"
-                value={status}
+                type="radio"
                 checked={selectedStatus === status}
                 onChange={() => setSelectedStatus(status)}
-                className="h-4 w-4 border-gray-300 dark:border-gray-700 text-indigo-600 focus:ring-indigo-500"
+                className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
               />
               <label 
                 htmlFor={`status-${status || 'all'}`} 
-                className="ml-3 text-sm text-gray-600 dark:text-gray-300"
+                className="ml-3 block text-sm text-gray-700 dark:text-gray-300 capitalize"
               >
-                {status ? (status === 'coming-soon' ? 'Coming Soon' : 'Available') : 'All Status'}
+                {status || 'All Statuses'}
               </label>
             </div>
           ))}

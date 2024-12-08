@@ -6,22 +6,28 @@ interface Props {
 }
 
 const { selectedLevel = '', selectedStatus = '', searchQuery = '' } = Astro.props;
+
+const levels = ['', 'Beginner', 'Intermediate', 'Advanced'];
+const statuses = ['', 'available', 'coming-soon'];
 ---
 
 <div class="space-y-6">
-  <!-- Search -->
+  <!-- Search Input -->
   <div>
-    <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+    <label 
+      for="course-search" 
+      class="block text-sm font-medium text-gray-700 dark:text-gray-200"
+    >
       Search Courses
     </label>
     <div class="mt-1">
-      <input
-        type="search"
+      <input 
+        type="search" 
+        id="course-search" 
         name="search"
-        id="search"
         value={searchQuery}
+        placeholder="Search courses..." 
         class="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-        placeholder="Search courses..."
       />
     </div>
   </div>
@@ -30,58 +36,24 @@ const { selectedLevel = '', selectedStatus = '', searchQuery = '' } = Astro.prop
   <div>
     <h3 class="text-sm font-medium text-gray-700 dark:text-gray-200">Level</h3>
     <div class="mt-2 space-y-2">
-      <div class="flex items-center">
-        <input
-          type="radio"
-          id="level-all"
-          name="level"
-          value=""
-          checked={!selectedLevel}
-          class="h-4 w-4 border-gray-300 dark:border-gray-700 text-indigo-600 focus:ring-indigo-500"
-        />
-        <label for="level-all" class="ml-3 text-sm text-gray-600 dark:text-gray-300">
-          All Levels
-        </label>
-      </div>
-      <div class="flex items-center">
-        <input
-          type="radio"
-          id="level-beginner"
-          name="level"
-          value="beginner"
-          checked={selectedLevel && selectedLevel.toLowerCase() === 'beginner'}
-          class="h-4 w-4 border-gray-300 dark:border-gray-700 text-indigo-600 focus:ring-indigo-500"
-        />
-        <label for="level-beginner" class="ml-3 text-sm text-gray-600 dark:text-gray-300">
-          Beginner
-        </label>
-      </div>
-      <div class="flex items-center">
-        <input
-          type="radio"
-          id="level-intermediate"
-          name="level"
-          value="intermediate"
-          checked={selectedLevel && selectedLevel.toLowerCase() === 'intermediate'}
-          class="h-4 w-4 border-gray-300 dark:border-gray-700 text-indigo-600 focus:ring-indigo-500"
-        />
-        <label for="level-intermediate" class="ml-3 text-sm text-gray-600 dark:text-gray-300">
-          Intermediate
-        </label>
-      </div>
-      <div class="flex items-center">
-        <input
-          type="radio"
-          id="level-advanced"
-          name="level"
-          value="advanced"
-          checked={selectedLevel && selectedLevel.toLowerCase() === 'advanced'}
-          class="h-4 w-4 border-gray-300 dark:border-gray-700 text-indigo-600 focus:ring-indigo-500"
-        />
-        <label for="level-advanced" class="ml-3 text-sm text-gray-600 dark:text-gray-300">
-          Advanced
-        </label>
-      </div>
+      {levels.map((level) => (
+        <div class="flex items-center">
+          <input
+            id={`level-${level || 'all'}`}
+            name="level"
+            type="radio"
+            value={level}
+            checked={selectedLevel === level}
+            class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+          />
+          <label 
+            for={`level-${level || 'all'}`} 
+            class="ml-3 block text-sm text-gray-700 dark:text-gray-300 capitalize"
+          >
+            {level || 'All Levels'}
+          </label>
+        </div>
+      ))}
     </div>
   </div>
 
@@ -89,53 +61,32 @@ const { selectedLevel = '', selectedStatus = '', searchQuery = '' } = Astro.prop
   <div>
     <h3 class="text-sm font-medium text-gray-700 dark:text-gray-200">Status</h3>
     <div class="mt-2 space-y-2">
-      <div class="flex items-center">
-        <input
-          type="radio"
-          id="status-all"
-          name="status"
-          value=""
-          checked={!selectedStatus}
-          class="h-4 w-4 border-gray-300 dark:border-gray-700 text-indigo-600 focus:ring-indigo-500"
-        />
-        <label for="status-all" class="ml-3 text-sm text-gray-600 dark:text-gray-300">
-          All Status
-        </label>
-      </div>
-      <div class="flex items-center">
-        <input
-          type="radio"
-          id="status-available"
-          name="status"
-          value="available"
-          checked={selectedStatus === 'available'}
-          class="h-4 w-4 border-gray-300 dark:border-gray-700 text-indigo-600 focus:ring-indigo-500"
-        />
-        <label for="status-available" class="ml-3 text-sm text-gray-600 dark:text-gray-300">
-          Available
-        </label>
-      </div>
-      <div class="flex items-center">
-        <input
-          type="radio"
-          id="status-coming-soon"
-          name="status"
-          value="coming-soon"
-          checked={selectedStatus === 'coming-soon'}
-          class="h-4 w-4 border-gray-300 dark:border-gray-700 text-indigo-600 focus:ring-indigo-500"
-        />
-        <label for="status-coming-soon" class="ml-3 text-sm text-gray-600 dark:text-gray-300">
-          Coming Soon
-        </label>
-      </div>
+      {statuses.map((status) => (
+        <div class="flex items-center">
+          <input
+            id={`status-${status || 'all'}`}
+            name="status"
+            type="radio"
+            value={status}
+            checked={selectedStatus === status}
+            class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+          />
+          <label 
+            for={`status-${status || 'all'}`} 
+            class="ml-3 block text-sm text-gray-700 dark:text-gray-300 capitalize"
+          >
+            {status === 'coming-soon' ? 'Coming Soon' : (status || 'All Statuses')}
+          </label>
+        </div>
+      ))}
     </div>
   </div>
 
   <!-- Clear Filters Button -->
   <div class="pt-2">
     <button
-      type="button"
       id="clear-filters"
+      type="button"
       class="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
     >
       Clear Filters
@@ -161,9 +112,9 @@ const { selectedLevel = '', selectedStatus = '', searchQuery = '' } = Astro.prop
 
   function handleFilterChange() {
     const currentParams = new URLSearchParams(window.location.search);
-    const searchInput = document.getElementById('search') as HTMLInputElement;
-    const selectedLevel = document.querySelector('input[name="level"]:checked') as HTMLInputElement;
-    const selectedStatus = document.querySelector('input[name="status"]:checked') as HTMLInputElement;
+    const searchInput = document.getElementById('course-search') as HTMLInputElement;
+    const levelInputs = document.querySelectorAll('input[name="level"]');
+    const statusInputs = document.querySelectorAll('input[name="status"]');
 
     // Update search parameter
     if (searchInput?.value) {
@@ -173,14 +124,16 @@ const { selectedLevel = '', selectedStatus = '', searchQuery = '' } = Astro.prop
     }
 
     // Update level parameter
-    if (selectedLevel?.value) {
+    const selectedLevel = Array.from(levelInputs).find(input => input.checked);
+    if (selectedLevel && selectedLevel.value) {
       currentParams.set('level', selectedLevel.value);
     } else {
       currentParams.delete('level');
     }
 
     // Update status parameter
-    if (selectedStatus?.value) {
+    const selectedStatus = Array.from(statusInputs).find(input => input.checked);
+    if (selectedStatus && selectedStatus.value) {
       currentParams.set('status', selectedStatus.value);
     } else {
       currentParams.delete('status');
@@ -191,7 +144,7 @@ const { selectedLevel = '', selectedStatus = '', searchQuery = '' } = Astro.prop
 
   // Initialize event listeners
   document.addEventListener('DOMContentLoaded', () => {
-    const searchInput = document.getElementById('search') as HTMLInputElement;
+    const searchInput = document.getElementById('course-search') as HTMLInputElement;
     const levelInputs = document.querySelectorAll('input[name="level"]');
     const statusInputs = document.querySelectorAll('input[name="status"]');
     const clearFiltersBtn = document.getElementById('clear-filters');

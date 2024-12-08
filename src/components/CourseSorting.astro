@@ -6,25 +6,29 @@ interface Props {
 const { currentSort = 'newest' } = Astro.props;
 
 const sortOptions = [
-  { value: 'newest', label: 'Newest First' },
-  { value: 'oldest', label: 'Oldest First' },
-  { value: 'name', label: 'Name (A-Z)' },
-  { value: 'name-desc', label: 'Name (Z-A)' },
-  { value: 'level', label: 'Level (Beginner to Advanced)' },
-  { value: 'level-desc', label: 'Level (Advanced to Beginner)' }
+  { value: '', label: 'Default Sorting' },
+  { value: 'title', label: 'Title (A-Z)' },
+  { value: '-title', label: 'Title (Z-A)' },
+  { value: 'level', label: 'Level (Ascending)' },
+  { value: '-level', label: 'Level (Descending)' },
+  { value: 'created_at', label: 'Newest First' },
+  { value: '-created_at', label: 'Oldest First' }
 ];
 ---
 
-<div class="flex items-center gap-3">
-  <label for="sorting" class="text-sm font-medium text-gray-700 dark:text-gray-300">
-    Sort by:
-  </label>
-  <select
-    id="sorting"
-    name="sorting"
-    class="block w-full sm:w-auto rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
+<div>
+  <label 
+    for="course-sorting" 
+    class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1"
   >
-    {sortOptions.map(option => (
+    Sort Courses
+  </label>
+  <select 
+    id="course-sorting" 
+    name="ordering"
+    class="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+  >
+    {sortOptions.map((option) => (
       <option value={option.value} selected={currentSort === option.value}>
         {option.label}
       </option>
@@ -33,42 +37,26 @@ const sortOptions = [
 </div>
 
 <script>
-  function updateSort(sortValue: string) {
-    const url = new URL(window.location.href);
-    const params = url.searchParams;
-    
-    // Preserve existing filter parameters
-    const searchQuery = params.get('search');
-    const level = params.get('level');
-    const status = params.get('status');
-    
-    // Clear and rebuild parameters
-    url.search = '';
-    if (searchQuery) params.set('search', searchQuery);
-    if (level) params.set('level', level);
-    if (status) params.set('status', status);
-    
-    // Add new sort value
-    params.set('sort', sortValue);
-    
-    // Update URL without page reload
-    window.history.pushState({}, '', url.toString());
-    
-    // Trigger page reload to apply sort
-    window.location.href = url.toString();
+  function updateSorting() {
+    const sortSelect = document.getElementById('course-sorting') as HTMLSelectElement;
+    const selectedSort = sortSelect.value;
+
+    // Dispatch custom event with sort parameter
+    window.dispatchEvent(new CustomEvent('course-sort-change', {
+      detail: { sort: selectedSort }
+    }));
   }
 
-  const sortingSelect = document.getElementById('sorting') as HTMLSelectElement;
-  
-  if (sortingSelect) {
-    // Set initial value
-    const currentSort = new URLSearchParams(window.location.search).get('sort') || 'newest';
-    sortingSelect.value = currentSort;
-    
-    // Add change listener
-    sortingSelect.addEventListener('change', (e) => {
-      const target = e.target as HTMLSelectElement;
-      updateSort(target.value);
-    });
-  }
+  // Initialize event listener
+  document.addEventListener('DOMContentLoaded', () => {
+    const sortSelect = document.getElementById('course-sorting') as HTMLSelectElement;
+    sortSelect.addEventListener('change', updateSorting);
+
+    // Set initial sorting from URL if exists
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderingParam = urlParams.get('ordering');
+    if (orderingParam) {
+      sortSelect.value = orderingParam;
+    }
+  });
 </script>

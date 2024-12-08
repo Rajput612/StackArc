@@ -7,19 +7,19 @@ const CourseSorting: React.FC = () => {
     const updateURL = () => {
       const currentParams = new URLSearchParams(window.location.search);
       
-      // Update sort parameter
+      // Update ordering parameter
       if (selectedSort) {
-        currentParams.set('sort', selectedSort);
+        currentParams.set('ordering', selectedSort);
       } else {
-        currentParams.delete('sort');
+        currentParams.delete('ordering');
       }
 
       const newURL = `${window.location.pathname}?${currentParams.toString()}`;
       window.history.pushState({ path: newURL }, '', newURL);
       
-      // Dispatch custom event for filtering
-      window.dispatchEvent(new CustomEvent('course-filter-change', {
-        detail: { params: currentParams.toString() }
+      // Dispatch custom event for sorting
+      window.dispatchEvent(new CustomEvent('course-sort-change', {
+        detail: { sort: selectedSort }
       }));
     };
 
@@ -36,10 +36,10 @@ const CourseSorting: React.FC = () => {
       >
         <option value="newest">Newest First</option>
         <option value="oldest">Oldest First</option>
-        <option value="name">Name (A-Z)</option>
-        <option value="name-desc">Name (Z-A)</option>
+        <option value="title">Name (A-Z)</option>
+        <option value="-title">Name (Z-A)</option>
         <option value="level">Level (Ascending)</option>
-        <option value="level-desc">Level (Descending)</option>
+        <option value="-level">Level (Descending)</option>
       </select>
     </div>
   );
