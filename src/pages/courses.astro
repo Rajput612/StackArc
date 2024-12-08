@@ -91,89 +91,78 @@ const initialOrdering = url.searchParams.get('ordering') || '';
 
     // Function to fetch and render courses
     const fetchAndRenderCourses = async () => {
-      const coursesContainer = document.getElementById('courses-container');
-      
-      try {
-        // Construct API URL with current parameters
-        const apiUrl = new URL(`${PUBLIC_API_URL}/api/courses/`);
-        currentParams.forEach((value, key) => {
-          apiUrl.searchParams.append(key, value);
-        });
+  const coursesContainer = document.getElementById('courses-container');
 
-        const response = await fetch(apiUrl.toString());
+  try {
+    // Construct API URL with current parameters
+    const apiUrl = new URL(`${PUBLIC_API_URL}/api/courses/`);
+    currentParams.forEach((value, key) => {
+      apiUrl.searchParams.append(key, value);
+    });
+
+    const response = await fetch(apiUrl.toString());
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const courses = await response.json();
+
+    // Render courses
+    coursesContainer.innerHTML = courses.map(course => `
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden relative group">
+        <div class="absolute top-4 right-4 z-10">
+          <span class="px-3 py-1 text-xs font-semibold rounded-full ${
+            course.status === 'coming-soon' 
+              ? 'bg-yellow-100 text-yellow-800 border border-yellow-200' 
+              : 'bg-green-100 text-green-800 border border-green-200'
+          }">
+            ${course.status === 'coming-soon' ? 'Coming Soon' : 'Available'}
+          </span>
+        </div>
         
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const courses = await response.json();
-
-        // Render courses
-        coursesContainer.innerHTML = courses.map(course => `
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden relative group">
-            <div class="absolute top-4 right-4 z-10">
-              <span class="px-3 py-1 text-xs font-semibold rounded-full ${
-                course.status === 'coming-soon' 
-                  ? 'bg-yellow-100 text-yellow-800 border border-yellow-200' 
-                  : 'bg-green-100 text-green-800 border border-green-200'
-              }">
-                ${course.status === 'coming-soon' ? 'Coming Soon' : 'Available'}
-              </span>
+        <div class="p-4 flex flex-col h-full">
+          <div class="text-3xl mb-2">${course.icon}</div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">${course.title}</h3>
+          <p class="text-sm text-gray-600 dark:text-gray-300 flex-grow mb-4">${course.description}</p>
+          
+          <div class="flex items-center justify-between">
+            <div class="flex flex-col">
+              <span class="text-xs text-gray-500 dark:text-gray-400">Level: ${course.level}</span>
+              <span class="text-xs text-gray-500 dark:text-gray-400">Topics: ${course.topic_count}</span>
             </div>
             
-            <div class="p-4 flex flex-col h-full">
-              <div class="text-3xl mb-2">${course.icon}</div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">${course.title}</h3>
-              <p class="text-sm text-gray-600 dark:text-gray-300 flex-grow mb-4">${course.description}</p>
-              
-              <div class="flex items-center justify-between">
-                <div class="flex flex-col">
-                  <span class="text-xs text-gray-500 dark:text-gray-400">Level: ${course.level}</span>
-                  <span class="text-xs text-gray-500 dark:text-gray-400">Topics: ${course.topic_count}</span>
-                </div>
-                
-                <button 
-                  data-course-slug="${course.slug}"
-                  class="start-learning-btn px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded-md transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 ${
-                    course.status === 'coming-soon' ? 'opacity-50 cursor-not-allowed' : ''
-                  }"
-                  ${course.status === 'coming-soon' ? 'disabled' : ''}
-                >
-                  Start Learning
-                </button>
-              </div>
-            </div>
+            <button 
+              data-course-id="${course.id}"
+              class="start-learning-btn px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded-md transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 ${
+                course.status === 'coming-soon' ? 'opacity-50 cursor-not-allowed' : ''
+              }"
+              ${course.status === 'coming-soon' ? 'disabled' : ''}
+            >
+              Start Learning
+            </button>
           </div>
-        `).join('');
+        </div>
+      </div>
+    `).join('');
 
-        // Add event listeners to start learning buttons
-        document.querySelectorAll('.start-learning-btn').forEach(button => {
-          button.addEventListener('click', (event) => {
-            const courseSlug = event.target.getAttribute('data-course-slug');
-            
-            // Define specific redirections
-            const redirectMap = {
-              'python-basics': '/courses/python-basics',
-              'python-advanced': '/courses/python-advanced'
-            };
+    // Add event listeners to start learning buttons
+    document.querySelectorAll('.start-learning-btn').forEach(button => {
+      button.addEventListener('click', (event) => {
+        const courseId = event.target.getAttribute('data-course-id');
+        window.location.href = `/courses/${courseId}`;
+      });
+    });
 
-            // Redirect based on course slug
-            const redirectUrl = redirectMap[courseSlug] || `/courses/${courseSlug}`;
-            
-            if (redirectUrl) {
-              window.location.href = redirectUrl;
-            }
-          });
-        });
+  } catch (error) {
+    coursesContainer.innerHTML = `
+      <div class="col-span-full text-center py-12 text-red-600">
+        Failed to load courses. ${error.message}
+      </div>
+    `;
+  }
+};
 
-      } catch (error) {
-        coursesContainer.innerHTML = `
-          <div class="col-span-full text-center py-12 text-red-600">
-            Failed to load courses. ${error.message}
-          </div>
-        `;
-      }
-    };
 
     // Event listeners for dynamic filtering
     window.addEventListener('course-filter-change', (event) => {
