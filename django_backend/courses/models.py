@@ -3,6 +3,13 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+class Category(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    icon = models.CharField(max_length=255, blank=True, null=True)  # New field for icon
+
+    def __str__(self):
+        return self.name
+
 class Course(models.Model):
     DIFFICULTY_CHOICES = [
         ('Beginner', 'Beginner'),
@@ -24,6 +31,7 @@ class Course(models.Model):
     duration = models.IntegerField(help_text="Total duration in minutes", default=120)
     is_published = models.BooleanField(default=True)
     enrolled_users = models.ManyToManyField(User, through='UserCourseProgress')
+    categories = models.ManyToManyField(Category, related_name='courses', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

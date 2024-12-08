@@ -100,6 +100,8 @@ const initialOrdering = url.searchParams.get('ordering') || '';
       apiUrl.searchParams.append(key, value);
     });
 
+    console.log('Fetching courses from:', apiUrl.toString()); // Log the API URL
+
     const response = await fetch(apiUrl.toString());
 
     if (!response.ok) {

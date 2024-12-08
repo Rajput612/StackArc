@@ -5,11 +5,12 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.db.models import Count
-from .models import Course, Topic, Exercise, UserCourseProgress
+from .models import Course, Topic, Exercise, UserCourseProgress, Category
 from .serializers import (
     CourseListSerializer, CourseDetailSerializer,
     TopicListSerializer, TopicDetailSerializer,
-    ExerciseSerializer, ExerciseDetailSerializer
+    ExerciseSerializer, ExerciseDetailSerializer,
+    CategorySerializer
 )
 from .permissions import IsEnrolledOrPreview
 from django_filters import rest_framework as django_filters
@@ -27,7 +28,7 @@ class CourseFilter(django_filters.FilterSet):
         fields = ['level', 'status']
 
 class CourseViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Course.objects.prefetch_related('topics', 'topics__exercises')
+    queryset = Course.objects.prefetch_related('topics', 'topics__exercises', 'categories')
     filter_backends = (
         django_filters.DjangoFilterBackend, 
         filters.OrderingFilter, 
@@ -46,7 +47,7 @@ class CourseViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
 
     def get_queryset(self):
-        return Course.objects.prefetch_related('topics', 'topics__exercises').annotate(
+        return Course.objects.prefetch_related('topics', 'topics__exercises', 'categories').annotate(
             total_topics=Count('topics')
         )
 
@@ -149,3 +150,7 @@ class ExerciseViewSet(viewsets.ReadOnlyModelViewSet):
         progress.last_accessed = timezone.now()
         progress.save()
         return Response({'detail': 'Exercise marked as completed.'})
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer

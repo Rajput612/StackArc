@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Course, Topic, Exercise, UserCourseProgress
+from .models import Course, Topic, Exercise, UserCourseProgress, Category
 
 class ExerciseSerializer(serializers.ModelSerializer):
     class Meta:
@@ -61,12 +61,18 @@ class TopicSerializer(serializers.ModelSerializer):
         model = Topic
         fields = ['id', 'title', 'description', 'order', 'is_preview', 'exercises']
 
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'name']
+
 class CourseListSerializer(serializers.ModelSerializer):
     topic_count = serializers.IntegerField(source='topics.count', read_only=True)
+    categories = CategorySerializer(many=True, read_only=True)
 
     class Meta:
         model = Course
-        fields = ['id', 'title', 'description', 'icon', 'level', 'status', 'topic_count']
+        fields = ['id', 'title', 'description', 'icon', 'level', 'status', 'topic_count', 'categories']
 
 class CourseDetailSerializer(CourseListSerializer):
     topics = TopicSerializer(many=True, read_only=True)
