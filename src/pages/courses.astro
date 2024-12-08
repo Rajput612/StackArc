@@ -133,7 +133,8 @@ const initialOrdering = url.searchParams.get('ordering') || '';
                 </div>
                 
                 <button 
-                  class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded-md transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 ${
+                  data-course-slug="${course.slug}"
+                  class="start-learning-btn px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded-md transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 ${
                     course.status === 'coming-soon' ? 'opacity-50 cursor-not-allowed' : ''
                   }"
                   ${course.status === 'coming-soon' ? 'disabled' : ''}
@@ -144,6 +145,26 @@ const initialOrdering = url.searchParams.get('ordering') || '';
             </div>
           </div>
         `).join('');
+
+        // Add event listeners to start learning buttons
+        document.querySelectorAll('.start-learning-btn').forEach(button => {
+          button.addEventListener('click', (event) => {
+            const courseSlug = event.target.getAttribute('data-course-slug');
+            
+            // Define specific redirections
+            const redirectMap = {
+              'python-basics': '/courses/python-basics',
+              'python-advanced': '/courses/python-advanced'
+            };
+
+            // Redirect based on course slug
+            const redirectUrl = redirectMap[courseSlug] || `/courses/${courseSlug}`;
+            
+            if (redirectUrl) {
+              window.location.href = redirectUrl;
+            }
+          });
+        });
 
       } catch (error) {
         coursesContainer.innerHTML = `

@@ -1,31 +1,66 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 
+export async function getStaticPaths() {
+  const API_URL = import.meta.env.PUBLIC_API_URL || 'http://127.0.0.1:8000';
+  
+  try {
+    const response = await fetch(`${API_URL}/api/courses/`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const courses = await response.json();
+    
+    return courses.map(course => ({
+      params: { 
+        id: course.slug || 'default-course' // Ensure a fallback value
+      },
+      props: { 
+        course,
+        courseId: course.slug || 'default-course' // Ensure a fallback value
+      }
+    }));
+  } catch (error) {
+    console.error('Error fetching courses for static paths:', error);
+    return [{ 
+      params: { id: 'default-course' },
+      props: { 
+        course: null,
+        courseId: 'default-course'
+      }
+    }];
+  }
+}
+
 const { id } = Astro.params;
+const { course, courseId } = Astro.props;
+
 const API_URL = import.meta.env.PUBLIC_API_URL || 'http://127.0.0.1:8000';
 
-// Fetch course details
-let course = null;
+// If course is not passed via props, fetch it
+let fetchedCourse = course;
 let error = null;
 
-try {
-  const response = await fetch(`${API_URL}/api/courses/${id}/`);
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+if (!fetchedCourse) {
+  try {
+    const response = await fetch(`${API_URL}/api/courses/${courseId || id}/`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    fetchedCourse = await response.json();
+  } catch (e) {
+    console.error('Error fetching course:', e);
+    error = 'Failed to load course details. Please try again later.';
   }
-  course = await response.json();
-} catch (e) {
-  console.error('Error fetching course:', e);
-  error = 'Failed to load course details. Please try again later.';
 }
 
 // Redirect if course not found
-if (!course && !error) {
+if (!fetchedCourse && !error) {
   return Astro.redirect('/courses');
 }
 ---
 
-<Layout title={course ? `${course.title} - StackArc` : 'Course Not Found'}>
+<Layout title={fetchedCourse ? `${fetchedCourse.title} - StackArc` : 'Course Not Found'}>
   <main class="container mx-auto px-4 py-8">
     {error && (
       <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
@@ -33,44 +68,44 @@ if (!course && !error) {
       </div>
     )}
 
-    {course && (
+    {fetchedCourse && (
       <div class="max-w-4xl mx-auto">
         <!-- Course Header -->
         <div class="mb-8">
           <div class="flex items-center gap-4 mb-4">
             <span class="text-5xl" role="img" aria-label="Course icon">
-              {course.icon}
+              {fetchedCourse.icon}
             </span>
             <div>
               <h1 class="text-4xl font-bold text-gray-900 dark:text-white">
-                {course.title}
+                {fetchedCourse.title}
               </h1>
               <div class="flex items-center gap-4 mt-2">
                 <span class={`px-3 py-1 rounded-full text-sm font-medium
-                  ${course.level === 'Beginner' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200' :
-                    course.level === 'Intermediate' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-200' :
+                  ${fetchedCourse.level === 'Beginner' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200' :
+                    fetchedCourse.level === 'Intermediate' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-200' :
                     'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-200'}`}>
-                  {course.level}
+                  {fetchedCourse.level}
                 </span>
                 <span class="text-gray-600 dark:text-gray-400">
-                  {course.topic_count} Topics
+                  {fetchedCourse.topic_count} Topics
                 </span>
               </div>
             </div>
           </div>
           <p class="text-xl text-gray-600 dark:text-gray-300">
-            {course.description}
+            {fetchedCourse.description}
           </p>
         </div>
 
         <!-- Topics List -->
-        {course.topics && (
+        {fetchedCourse.topics && (
           <div class="space-y-6">
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
               Course Content
             </h2>
             <div class="space-y-4">
-              {course.topics.map((topic, index) => (
+              {fetchedCourse.topics.map((topic, index) => (
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
                   <div class="flex items-center justify-between">
                     <div>
@@ -110,6 +145,8 @@ if (!course && !error) {
         <!-- Call to Action -->
         <div class="mt-12 text-center">
           <button
+            id="start-learning-btn"
+            data-course-slug={fetchedCourse.slug}
             class="px-8 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
           >
             Start Learning
@@ -118,6 +155,29 @@ if (!course && !error) {
       </div>
     )}
   </main>
+
+  <script define:vars={{ courseSlug: fetchedCourse?.slug }}>
+    document.addEventListener('DOMContentLoaded', () => {
+      const startLearningBtn = document.getElementById('start-learning-btn');
+      
+      if (startLearningBtn) {
+        startLearningBtn.addEventListener('click', () => {
+          const courseSlug = startLearningBtn.getAttribute('data-course-slug');
+          
+          // Define specific redirections
+          const redirectMap = {
+            'python-basics': '/courses/python-basics',
+            'python-advanced': '/courses/python-advanced'
+          };
+
+          // Redirect based on course slug
+          const redirectUrl = redirectMap[courseSlug] || `/courses/${courseSlug}`;
+          
+          window.location.href = redirectUrl;
+        });
+      }
+    });
+  </script>
 </Layout>
 
 <style>
