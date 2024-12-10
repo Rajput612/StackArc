@@ -1,0 +1,112 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { FaUser, FaComments, FaDesktop, FaPaintBrush, FaTrophy, FaBell } from 'react-icons/fa';
+
+// Top Contributors
+const contributors = [
+  { name: "Alex Johnson", role: "Full-Stack Developer", contributions: 230, badge: "gold" },
+  { name: "Sara Kim", role: "UI/UX Designer", contributions: 185, badge: "silver" },
+  { name: "Michael Chen", role: "Data Scientist", contributions: 156, badge: "bronze" }
+];
+
+// Featured Discussions (Use a key to map icons later)
+const discussions = [
+  { title: "How to Get Started with Web Development?", author: "Chris Lee", replies: 52, views: 1348, category: "Development", color: "bg-blue-500", iconKey: "desktop" },
+  { title: "Best Practices for Remote Team Collaboration", author: "Emily Davis", replies: 38, views: 987, category: "Business", color: "bg-green-500", iconKey: "comments" },
+  { title: "Top Tools for Modern UI Design", author: "Sophia Patel", replies: 45, views: 1130, category: "Design", color: "bg-purple-500", iconKey: "paintBrush" }
+];
+
+// Recent Activities
+const recentActivities = [
+  "Alex Johnson created a new community: 'Web Developers Unite'",
+  "Sara Kim posted a new discussion: 'UI Design Trends 2024'",
+  "Michael Chen commented on 'How to Get Started with Web Development?'"
+];
+
+// Map keys to icons directly (no JSX syntax here)
+const icons = {
+  desktop: FaDesktop,
+  comments: FaComments,
+  paintBrush: FaPaintBrush
+};
+---
+
+<MainLayout title="Community - Connect & Collaborate">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <!-- Theme Toggle -->
+
+    <!-- Hero Section -->
+    <div class="relative overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-br from-indigo-500 to-blue-600"></div>
+      <div class="relative py-16 px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto text-center text-white">
+          <h1 class="text-5xl font-extrabold mb-6 animate-fade-in">Welcome to Our Community</h1>
+          <p class="text-xl mb-8 animate-fade-in delay-1s">Share knowledge, connect with like-minded people, and grow together.</p>
+          <div>
+            <button class="px-6 py-3 bg-white text-indigo-600 rounded-lg shadow hover:bg-gray-100">Join Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8 space-y-16">
+      <!-- Top Contributors -->
+      <section>
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white text-center mb-8">Top Contributors</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {contributors.map((contributor) => (
+            <div key={contributor.name} class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 text-center">
+              <FaUser class="w-24 h-24 mx-auto mb-4 text-indigo-600 animate-bounce" />
+              <h3 class="text-lg font-bold text-gray-900 dark:text-white">{contributor.name}</h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">{contributor.role}</p>
+              <p class="mt-4 text-indigo-600 dark:text-indigo-400 font-medium">{contributor.contributions} Contributions</p>
+              <div class={`inline-block mt-4 px-4 py-1 rounded-full bg-${contributor.badge}-500 text-white`}>
+                {contributor.badge.toUpperCase()} Badge
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Featured Discussions -->
+      <section>
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white text-center mb-8">Featured Discussions</h2>
+        <div class="space-y-6">
+          {discussions.map((discussion) => (
+            <div key={discussion.title} class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 flex items-start gap-4 hover:scale-[1.02] transition-transform">
+              <div class={`w-12 h-12 flex-shrink-0 rounded-full ${discussion.color} flex items-center justify-center`}>
+                {/* Use the component stored in the icons map */}
+                {icons[discussion.iconKey] && <icons[discussion.iconKey] class="text-white w-6 h-6" />}
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white">{discussion.title}</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">by {discussion.author}</p>
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                  <span>{discussion.replies} Replies</span> · <span>{discussion.views} Views</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Recent Activities -->
+      <section>
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white text-center mb-8">Recent Activities</h2>
+        <ul class="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
+          {recentActivities.map((activity, index) => (
+            <li key={index}>{activity}</li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- Call to Action -->
+      <section class="bg-gradient-to-r from-indigo-600 to-blue-700 rounded-2xl text-white p-12 text-center">
+        <h2 class="text-4xl font-bold mb-4">Become a Part of the Community</h2>
+        <p class="text-lg mb-8">Share your expertise, learn from others, and grow together.</p>
+        <button class="px-6 py-3 bg-white text-indigo-600 rounded-lg shadow hover:bg-gray-100">Sign Up Now</button>
+      </section>
+    </div>
+  </div>
+</MainLayout>
